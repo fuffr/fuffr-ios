@@ -51,7 +51,7 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 
 -(id) init {
     if (self = [super init]) {
-        _receiveQueue = dispatch_queue_create("com.neonode.receivequeue", nil);
+        _receiveQueue = dispatch_queue_create("com.fuffr.receivequeue", nil);
 
         _manager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
         self.connectedDevices = [NSMutableArray array];

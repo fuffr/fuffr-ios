@@ -36,7 +36,7 @@ NSString* const FFRSideTopUdid = @"fff5";
     if (self = [super init]) {
         self.spaceMapper = [[FFROverlaySpaceMapper alloc] init];
         _touches = [[FFRTrackingManager alloc] init];
-        _backgroundQueue = dispatch_queue_create("com.neonode.background", NULL);
+        _backgroundQueue = dispatch_queue_create("com.fuffr.background", NULL);
     }
 
     return self;
