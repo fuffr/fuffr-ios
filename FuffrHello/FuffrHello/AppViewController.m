@@ -2,7 +2,7 @@
 //  AppViewController.m
 //  Implementation file for the FuffrHello view controller.
 //
-//  Created by miki on 16/03/14.
+//  Created by Fuffr on 16/03/14.
 //  Copyright (c) 2014 Fuffr. All rights reserved.
 //
 
@@ -51,8 +51,8 @@
 {
     [super viewDidAppear: animated];
 
-	// Connect to the sensor case and setup touch events.
-	[self setupSensorCase];
+	// Connect to Fuffr and setup touch events.
+	[self setupFuffr];
 }
 
 - (void)didReceiveMemoryWarning
@@ -89,17 +89,16 @@
     UIGraphicsEndImageContext();
 }
 
-- (void) setupSensorCase
-{
+- (void) setupFuffr{
 	// Get a reference to the touch manager.
 	FFRTouchManager* manager = [FFRTouchManager sharedManager];
 
-	// Connect to the case, the onSuccess method will be
-	// called when a connaction to the case is made.
+	// Connect to Fuffr, the onSuccess method will be
+	// called when a connaction is established.
 	// Support for onError is not complete.
 	[manager
-		connectToSensorCaseNotifying: self
-		onSuccess: @selector(sensorCaseConnected)
+		connectToFuffrNotifying: self
+		onSuccess: @selector(fuffrConnected)
 		onError: nil];
 
 	// Register methods for right side touches. The touchEnded
@@ -109,7 +108,7 @@
 		touchBegan: @selector(touchRightBegan:)
 		touchMoved: @selector(touchRightMoved:)
 		touchEnded: nil
-		side: FFRCaseRight];
+		side: FFRSideRight];
 
 	// Register methods for left side touches. The touchEnded
 	// method is not used in this example.
@@ -118,19 +117,19 @@
 		touchBegan: @selector(touchLeftBegan:)
 		touchMoved: @selector(touchLeftMoved:)
 		touchEnded: nil
-		side: FFRCaseLeft];
+		side: FFRSideLeft];
 }
 
-- (void) sensorCaseConnected
+- (void) fuffrConnected
 {
-	NSLog(@"sensorCaseConnected");
+	NSLog(@"fuffrConnected");
 }
 
 - (void) touchRightBegan: (NSSet*)touches
 {
 	// In this example we only use one touch object for
-	// each left/right side of the case. Here the reference
-	// to the first right side touch is saved.
+	// each left/right side. Here the reference to the
+	// first right side touch is saved.
 	self.touchRight = [[touches allObjects] firstObject];
 
 	// Set position of the right circle and redraw.
@@ -140,8 +139,8 @@
 - (void) touchLeftBegan: (NSSet*)touches
 {
 	// In this example we only use one touch object for
-	// each left/right side of the case. Here the reference
-	// to the first left side touch is saved.
+	// each left/right side. Here the reference to the
+	// first left side touch is saved.
 	self.touchLeft = [[touches allObjects] firstObject];
 
 	// Set position of the left circle and redraw.

@@ -2,7 +2,7 @@
 //  FFRTrackingArray.h
 //  FuffrLib
 //
-//  Created by Christoffer Sjöberg on 2013-10-23.
+//  Created by Fuffr on 2013-10-23.
 //  Copyright (c) 2013 Fuffr. All rights reserved.
 //
 
@@ -32,7 +32,7 @@ extern NSString* const FFRTrackingPulsedNotification;
 extern const float FFRTrackingManagerUpdateSpeed;
 
 /**
-    Class for tracking the touches reported from the sensor case, 
+    Class for tracking the touches reported from Fuffr, 
     in order to trigger events for added/removed touches,
     as well as enabling KVO of location in existing touches.
  */

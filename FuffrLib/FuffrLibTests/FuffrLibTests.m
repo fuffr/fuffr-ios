@@ -2,7 +2,7 @@
 //  FuffrLibTests.m
 //  FuffrLibTests
 //
-//  Created by miki on 16/03/14.
+//  Created by Fuffr on 16/03/14.
 //  Copyright (c) 2014 Fuffr. All rights reserved.
 //
 

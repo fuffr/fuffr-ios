@@ -2,7 +2,7 @@
 //  FFRCaseHandler.h
 //  FuffrLib
 //
-//  Created by Christoffer Sjöberg on 2013-11-18.
+//  Created by Fuffr on 2013-11-18.
 //  Copyright (c) 2013 Fuffr. All rights reserved.
 //
 
@@ -20,7 +20,7 @@
 extern NSString* const FFRCaseSensorServiceUuid;
 
 /**
- Characteristic to enable the Fuffr sensor case
+ Characteristic to enable Fuffr
  */
 extern NSString* const FFRProximityEnablerCharacteristic;
 
@@ -46,7 +46,7 @@ extern NSString* const FFRSideTopUdid;
 
 
 /**
-    Main class for handling BLE communication with the Fuffr iPhone sensor case
+    Main class for handling BLE communication with Fuffr
  */
 @interface FFRCaseHandler : NSObject<FFRPeripheralHandler> {
     // The peripheral

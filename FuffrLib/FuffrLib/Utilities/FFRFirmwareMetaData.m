@@ -2,7 +2,7 @@
 //  FFRFirmwareMetaData.m
 //  FuffrLib
 //
-//  Created by Christoffer Sjöberg on 2013-11-13.
+//  Created by Fuffr on 2013-11-13.
 //  Copyright (c) 2013 Fuffr. All rights reserved.
 //
 

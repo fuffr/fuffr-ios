@@ -2,7 +2,7 @@
 //  FFRCaseHandler.m
 //  FuffrLib
 //
-//  Created by Christoffer Sjöberg on 2013-11-18.
+//  Created by Fuffr on 2013-11-18.
 //  Copyright (c) 2013 Fuffr. All rights reserved.
 //
 
@@ -16,7 +16,7 @@
 /**
     Unpacks the bluetooth packet and converts it into a touch object
  */
--(FFRTouch*) unpackData:(NSData*)data fromSide:(FFRCaseSide)side;
+-(FFRTouch*) unpackData:(NSData*)data fromSide:(FFRSide)side;
 
 @end
 
@@ -54,7 +54,7 @@ NSString* const FFRSideTopUdid = @"fff5";
     _peripheral = peripheral;
 
     // enable sensor sides and proximity in general, spread out commands in time
-    [self enableSides:FFRCaseTop|FFRCaseLeft|FFRCaseRight|FFRCaseBottom setOn:TRUE];
+    [self enableSides:FFRSideTop|FFRSideLeft|FFRSideRight|FFRSideBottom setOn:TRUE];
     [self performSelector:@selector(enablePeripheral:) withObject:@TRUE afterDelay:0.4];
     //[self enablePeripheral:TRUE];
 }
@@ -75,29 +75,29 @@ NSString* const FFRSideTopUdid = @"fff5";
 
 #pragma mark - enable/disable sensors
 
--(void) enableSides:(FFRCaseSide)sides setOn:(BOOL)on {
+-(void) enableSides:(FFRSide)sides setOn:(BOOL)on {
     if (!_peripheral) {
         NSLog(@"No peripheral loaded in Case handler!");
         return;
     }
 
     // enabling the sensor sides is spread out in time to prevent connection timeouts, probably because the case becomes busy processing the commands
-    if (sides & FFRCaseTop) {
+    if (sides & FFRSideTop) {
         [self performSelector:@selector(enableTopSide:) withObject:@TRUE afterDelay:0.6];
         //[_peripheral setNotificationForCharacteristicWithIdentifier:FFRSideTopUdid enabled:on];
     }
 
-    if (sides & FFRCaseLeft) {
+    if (sides & FFRSideLeft) {
         [self performSelector:@selector(enableLeftSide:) withObject:@TRUE afterDelay:0.7];
         //[_peripheral setNotificationForCharacteristicWithIdentifier:FFRSideLeftUdid enabled:on];
     }
 
-    if (sides & FFRCaseRight) {
+    if (sides & FFRSideRight) {
         [self performSelector:@selector(enableRightSide:) withObject:@TRUE afterDelay:0.8];
         //[_peripheral setNotificationForCharacteristicWithIdentifier:FFRSideRightUdid enabled:on];
     }
 
-    if (sides & FFRCaseBottom) {
+    if (sides & FFRSideBottom) {
         [self performSelector:@selector(enableBottomSide:) withObject:@TRUE afterDelay:0.9];
         //[_peripheral setNotificationForCharacteristicWithIdentifier:FFRSideBottomUdid enabled:on];
     }
@@ -161,26 +161,26 @@ NSString* const FFRSideTopUdid = @"fff5";
 -(void) didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic {
     dispatch_async(_backgroundQueue, ^{
         FFRTouch* touch = nil;
-        FFRCaseSide side = FFRCaseNotSet;
+        FFRSide side = FFRSideNotSet;
 
         if ([characteristic.UUID isEqualToString:FFRSideLeftUdid]) {
             //NSLog(@"reading left side data");
-            side = FFRCaseLeft;
+            side = FFRSideLeft;
         }
         else if ([characteristic.UUID isEqualToString:FFRSideRightUdid]) {
             //NSLog(@"reading right side data");
-            side = FFRCaseRight;
+            side = FFRSideRight;
         }
         else if ([characteristic.UUID isEqualToString:FFRSideTopUdid]) {
             //NSLog(@"reading top side data");
-            side = FFRCaseTop;
+            side = FFRSideTop;
         }
         else if ([characteristic.UUID isEqualToString:FFRSideBottomUdid]) {
             //NSLog(@"reading bottom side data");
-            side = FFRCaseBottom;
+            side = FFRSideBottom;
         }
 
-        if (side != FFRCaseNotSet) {
+        if (side != FFRSideNotSet) {
             touch = [self unpackData:characteristic.value fromSide:side];
             [_touches handleNewOrChangedTrackingObject:touch];
         }
@@ -201,7 +201,7 @@ NSString* const FFRSideTopUdid = @"fff5";
 
 #pragma mark - touch data handling
 
--(FFRTouch*) unpackData:(NSData*)data fromSide:(FFRCaseSide)side {
+-(FFRTouch*) unpackData:(NSData*)data fromSide:(FFRSide)side {
     FFRRawTrackingData raw;
     [data getBytes:&raw length:sizeof(FFRRawTrackingData)];
 
@@ -220,7 +220,7 @@ NSString* const FFRSideTopUdid = @"fff5";
     return touch;
 }
 
--(CGPoint) normalizePoint:(CGPoint)point onSide:(FFRCaseSide)side {
+-(CGPoint) normalizePoint:(CGPoint)point onSide:(FFRSide)side {
     const float FFRLongXResolution = 3327.0;
     const float FFRLongYResolution = 1878.0;
     const float FFRShortXResolution = 1279.0;
@@ -228,16 +228,16 @@ NSString* const FFRSideTopUdid = @"fff5";
 
     CGPoint p;
     switch (side) {
-        case FFRCaseRight:
+        case FFRSideRight:
             p = CGPointMake(point.y / FFRLongYResolution, point.x / FFRLongXResolution);
             break;
-        case FFRCaseLeft:
+        case FFRSideLeft:
             p = CGPointMake(1 - point.y / FFRLongYResolution, 1 - point.x / FFRLongXResolution);
             break;
-        case FFRCaseBottom:
+        case FFRSideBottom:
             p = CGPointMake(point.x / FFRShortXResolution, point.y / FFRShortYResolution);
             break;
-        case FFRCaseTop:
+        case FFRSideTop:
             p = CGPointMake(1 - point.x / FFRShortXResolution, 1 - point.y / FFRShortYResolution);
             break;
         default:

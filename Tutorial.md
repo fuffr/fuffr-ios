@@ -1,6 +1,6 @@
 # Fuffr Tutorial
 
-Start developing cool apps for the Fuffr sensor case! This tutorial gets you going.
+Start developing cool apps for the Fuffr! This tutorial gets you going.
 
 Current release of Fuffr is targeted for iOS devices. Android support will follow.
 
@@ -10,57 +10,60 @@ To develop Fuffr apps, you need:
 
 * Basic knowledge of Objective-C and iOS development.
 * A Mac running a recent version of Xcode.
-* An iPhone 5/5C/5S running iOS 7 or higher. (You can also use iPhone 4S, but the case is designed for the iPhone 5 form factor.)
-* Please note that you cannot run Fuffr apps in the iOS Simulator, because it lacks support for BLE (Bluetooth Low Energy) needed to connect to the sensor case.
+* An iPhone 5/5C/5S running iOS 7 or higher. (You can also use iPhone 4S, but Fuffr is designed for the iPhone 5 form factor.)
+* Please note that you cannot run Fuffr apps in the iOS Simulator, because it lacks support for BLE (Bluetooth Low Energy) needed to connect to Fuffr.
 * The source code for the Fuffr library and the example apps (available on GitHub).
+* Fuffr hardware (contact hello@fuffr.com for information on availability).
 
 ## Get the source code
 
 You have two options:
 
-* Install Git and clone the Fuffr GitHub repository using the command:
+Install Git and clone the Fuffr GitHub repository using the command:
 
-    git clone (TODO: insert url here)
+    git clone git@github.com:fuffr/fuffr-code.git
 
-* Download the code as a zip-file by clicking **Download ZIP** on the GitHub page (TODO: insert link).
+Download the code as a zip-file by clicking **Download ZIP** on [GitHub](https://github.com/fuffr/fuffr-code).
 
 ## Run the example apps
 
 The quickest way to get started is by exploring the example apps:
 
-* **FuffrHello** - This is a minimal example that shows how to control two circles using the left and right sensor arrays or the case. This example uses a single touch interaction style for each side of the case.
+**FuffrHello** - This is a minimal example that shows how to control two circles using the left and right sensor arrays. This example uses a single touch interaction style for each side.
 
-* **FuffrDots** - A minimal example that illustrates how to access multi touch data. For each touch point, a circle is drawn.
+**FuffrDots** - A minimal example that illustrates how to access multi touch data. For each touch point, a circle is drawn.
 
-* **FuffrMap** - Example app that show how to navigate Apple maps with the sensor case. Use right side finger to pan (scroll) across the map, and the left side finger to zoom the map with up/down movements.
+**FuffrMap** - Example app that show how to navigate Apple maps with Fuffr. Use right side finger to pan (scroll) across the map, and the left side finger to zoom the map with up/down movements.
 
-* **FuffrJS** - This example demonstrates how to interface with JavaScript and pass touch events to an app written in HTML/JS.
+**FuffrJS** - This example demonstrates how to interface with JavaScript and pass touch events to an app written in HTML/JS.
 
 ## Add the FuffrLib to your own app
+
+**You only need to read the following if you wish to use Fuffr with your existing apps. The examples that comes with Fuffr are already set up properly.**
 
 **FuffrLib** is an Xcode library you can add to your own iOS applications.
 
 Follow these steps to include the library into you app:
 
-* Open your application in Xcode.
+Open your application in Xcode.
 
-* Make sure that no other application that includes FuffrLib is open in Xcode.
+Make sure that no other application that includes FuffrLib is open in Xcode.
 
-* From the Finder, drag and drop the file **FuffrLib.xcodeproj** into the Xcode Project Navigator.
+From the Finder, drag and drop the file **FuffrLib.xcodeproj** into the Xcode Project Navigator.
 
-* Select your project (the topmost entry) in the Project Navigator and select tab **Build Settings**.
+Select your project (the topmost entry) in the Project Navigator and select tab **Build Settings**.
 
-* Under **Search Paths/Header Search Paths**, enter the following in the Debug and Release fields (make sure to include also the quote marks):
+Under **Search Paths/Header Search Paths**, enter the following in the Debug and Release fields (make sure to include also the quote marks):
 
     "$(TARGET\_BUILD\_DIR)/usr/local/lib/include" "$(OBJROOT)/UninstalledProducts/include" "$(BUILT\_PRODUCTS\_DIR)"
 
-* Under **Linking/Other Linker Flags**, enter the following in the Debug and Release fields:
+Under **Linking/Other Linker Flags**, enter the following in the Debug and Release fields:
 
     -ObjC
 
-* Next select tab **Build Phases**.
+Next select tab **Build Phases**.
 
-* Under **Target Dependencies**, click **+** (plus) and add **FuffrLib**.
+Under **Target Dependencies**, click **+** (plus) and add **FuffrLib**.
 
 * Under **Link Binary With Libraries**, click **+** (plus) and add **libFuffrLib.a**.
 
@@ -74,35 +77,35 @@ Here is an overview of classes and methods provided by the Fuffr API.
 
 The following classes contain functionality needed by most applications:
 
-Class **FFRTouchManager** (FuffrLib/FFRTouchManager.h) contains methods for connecting to the sensor case and for observing touch events. This is a singleton, the system creates and maintains the single instance of this class.
+Class **FFRTouchManager** ([FuffrLib/FFRTouchManager.h](https://github.com/fuffr/fuffr-ios/blob/master/FuffrLib/FuffrLib/Touch/FFRTouchManager.h)) contains methods for connecting to Fuffr and for observing touch events. This is a singleton, the system creates and maintains the single instance of this class.
 
-Class **FFRTouch** (FuffrLib/FFRTouch.h) represents touches, with information like the touch coordinate and the side of the case that generated the event.
+Class **FFRTouch** ([FuffrLib/FFRTouch.h](https://github.com/fuffr/fuffr-ios/blob/master/FuffrLib/FuffrLib/Touch/FFRTouch.h)) represents touches, with information like the touch coordinate and which side that generated the event.
 
-Enum **FFRCaseSide** (FuffrLib/FFRTouch.h) has constants that represent the sides of the case: **FFRCaseTop**, **FFRCaseBottom**, **FFRCaseLeft**, **FFRCaseRight**.
+Enum **FFRCaseSide** ([FuffrLib/FFRTouch.h](https://github.com/fuffr/fuffr-ios/blob/master/FuffrLib/FuffrLib/Touch/FFRTouch.h)) has constants that represent each side: **FFRSideTop**, **FFRSideBottom**, **FFRSideLeft**, **FFRSideRight**.
 
-### Connecting to the sensor case
+### Connecting to Fuffr
 
-The first step in an app is to connect to the sensor case. The app uses BLE (Bluetooth Low Energy) to communicate with the case.
+The first step in an app is to connect to Fuffr. The app uses BLE (Bluetooth Low Energy) to communicate with Fuffr.
 
-This is how to get a reference to the **FFRTouchManager** and connect to the case:
+This is how to get a reference to the **FFRTouchManager** and connect:
 
 	FFRTouchManager* manager = [FFRTouchManager sharedManager];
 
     [manager
-        connectToSensorCaseNotifying: self
-        onSuccess: @selector(sensorCaseConnected)
+        connectToFuffrNotifying: self
+        onSuccess: @selector(fuffrConnected)
         onError: nil];
 
 ### Registering touch observers
 
-To observe touch events, the application registers methods with the **FFRTouchManager**. Here is an example that registers touch methods for the right side of the case:
+To observe touch events, the application registers methods with the **FFRTouchManager**. Here is an example that registers touch methods for the right side:
 
     [manager
         addTouchObserver: self
         touchBegan: @selector(touchRightBegan:)
         touchMoved: @selector(touchRightMoved:)
         touchEnded: @selector(touchRightEnded:)
-        side: FFRCaseRight];
+        side: FFRSideRight];
 
 ### Receiving touch events
 
@@ -120,6 +123,6 @@ The methods registered to receive touch events takes one parameter, an **NSSet**
 
 ## Let us know what you think!
 
-We would love to hear about the Fuffr apps you create. Let us know about your work, what you think of the case, the API, and please report any bugs you might encounter.
+We would love to hear about the Fuffr apps you create. Let us know about your work, what you think Fuffr, the API, and please report any bugs you might encounter.
 
-Contact: (TODO insert contact info)
+Contact: hello@fuffr.com

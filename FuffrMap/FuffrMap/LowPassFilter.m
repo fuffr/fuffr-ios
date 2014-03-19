@@ -2,7 +2,7 @@
 //  LowPassFilter.m
 //  FuffrMap
 //
-//  Created by miki on 18/03/14.
+//  Created by Fuffr on 18/03/14.
 //  Copyright (c) 2014 Fuffr. All rights reserved.
 //
 

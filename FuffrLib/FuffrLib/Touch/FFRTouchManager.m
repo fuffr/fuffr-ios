@@ -3,7 +3,7 @@
 //  This is a high-level touch and connection mananger for
 //  the FuffrLib.
 //
-//  Created by Mikael Kindborg on 07/03/14.
+//  Created by Fuffr on 07/03/14.
 //  Copyright (c) 2014 Fuffr. All rights reserved.
 //
 
@@ -28,7 +28,7 @@
 @property SEL endedSelector;
 
 // Sides (can be combined with bitwise-or).
-@property FFRCaseSide side;
+@property FFRSide side;
 
 @end
 
@@ -46,7 +46,7 @@ static BOOL stringContains(NSString* string, NSString* substring)
 }
 
 // Helper function.
-static NSSet* filterTouchesBySide(NSSet* touches, FFRCaseSide side)
+static NSSet* filterTouchesBySide(NSSet* touches, FFRSide side)
 {
 	return [touches objectsPassingTest:
 		^BOOL(id obj, BOOL* stop)
@@ -76,7 +76,7 @@ static FFRTouchManager* sharedInstance = NULL;
 	touchBegan: (SEL)touchBeganSelector
 	touchMoved: (SEL)touchMovedSelector
 	touchEnded: (SEL)touchEndedSelector
-	side: (FFRCaseSide)side
+	side: (FFRSide)side
 {
 	FFRTouchEventObserver* observer = [FFRTouchEventObserver new];
 	observer.object = object;
@@ -101,7 +101,7 @@ static FFRTouchManager* sharedInstance = NULL;
 	return self;
 }
 
-- (BOOL) connectToSensorCaseNotifying: (id)object
+- (BOOL) connectToFuffrNotifying: (id)object
 	onSuccess: (SEL)successSelector
 	onError: (SEL)errorSelector;
 {
@@ -168,7 +168,7 @@ static FFRTouchManager* sharedInstance = NULL;
 				{
 					[self stopScan];
 					[[FFRBLEManager sharedManager] connectPeripheral: p];
-					[self initSensorCase];
+					[self initFuffr];
 					[self notifyConnected: YES];
 					break;
 				}
@@ -177,7 +177,7 @@ static FFRTouchManager* sharedInstance = NULL;
     }
 }
 
-- (void) initSensorCase
+- (void) initFuffr
 {
     FFRBLEManager* BLEManager = [FFRBLEManager sharedManager];
 

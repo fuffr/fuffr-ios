@@ -46,8 +46,8 @@
 	//center.latitude = 89;
     [self.mapView setCenterCoordinate:center animated:false];
 
-	// Connect to the sensor case and setup touch events.
-	[self setupSensorCase];
+	// Connect to Fuffr and setup touch events.
+	[self setupFuffr];
 }
 
 - (void)didReceiveMemoryWarning
@@ -55,15 +55,15 @@
     [super didReceiveMemoryWarning];
 }
 
-- (void) setupSensorCase
+- (void) setupFuffr
 {
 	// Get a reference to the touch manager.
 	FFRTouchManager* manager = [FFRTouchManager sharedManager];
 
 	// Connect to the case.
 	[manager
-		connectToSensorCaseNotifying: self
-		onSuccess: @selector(sensorCaseConnected)
+		connectToFuffrNotifying: self
+		onSuccess: @selector(fuffrConnected)
 		onError: nil];
 
 	// Register panning touch methods.
@@ -72,7 +72,7 @@
 		touchBegan: @selector(panningTouchBegan:)
 		touchMoved: @selector(panningTouchMoved:)
 		touchEnded: nil
-		side: FFRCaseRight];
+		side: FFRSideRight];
 
 	// Register zooming touch methods.
 	[manager
@@ -80,12 +80,12 @@
 		touchBegan: @selector(zoomingTouchBegan:)
 		touchMoved: @selector(zoomingTouchMoved:)
 		touchEnded: nil
-		side: FFRCaseLeft];
+		side: FFRSideLeft];
 }
 
-- (void) sensorCaseConnected
+- (void) fuffrConnected
 {
-	NSLog(@"sensorCaseConnected");
+	NSLog(@"fuffrConnected");
 }
 
 - (void) panningTouchBegan: (NSSet*)touches

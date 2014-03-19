@@ -1,3 +1,5 @@
-# Fuffr Sensor Case
+# Fuffr
 
-This is the code repository for the Fuffr Sensor Case. Here you will find FuffrLib, a library that enables you to write apps that use the case FuffrLib, and example apps that helps you get started. There is also a [tutorial](TODO insert link) that explains the basic steps in developing Fuffr apps.
+This is the code repository for Fuffr. Here you will find FuffrLib, a library that enables you to write apps for Fuffr, and example apps that helps you get started.
+
+There is also a [tutorial](https://github.com/fuffr/fuffr-ios/blob/master/Tutorial.md) that explains the basic steps in developing Fuffr apps.

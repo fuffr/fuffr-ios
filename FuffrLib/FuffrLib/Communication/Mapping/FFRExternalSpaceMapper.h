@@ -2,7 +2,7 @@
 //  FFRExternalSpaceMapper.h
 //  FuffrLib
 //
-//  Created by Christoffer Sjöberg on 2013-11-28.
+//  Created by Fuffr on 2013-11-28.
 //  Copyright (c) 2013 Fuffr. All rights reserved.
 //
 
@@ -17,7 +17,7 @@
 /**
  Converts a normalized coordinate 0..1, 0..1 to screen space
  */
--(CGPoint) locationOnScreen:(CGPoint) point fromSide:(FFRCaseSide)side;
+-(CGPoint) locationOnScreen:(CGPoint) point fromSide:(FFRSide)side;
 
 @end
 

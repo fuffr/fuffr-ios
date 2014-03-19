@@ -2,7 +2,7 @@
 //  FFRTopBottomSpaceMapper.m
 //  FuffrLib
 //
-//  Created by Christoffer Sjöberg on 2013-11-18.
+//  Created by Fuffr on 2013-11-18.
 //  Copyright (c) 2013 Fuffr. All rights reserved.
 //
 
@@ -10,14 +10,14 @@
 
 @implementation FFRTopBottomSpaceMapper
 
--(CGPoint) locationOnScreen:(CGPoint) point fromSide:(FFRCaseSide)side {
+-(CGPoint) locationOnScreen:(CGPoint) point fromSide:(FFRSide)side {
     CGSize size = [UIApplication sharedApplication].keyWindow.frame.size;
 
     CGPoint p = CGPointZero;
-    if (side == FFRCaseBottom) {
+    if (side == FFRSideBottom) {
         p = CGPointMake(size.width * point.x, size.height * (0.5 + point.y / 2));
     }
-    else if (side == FFRCaseTop) {
+    else if (side == FFRSideTop) {
         p = CGPointMake(size.width * point.x, size.height * point.y / 2);
     }
 

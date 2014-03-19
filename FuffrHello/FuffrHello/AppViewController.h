@@ -2,7 +2,7 @@
 //  AppViewController.h
 //  Header file for the FuffrHello view controller.
 //
-//  Created by miki on 16/03/14.
+//  Created by Fuffr on 16/03/14.
 //  Copyright (c) 2014 Fuffr. All rights reserved.
 //
 
@@ -11,7 +11,7 @@
 
 /**
  * This view controller paints two circles, which are
- * tracked by the left and right side of the case.
+ * tracked by the left and right side.
  */
 @interface AppViewController : UIViewController
 

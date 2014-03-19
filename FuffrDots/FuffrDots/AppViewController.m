@@ -2,7 +2,7 @@
 //  AppViewController.m
 //  FuffrDots
 //
-//  Created by miki on 18/03/14.
+//  Created by Fuffr on 18/03/14.
 //  Copyright (c) 2014 Fuffr. All rights reserved.
 //
 
@@ -39,8 +39,8 @@
 {
     [super viewDidAppear: animated];
 
-	// Connect to the sensor case and setup touch events.
-	[self setupSensorCase];
+	// Connect to Fuffr and setup touch events.
+	[self setupFuffr];
 }
 
 - (void)didReceiveMemoryWarning
@@ -48,33 +48,33 @@
     [super didReceiveMemoryWarning];
 }
 
-- (void) setupSensorCase
+- (void) setupFuffr
 {
 	// Get a reference to the touch manager.
 	FFRTouchManager* manager = [FFRTouchManager sharedManager];
 
-	// Connect to the case, the onSuccess method will be
-	// called when a connaction to the case is made.
+	// Connect to Fuffr, the onSuccess method will be
+	// called when connection is established.
 	// Support for onError is not complete.
 	[manager
-		connectToSensorCaseNotifying: self
-		onSuccess: @selector(sensorCaseConnected)
+		connectToFuffrNotifying: self
+		onSuccess: @selector(fuffrConnected)
 		onError: nil];
 
 	// Register methods for touch events. Here the side constants are
-	// bit-or:ed to capture touches on all four sides of the case.
+	// bit-or:ed to capture touches on all four sides.
 	[manager
 		addTouchObserver: self
 		touchBegan: @selector(drawTouches:)
 		touchMoved: @selector(drawTouches:)
 		touchEnded: @selector(drawTouches:)
-		side: FFRCaseLeft | FFRCaseRight | FFRCaseTop | FFRCaseBottom];
+		side: FFRSideLeft | FFRSideRight | FFRSideTop | FFRSideBottom];
 
 }
 
-- (void) sensorCaseConnected
+- (void) fuffrConnected
 {
-	NSLog(@"sensorCaseConnected");
+	NSLog(@"fuffrConnected");
 }
 
 - (void) drawTouches: (NSSet*)touches
