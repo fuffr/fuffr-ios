@@ -135,9 +135,9 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
         // log previous devices due to duplicates appearing
         if (!known) {
             NSLog(@"new device: %@", [peripheral.identifier UUIDString]);
-            for (CBPeripheral*p in self.discoveredDevices) {
+            //for (CBPeripheral* p in self.discoveredDevices) {
                 //NSLog(@"known device: %@", p.identifier);
-            }
+            //}
         }
 
         // send KVO information

@@ -97,16 +97,19 @@
 
 	for (FFRTouch* touch in touches)
 	{
-		CGFloat x = touch.normalizedLocation.x * width;
-		CGFloat y = touch.normalizedLocation.y * height;
-    	CGContextSetRGBFillColor(context, 0.2, 0.749, 0.871, 1);
-		CGContextFillEllipseInRect(
-			context,
-			CGRectMake(
-				x - (circleSize / 2),
-				y - (circleSize / 2),
-				circleSize,
-				circleSize));
+		if (touch.phase != UITouchPhaseEnded)
+		{
+			CGFloat x = touch.normalizedLocation.x * width;
+			CGFloat y = touch.normalizedLocation.y * height;
+    		CGContextSetRGBFillColor(context, 0.2, 0.749, 0.871, 1);
+			CGContextFillEllipseInRect(
+				context,
+				CGRectMake(
+					x - (circleSize / 2),
+					y - (circleSize / 2),
+					circleSize,
+					circleSize));
+		}
 	}
 
     self.imageView.image = UIGraphicsGetImageFromCurrentImageContext();
