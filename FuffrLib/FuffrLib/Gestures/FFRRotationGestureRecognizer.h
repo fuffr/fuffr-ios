@@ -7,6 +7,7 @@
 //
 
 #import "FFRGestureRecognizer.h"
+#import "FFRLowPassFilter.h"
 
 /**
  * Rotation recognizer

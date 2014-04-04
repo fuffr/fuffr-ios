@@ -117,6 +117,8 @@
 		side: FFRSideRight];
 }
 
+// Comment/uncomment lines [manager addGestureRecognizer: ...
+// to add/remove gestures.
 - (void) setupGestures
 {
 	// Get a reference to the touch manager.
@@ -127,7 +129,8 @@
 	FFRPanGestureRecognizer* pan = [FFRPanGestureRecognizer new];
 	pan.side = FFRSideRight;
     [pan addTarget: self action: @selector(onPan:)];
-	[manager addGestureRecognizer: pan];
+	// Uncomment this line to add pan to right side.
+	//[manager addGestureRecognizer: pan];
 
 	pan = [FFRPanGestureRecognizer new];
 	pan.side = FFRSideLeft;
@@ -137,12 +140,14 @@
 	FFRPinchGestureRecognizer* pinch = [FFRPinchGestureRecognizer new];
 	pinch.side = FFRSideRight;
     [pinch addTarget: self action: @selector(onPinch:)];
+	// Comment out this line to remove pinch from right side.
 	[manager addGestureRecognizer: pinch];
 
 	FFRRotationGestureRecognizer* rotation = [FFRRotationGestureRecognizer new];
 	rotation.side = FFRSideRight;
     [rotation addTarget: self action: @selector(onRotation:)];
-	[manager addGestureRecognizer: rotation];
+	// Uncomment this line to add rotation to right side.
+	//[manager addGestureRecognizer: rotation];
 
 	FFRTapGestureRecognizer* tap = [FFRTapGestureRecognizer new];
 	tap.side = FFRSideTop | FFRSideBottom;
@@ -183,7 +188,7 @@
 	if (gesture.state == UIGestureRecognizerStateChanged)
 	{
 		CGFloat scale = self.baseScale * gesture.scale;
-		scale = MIN(scale, 4.0);
+		scale = MIN(scale, 5.0);
 		scale = MAX(scale, 0.5);
 		self.currentScale = scale;
 	}
@@ -197,11 +202,9 @@
 
 -(void) onRotation: (FFRRotationGestureRecognizer*)gesture
 {
-    NSLog(@"onRotation: %f", gesture.rotation);
-
 	if (gesture.state == UIGestureRecognizerStateChanged)
 	{
-		CGFloat rotation = self.baseRotation - (gesture.rotation * 2.0);
+		CGFloat rotation = self.baseRotation - (gesture.rotation * 1.5);
 
 		self.currentRotation = rotation;
 	}
@@ -222,7 +225,7 @@
 		// Panning is relative to the base translation.
 		CGPoint p = self.baseTranslation;
 
-		p.x += gesture.translation.width;
+		p.x += (gesture.translation.width * 1.5);
 		p.y += gesture.translation.height;
 
 		CGFloat maxTranslationX = self.imageView.bounds.size.width / 2;

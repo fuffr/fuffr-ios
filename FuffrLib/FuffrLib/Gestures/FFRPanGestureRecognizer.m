@@ -87,6 +87,8 @@
 		self.startPoint = self.touch.location;
 		self.translation = CGSizeMake(0,0);
 		self.state = UIGestureRecognizerStateBegan;
+		self.lowPassFilterX = [FFRLowPassFilter new];
+		self.lowPassFilterY = [FFRLowPassFilter new];
 	}
 
 	// Set backup touch.
@@ -123,8 +125,8 @@
 	}
 */
 	self.translation = CGSizeMake(
-		self.touch.location.x - self.startPoint.x,
-		self.touch.location.y - self.startPoint.y);
+		[self.lowPassFilterX filter: (self.touch.location.x - self.startPoint.x)],
+		[self.lowPassFilterY filter: (self.touch.location.y - self.startPoint.y)]);
 	self.state = UIGestureRecognizerStateChanged;
 	[self performAction];
 }
@@ -144,11 +146,12 @@
 	{
 		if (self.touch2 != nil && self.touch2.phase != UITouchPhaseEnded)
 		{
-			// Switch to second touch point.
 			/*NSLog(@"  Swithing touch points offset: %i %i",
 				(int)(self.touch2.location.x - self.touch.location.x),
 				(int)(self.touch2.location.y - self.touch.location.y)
 				);*/
+
+			// Switch to second touch point.
 			self.startPoint = CGPointMake(
 				self.startPoint.x + (self.touch2.location.x - self.touch.location.x),
 				self.startPoint.y + (self.touch2.location.y - self.touch.location.y));

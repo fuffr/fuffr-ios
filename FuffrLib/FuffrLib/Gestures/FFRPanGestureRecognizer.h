@@ -7,6 +7,7 @@
 //
 
 #import "FFRGestureRecognizer.h"
+#import "FFRLowPassFilter.h"
 
 /**
  * A panning gesture recognizer.
@@ -39,5 +40,8 @@
  * The second touch.
  */
 @property (nonatomic, weak) FFRTouch* touch2;
+
+@property FFRLowPassFilter* lowPassFilterX;
+@property FFRLowPassFilter* lowPassFilterY;
 
 @end

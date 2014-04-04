@@ -90,6 +90,8 @@
 
 - (void) touchesBegan: (NSSet*)touches
 {
+	NSLog(@"began %i", (int)touches.count);
+
 	for (FFRTouch* touch in touches)
 	{
 		DotColor* color = [DotColor new];
@@ -108,11 +110,19 @@
 
 - (void) touchesMoved: (NSSet*)touches
 {
+	NSLog(@"moved %i", (int)touches.count);
+	for (FFRTouch* touch in touches)
+	{
+		NSLog(@"  id %i", (int)touch.identifier);
+	}
+
 	[self redrawView];
 }
 
 - (void) touchesEnded: (NSSet*)touches
 {
+	NSLog(@"ended %i", (int)touches.count);
+
 	for (FFRTouch* touch in touches)
 	{
 		[self.touches removeObject: touch];

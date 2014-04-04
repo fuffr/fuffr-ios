@@ -49,6 +49,8 @@
 		2197196318D60B3F007B6E84 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2197195F18D60B25007B6E84 /* CoreBluetooth.framework */; };
 		2197196418D60B42007B6E84 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2197196118D60B32007B6E84 /* CoreGraphics.framework */; };
 		2197196718D60EA1007B6E84 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2197196618D60EA1007B6E84 /* UIKit.framework */; };
+		21BCD6C118EF21D900944ACC /* FFRLowPassFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 21BCD6BF18EF21D900944ACC /* FFRLowPassFilter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		21BCD6C218EF21D900944ACC /* FFRLowPassFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 21BCD6C018EF21D900944ACC /* FFRLowPassFilter.m */; };
 		21C8CCD918D6634000E70941 /* FFRoad.h in Headers */ = {isa = PBXBuildFile; fileRef = 2197196818D6138D007B6E84 /* FFRoad.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		21C8CCDA18D6634000E70941 /* FFRExternalSpaceMapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 219718F018D60711007B6E84 /* FFRExternalSpaceMapper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		21C8CCDB18D6634000E70941 /* FFRLeftRightSpaceMapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 219718F118D60711007B6E84 /* FFRLeftRightSpaceMapper.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -143,6 +145,8 @@
 		2197196118D60B32007B6E84 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		2197196618D60EA1007B6E84 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		2197196818D6138D007B6E84 /* FFRoad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFRoad.h; sourceTree = "<group>"; };
+		21BCD6BF18EF21D900944ACC /* FFRLowPassFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFRLowPassFilter.h; sourceTree = "<group>"; };
+		21BCD6C018EF21D900944ACC /* FFRLowPassFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFRLowPassFilter.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -313,6 +317,8 @@
 		2197193218D60711007B6E84 /* Touch */ = {
 			isa = PBXGroup;
 			children = (
+				21BCD6BF18EF21D900944ACC /* FFRLowPassFilter.h */,
+				21BCD6C018EF21D900944ACC /* FFRLowPassFilter.m */,
 				2197193318D60711007B6E84 /* FFRTouch.h */,
 				2197193418D60711007B6E84 /* FFRTouch.m */,
 				2197193518D60711007B6E84 /* FFRTouchManager.h */,
@@ -370,6 +376,7 @@
 				21C8CCE818D6634000E70941 /* FFRTrackingManager.h in Headers */,
 				21C8CCE918D6634000E70941 /* FFRRawTrackingData.h in Headers */,
 				21C8CCEA18D6634000E70941 /* FFRFirmwareMetaData.h in Headers */,
+				21BCD6C118EF21D900944ACC /* FFRLowPassFilter.h in Headers */,
 				21C8CCEB18D6634000E70941 /* FFRFirmwareUtility.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -465,6 +472,7 @@
 				2197194018D60711007B6E84 /* FFRLeftRightSpaceMapper.m in Sources */,
 				215E0B3718DC67CF00484E43 /* FFRPanGestureRecognizer.m in Sources */,
 				2197194218D60711007B6E84 /* FFRQuadrantSpaceMapper.m in Sources */,
+				21BCD6C218EF21D900944ACC /* FFRLowPassFilter.m in Sources */,
 				215E0B3F18DC67CF00484E43 /* FFRTapGestureRecognizer.m in Sources */,
 				215E0B3B18DC67CF00484E43 /* FFRRotationGestureRecognizer.m in Sources */,
 				2197195D18D60711007B6E84 /* FFRFirmwareMetaData.m in Sources */,

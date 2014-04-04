@@ -52,11 +52,13 @@ const float FFRTrackingManagerUpdateSpeed = 0.07f;
     FFRTouch * existing = [self objectInTrackedObjectsWithIdentifier:data.identifier];
     if (existing) {
         existing.timestamp = data.timestamp;
-        if (existing.location.x != data.location.x || existing.location.y != data.location.y) {
-            existing.location = data.location;
+        if (existing.location.x != data.location.x || existing.location.y != data.location.y)
+		{
             existing.rawPoint = data.rawPoint;
             existing.normalizedLocation = data.normalizedLocation;
-            existing.phase = data.phase;
+            //existing.phase = data.phase;
+            existing.phase = UITouchPhaseMoved;
+            existing.location = data.location;
         }
         else {
             [[NSNotificationCenter defaultCenter] postNotificationName:FFRTrackingPulsedNotification object:[NSSet setWithArray:_trackedObjects] userInfo:nil];
@@ -146,7 +148,11 @@ const float FFRTrackingManagerUpdateSpeed = 0.07f;
 }
 
 #pragma mark - 
--(void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+-(void) observeValueForKeyPath:(NSString *)keyPath
+	ofObject:(id)object
+	change:(NSDictionary *)change
+	context:(void *)context
+{
     //LOGMETHOD
 
     if ([keyPath compare:@"location"] == NSOrderedSame) {

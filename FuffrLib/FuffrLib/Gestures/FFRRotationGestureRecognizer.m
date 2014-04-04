@@ -18,8 +18,8 @@
 
     if (self)
 	{
-		self.minimumTouchDistance = 200;
-		self.rotationThreshold = 1.0;
+		self.minimumTouchDistance = 50;
+		self.rotationThreshold = 0.1;
 		self.rotation = 0.0;
         self.touch1 = nil;
         self.touch2 = nil;
@@ -35,16 +35,18 @@
 		self.touch2.location.y - self.touch1.location.y);
 }
 
--(bool) isValidRotationTouch
+-(bool) isValidRotationTouch: (NSSet*)touches
 {
-	// If are two touches we can pinch if the distance is above minumum.
-	if (self.touch1 != nil && self.touch2 != nil)
+	if (touches.count > 1)
 	{
+		NSArray* touchArray = [touches allObjects];
+		FFRTouch* touch1 = [touchArray objectAtIndex: 0];
+		FFRTouch* touch2 = [touchArray objectAtIndex: 1];
 		CGFloat distance = [self
-			distanceBetween: self.touch1.location
-			andPoint: self.touch2.location];
+			distanceBetween: touch1.location
+			andPoint: touch2.location];
 			
-		//NSLog(@"Distance in rotation: %f", distance);
+		//NSLog(@"Distance in pinch: %f", distance);
 		if (distance > self.minimumTouchDistance)
 		{
 			return true;
@@ -58,51 +60,33 @@
 
 -(void) touchesBegan: (NSSet*)touches
 {
-    LOGMETHOD
+}
 
-	// Tracked touches must be nil.
-	if (! (self.touch1 == nil && self.touch2 == nil) )
-	{
-		return;
-	}
-
-	// Number of touches must be valid.
+-(void) touchesMoved: (NSSet*)touches
+{
+	// Must have two touches.
 	if (touches.count < 2)
 	{
 		return;
 	}
 
-	// Save references to touches.
-	NSArray* touchArray = [touches allObjects];
-	self.touch1 = [touchArray objectAtIndex: 0];
-	self.touch2 = [touchArray objectAtIndex: 1];
-	self.startRotation = [self currentRotation];
-	self.previousRotation = self.startRotation;
-	self.rotation = 0.0;
-	self.state = UIGestureRecognizerStateBegan;
-}
-
--(void) touchesMoved: (NSSet*)touches
-{
-    LOGMETHOD
-
-	// Check that gesure is ongoing.
-	if (! (self.state == UIGestureRecognizerStateBegan ||
-		   self.state == UIGestureRecognizerStateChanged) )
-	{
-		return;
-	}
-
-	// Check that tracked touches are valid.
-	if (self.touch1 == nil || self.touch2 == nil)
-	{
-		return;
-	}
-
 	// Touches must be valid.
-	if (! [self isValidRotationTouch])
+	if (![self isValidRotationTouch: touches])
 	{
 		return;
+	}
+
+	// Initialise touches if not set.
+	if (self.touch1 == nil && self.touch2 == nil)
+	{
+		// Save references to touches.
+		NSArray* touchArray = [touches allObjects];
+		self.touch1 = [touchArray objectAtIndex: 0];
+		self.touch2 = [touchArray objectAtIndex: 1];
+		self.startRotation = [self currentRotation];
+		self.previousRotation = self.startRotation;
+		self.rotation = 0.0;
+		self.state = UIGestureRecognizerStateBegan;
 	}
 	
 	CGFloat newRotation = [self currentRotation];
@@ -117,8 +101,6 @@
 
 -(void) touchesEnded: (NSSet*)touches
 {
-    LOGMETHOD
-
 	if (self.touch1 != nil && self.touch1 != nil)
 	{
 		self.state = UIGestureRecognizerStateEnded;
