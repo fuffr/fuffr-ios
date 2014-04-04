@@ -8,6 +8,15 @@
 
 #import "AppViewController.h"
 
+@interface DotColor : NSObject
+@property (nonatomic, assign) CGFloat red;
+@property (nonatomic, assign) CGFloat green;
+@property (nonatomic, assign) CGFloat blue;
+@end
+
+@implementation DotColor
+@end
+
 @implementation AppViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -33,6 +42,8 @@
 
 	// Set background color.
     self.imageView.backgroundColor = UIColor.whiteColor;
+
+	self.dotColors = [NSMutableDictionary new];
 }
 
 -(void) viewDidAppear:(BOOL)animated
@@ -65,7 +76,7 @@
 	// bit-or:ed to capture touches on all four sides.
 	[manager
 		addTouchObserver: self
-		touchBegan: @selector(drawTouches:)
+		touchBegan: @selector(drawTouchesBegan:)
 		touchMoved: @selector(drawTouches:)
 		touchEnded: @selector(drawTouches:)
 		side: FFRSideLeft | FFRSideRight | FFRSideTop | FFRSideBottom];
@@ -75,6 +86,35 @@
 - (void) fuffrConnected
 {
 	NSLog(@"fuffrConnected");
+}
+
+- (void) drawTouchesBegan: (NSSet*)touches
+{
+	for (FFRTouch* touch in touches)
+	{
+		if (nil == [self.dotColors objectForKey:
+				//[NSValue valueWithPointer: (__bridge const void *)(touch)]
+				[NSNumber numberWithInt: (int)touch.identifier]
+				])
+		{
+			DotColor* color = [DotColor new];
+			color.red = (CGFloat) arc4random_uniform(256) / 256;
+			color.green = (CGFloat) arc4random_uniform(256) / 256;
+			color.blue = (CGFloat) arc4random_uniform(256) / 256;
+			[self.dotColors
+				setObject: color
+				forKey:
+					//[NSValue valueWithPointer: (__bridge const void *)(touch)]
+					[NSNumber numberWithInt: (int)touch.identifier]
+			];
+		}
+	}
+
+	// Draw on main thread.
+	dispatch_async(dispatch_get_main_queue(),
+	^{
+		[self drawImageView: touches];
+    });
 }
 
 - (void) drawTouches: (NSSet*)touches
@@ -99,9 +139,14 @@
 	{
 		if (touch.phase != UITouchPhaseEnded)
 		{
+			DotColor* color = [self.dotColors objectForKey:
+				[NSNumber numberWithInt: (int)touch.identifier]
+				//[NSValue valueWithPointer: (__bridge const void *)(touch)]
+				];
+    		CGContextSetRGBFillColor(context, color.red, color.green, color.blue, 1.0);
+
 			CGFloat x = touch.normalizedLocation.x * width;
 			CGFloat y = touch.normalizedLocation.y * height;
-    		CGContextSetRGBFillColor(context, 0.2, 0.749, 0.871, 1);
 			CGContextFillEllipseInRect(
 				context,
 				CGRectMake(

@@ -10,6 +10,13 @@
 #import <Foundation/Foundation.h>
 #import "FFRBLEManager.h"
 #import "FFRCaseHandler.h"
+#import "FFRGestureRecognizer.h"
+#import "FFRLongPressGestureRecognizer.h"
+#import "FFRPanGestureRecognizer.h"
+#import "FFRPinchGestureRecognizer.h"
+#import "FFRRotationGestureRecognizer.h"
+#import "FFRSwipeGestureRecognizer.h"
+#import "FFRTapGestureRecognizer.h"
 
 /**
  * Class that provides a high-level interface to the 
@@ -29,6 +36,9 @@
 
 /** List of touch observers. */
 @property NSMutableArray* touchObservers;
+
+/** List of gesture recognizers. */
+@property NSMutableArray* gestureRecognizers;
 
 /**
  * Public class method that returns singleton instance of 
@@ -87,5 +97,15 @@
  * @param object The observer that will be removed.
  */
 - (void) removeTouchObserver: (id)object;
+
+/**
+ Add a gesture recognizer.
+ */
+-(void) addGestureRecognizer: (FFRGestureRecognizer*) gestureRecognizer;
+
+/**
+ Remove a gesture recognizer.
+ */
+-(void) removeGestureRecognizer: (FFRGestureRecognizer*) gestureRecognizer;
 
 @end

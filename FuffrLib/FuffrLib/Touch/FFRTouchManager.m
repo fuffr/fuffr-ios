@@ -55,6 +55,16 @@ static NSSet* filterTouchesBySide(NSSet* touches, FFRSide side)
     	}];
 }
 
+// Helper function.
+static NSSet* filterTouchesBySideAndPhase(NSSet* touches, FFRSide side, UITouchPhase phase)
+{
+	return [touches objectsPassingTest:
+		^BOOL(id obj, BOOL* stop)
+		{
+			return (side & ((FFRTouch*)obj).side) && (phase == ((FFRTouch*)obj).phase);
+    	}];
+}
+
 // Singleton instance.
 static FFRTouchManager* sharedInstance = NULL;
 
@@ -92,11 +102,22 @@ static FFRTouchManager* sharedInstance = NULL;
 	[self.touchObservers removeObject: object];
 }
 
+-(void) addGestureRecognizer: (FFRGestureRecognizer*) gestureRecognizer
+{
+	[self.gestureRecognizers addObject: gestureRecognizer];
+}
+
+-(void) removeGestureRecognizer: (FFRGestureRecognizer*) gestureRecognizer
+{
+	[self.gestureRecognizers removeObject: gestureRecognizer];
+}
+
 // Internal instance methods.
 
 - (id) init
 {
 	self.touchObservers = [NSMutableArray array];
+	self.gestureRecognizers = [NSMutableArray array];
 	[self registerTouchMethods];
 	return self;
 }
@@ -140,12 +161,13 @@ static FFRTouchManager* sharedInstance = NULL;
 {
 	NSLog(@"stopScan");
 
-    [[FFRBLEManager sharedManager] stopScan];
+	self.scanIsOngoing = NO;
+
     [[FFRBLEManager sharedManager]
 		removeObserver:self
 		forKeyPath:@"discoveredDevices"];
+    [[FFRBLEManager sharedManager] stopScan];
 
-	self.scanIsOngoing = NO;
 }
 
 - (void) observeValueForKeyPath: (NSString*)keyPath
@@ -163,13 +185,18 @@ static FFRTouchManager* sharedInstance = NULL;
 			{
         		CBPeripheral* p = [manager.discoveredDevices objectAtIndex:i];
 				NSLog(@"Found device: %@", p);
-				if (stringContains(p.name, @"Neonode") ||
-					stringContains(p.name, @"Fuffr"))
+				if (self.scanIsOngoing &&
+					(stringContains(p.name, @"Fuffr") ||
+					stringContains(p.name, @"Neonode")))
 				{
-					[self stopScan];
+					//p.RSSI
+					
+					// connectPeripheral stops scan.
 					[[FFRBLEManager sharedManager] connectPeripheral: p];
+
 					[self initFuffr];
 					[self notifyConnected: YES];
+
 					break;
 				}
     		}
@@ -179,20 +206,20 @@ static FFRTouchManager* sharedInstance = NULL;
 
 - (void) initFuffr
 {
-    FFRBLEManager* BLEManager = [FFRBLEManager sharedManager];
+    FFRBLEManager* bleManager = [FFRBLEManager sharedManager];
 
-    if (![BLEManager.handler isKindOfClass: [FFRCaseHandler class]])
+    if (![bleManager.handler isKindOfClass: [FFRCaseHandler class]])
 	{
-        BLEManager.handler = [FFRCaseHandler new];
-		if ([BLEManager.connectedDevices count])
+        bleManager.handler = [FFRCaseHandler new];
+		if ([bleManager.connectedDevices count])
 		{
-			[BLEManager.handler loadPeripheral:
-				[BLEManager.connectedDevices firstObject]];
+			[bleManager.handler loadPeripheral:
+				[bleManager.connectedDevices firstObject]];
 		}
     }
 
-    __weak FFRBLEManager* manager = BLEManager;
-    [BLEManager
+    __weak FFRBLEManager* manager = bleManager;
+    [bleManager
 		addMonitoredService: FFRCaseSensorServiceUuid
 		onDiscovery: ^(CBService* service, CBPeripheral* hostPeripheral)
 		{
@@ -233,11 +260,17 @@ static FFRTouchManager* sharedInstance = NULL;
 {
     NSSet* touches = data.object;
 
+	//NSLog(@"touchBegan count: %i", touches.count);
+
+	// Notify touch observers.
     for (FFRTouchEventObserver* observer in self.touchObservers)
 	{
 		if (observer.beganSelector)
 		{
-			NSSet* observedTouches = filterTouchesBySide(touches, observer.side);
+			NSSet* observedTouches = filterTouchesBySideAndPhase(
+				touches,
+				observer.side,
+				UITouchPhaseBegan);
 			if ([observedTouches count] > 0)
 			{
 				[observer.object
@@ -246,17 +279,36 @@ static FFRTouchManager* sharedInstance = NULL;
 			}
 		}
 	}
+
+	// Notify gesture recognizers.
+    for (FFRGestureRecognizer* recognizer in self.gestureRecognizers)
+	{
+		NSSet* observedTouches = filterTouchesBySideAndPhase(
+			touches,
+			recognizer.side,
+			UITouchPhaseBegan);
+		if ([observedTouches count] > 0)
+		{
+			[recognizer touchesBegan: observedTouches];
+		}
+	}
 }
 
 - (void) handleTouchMovedNotification: (NSNotification*)data
 {
     NSSet* touches = data.object;
 
+	//NSLog(@"touchMoved count: %i", touches.count);
+
+	// Notify touch observers.
     for (FFRTouchEventObserver* observer in self.touchObservers)
 	{
 		if (observer.movedSelector)
 		{
-			NSSet* observedTouches = filterTouchesBySide(touches, observer.side);
+			NSSet* observedTouches = filterTouchesBySideAndPhase(
+				touches,
+				observer.side,
+				UITouchPhaseMoved);
 			if ([observedTouches count] > 0)
 			{
 				[observer.object
@@ -265,23 +317,54 @@ static FFRTouchManager* sharedInstance = NULL;
 			}
 		}
 	}
+
+    for (FFRGestureRecognizer* recognizer in self.gestureRecognizers)
+	{
+		NSSet* observedTouches = filterTouchesBySideAndPhase(
+			touches,
+			recognizer.side,
+			UITouchPhaseMoved);
+		if ([observedTouches count] > 0)
+		{
+			[recognizer touchesMoved: observedTouches];
+		}
+	}
 }
 
 - (void) handleTouchEndedNotification: (NSNotification*)data
 {
     NSSet* touches = data.object;
 
+	//NSLog(@"touchEnded count: %i", touches.count);
+
+	// Notify touch observers.
     for (FFRTouchEventObserver* observer in self.touchObservers)
 	{
 		if (observer.endedSelector)
 		{
-			NSSet* observedTouches = filterTouchesBySide(touches, observer.side);
+			NSSet* observedTouches = filterTouchesBySideAndPhase(
+				touches,
+				observer.side,
+				UITouchPhaseEnded);
 			if ([observedTouches count] > 0)
 			{
 				[observer.object
 					performSelector:observer.endedSelector
 					withObject: observedTouches];
 			}
+		}
+	}
+
+	// Notify gesture recognizers.
+    for (FFRGestureRecognizer* recognizer in self.gestureRecognizers)
+	{
+		NSSet* observedTouches = filterTouchesBySideAndPhase(
+			touches,
+			recognizer.side,
+			UITouchPhaseEnded);
+		if ([observedTouches count] > 0)
+		{
+			[recognizer touchesEnded: observedTouches];
 		}
 	}
 }

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+	<meta name="viewport" content="user-scalable=no, initial-scale=1"/>
+    <title>Dancing Squares</title>
+	<script src="jquery/jquery.js"></script>
+	<script src="fuffr.js"></script>
+</head>
+<body>
+
+<style>
+#right-object {
+	position: absolute;
+	width: 100px;
+	height: 100px;
+	top: 0px;
+	left: 120px;
+}
+#left-object {
+	position: absolute;
+	width: 100px;
+	height: 100px;
+	top: 0px;
+	left: 0px;
+}
+</style>
+
+<div>
+	<div id="right-object"></div>
+	<div id="left-object"></div>
+	<div id="output"></div>
+</div>
+
+<script>
+var windowWidth = $(window).width()
+var windowHeight = $(window).height()
+
+function OnRightTouch(touchId, touchX, touchY, previousX, previousY, normalizedX, normalizedY)
+{
+	MoveObjectToTouchPoint('#right-object', normalizedX, normalizedY)
+	UpdateObjectColors()
+}
+
+function OnLeftTouch(touchId, touchX, touchY, previousX, previousY, normalizedX, normalizedY)
+{
+	MoveObjectToTouchPoint('#left-object', normalizedX, normalizedY)
+	UpdateObjectColors()
+}
+
+function MoveObjectToTouchPoint(objectId, normalizedX, normalizedY)
+{
+	var x = (normalizedX * windowWidth) - 50
+	var y = (normalizedY * windowHeight) - 50
+	$(objectId).offset({top:y, left:x})
+}
+
+function UpdateObjectColors()
+{
+	var object1 = $('#right-object')[0]
+	var object2 = $('#left-object')[0]
+	if (ObjectsOverlap(object1, object2))
+	{
+		$('#right-object').css('background','rgb(228,0,0)')
+		$('#left-object').css('background','rgb(228,0,0)')
+	}
+	else
+	{
+		$('#right-object').css('background','rgb(26,148,0)')
+		$('#left-object').css('background','rgb(154,31,138)')
+	}
+}
+
+function ObjectsOverlap(object1, object2)
+{
+	var rect1 = object1.getBoundingClientRect()
+	var rect2 = object2.getBoundingClientRect()
+	return !(rect1.right < rect2.left
+		|| rect1.left > rect2.right
+		|| rect1.bottom < rect2.top
+		|| rect1.top > rect2.bottom)
+}
+
+// For debugging.
+function showOutput(s)
+{
+	$('#output').html(s)
+}
+
+// Call to set initial colors.
+UpdateObjectColors()
+</script>
+
+</body>
+</html>

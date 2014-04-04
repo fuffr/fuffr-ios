@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+	<meta name="viewport" content="user-scalable=no, initial-scale=1"/>
+    <title>Pong</title>
+	<script src="jquery/jquery.js"></script>
+	<script src="fuffr.js"></script>
+</head>
+<body>
+
+<style>
+body {
+	margin: 0px;
+	padding: 0px;
+	background:rgb(0,200,100);
+}
+
+#paddle-left {
+	position: absolute;
+	width: 20px;
+	height: 150px;
+	top: 0px;
+	left: 0px;
+	background:rgb(255,255,255);
+}
+
+#paddle-right {
+	position: absolute;
+	width: 20px;
+	height: 150px;
+	top: 0px;
+	right: 0px;
+	background:rgb(255,255,255);
+}
+
+#ball {
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	top: 50%;
+	left: 50%;
+	background:rgb(255,255,255);
+}
+</style>
+
+<div>
+	<div id="paddle-left"></div>
+	<div id="paddle-right"></div>
+	<div id="ball"></div>
+</div>
+
+<script>
+var playfieldWidth = $(window).width()
+var playfieldHeight = $(window).height()
+
+var makeSprite = function()
+{
+	var sprite = {}
+
+	sprite.x = 0
+	sprite.y = 0
+	sprite.dx = 0
+	sprite.dy = 0
+
+	sprite.setDOMElement = function(element)
+	{
+		sprite.domElement = element
+	}
+
+	sprite.setLeft = function(x)
+	{
+		sprite.x = x
+		sprite.domElement.style.left = x + 'px'
+	}
+
+	sprite.setRight = function(x)
+	{
+		sprite.x = x - sprite.domElement.offsetWidth
+		sprite.domElement.style.left = sprite.x + 'px'
+	}
+
+	sprite.setTop = function(y)
+	{
+		sprite.y = y
+		sprite.domElement.style.top = y + 'px'
+	}
+
+	sprite.setBottom = function(y)
+	{
+		sprite.y = y - sprite.domElement.offsetHeight
+		sprite.domElement.style.bottom = sprite.y.offsetHeight + 'px'
+	}
+
+	sprite.setCenterX = function(x)
+	{
+		sprite.setLeft(x - (sprite.domElement.offsetWidth / 2))
+	}
+
+	sprite.setCenterY = function(y)
+	{
+		sprite.setTop(y - (sprite.domElement.offsetHeight / 2))
+	}
+
+	sprite.setDeltaX = function(dx)
+	{
+		sprite.dx = dx
+	}
+
+	sprite.setDeltaY = function(dy)
+	{
+		sprite.dy = dy
+	}
+
+	sprite.getCenterX = function()
+	{
+		return sprite.x + (sprite.domElement.offsetWidth / 2)
+	}
+
+	sprite.getCenterY = function()
+	{
+		return sprite.y + (sprite.domElement.offsetHeight / 2)
+	}
+
+	sprite.getLeft = function()
+	{
+		return sprite.x
+	}
+
+	sprite.getRight = function()
+	{
+		return sprite.x + sprite.domElement.offsetWidth
+	}
+
+	sprite.getTop = function()
+	{
+		return sprite.y
+	}
+
+	sprite.getBottom = function()
+	{
+		return sprite.y + sprite.domElement.offsetHeight
+	}
+
+	sprite.move = function()
+	{
+		sprite.setLeft(sprite.x + sprite.dx)
+		sprite.setTop(sprite.y + sprite.dy)
+	}
+
+	return sprite
+}
+
+var paddleLeft = makeSprite()
+paddleLeft.setDOMElement(document.getElementById('paddle-left'))
+paddleLeft.setLeft(0)
+paddleLeft.setCenterY(playfieldHeight / 2)
+
+var paddleRight = makeSprite()
+paddleRight.setDOMElement(document.getElementById('paddle-right'))
+paddleRight.setRight(playfieldWidth)
+paddleRight.setCenterY(playfieldHeight / 2)
+
+var ball = makeSprite()
+ball.setDOMElement(document.getElementById('ball'))
+ball.setCenterX(playfieldWidth / 2)
+ball.setCenterY(playfieldHeight / 2)
+ball.setDeltaX(4)
+ball.setDeltaY(4)
+
+ball.checkWallCollision = function()
+{
+	var nextX = ball.getCenterX() + ball.dx
+	var nextY = ball.getCenterY() + ball.dy
+
+	// Left wall.
+	if (nextX < 0 && ball.dx < 0)
+	{
+		ball.dx = - ball.dx
+	}
+	// Right wall.
+	else if (nextX > playfieldWidth && ball.dx > 0)
+	{
+		ball.dx = - ball.dx
+	}
+	// Top wall.
+	else if (nextY < 0 && ball.dy < 0)
+	{
+		ball.dy = - ball.dy
+	}
+	// Bottom wall.
+	else if (nextY > playfieldHeight && ball.dy > 0)
+	{
+		ball.dy = - ball.dy
+	}
+}
+
+ball.checkLeftPaddleCollision = function()
+{
+	var nextX = ball.getCenterX() + ball.dx
+	var nextY = ball.getCenterY() + ball.dy
+
+	var paddle = paddleLeft
+
+	// Bounce if ball is within paddle bounds.
+	if (nextX < paddle.getRight() &&
+		nextY > paddle.getTop() &&
+		nextY < paddle.getBottom() &&
+		ball.dx < 0)
+	{
+	console.log('collide left paddle')
+		ball.dx = - ball.dx
+	}
+}
+
+ball.checkRightPaddleCollision = function()
+{
+	var nextX = ball.getCenterX() + ball.dx
+	var nextY = ball.getCenterY() + ball.dy
+
+	var paddle = paddleRight
+
+	// Bounce if ball is within paddle bounds.
+	if (nextX > paddle.getLeft() &&
+		nextY > paddle.getTop() &&
+		nextY < paddle.getBottom() &&
+		ball.dx > 0)
+	{
+	console.log('collide right paddle')
+		ball.dx = - ball.dx
+	}
+}
+
+setInterval(function()
+{
+	ball.move()
+	ball.checkLeftPaddleCollision()
+	ball.checkRightPaddleCollision()
+	ball.checkWallCollision()
+},
+20)
+
+function OnRightTouch(touchId, touchX, touchY, previousX, previousY, normalizedX, normalizedY)
+{
+	var y = (normalizedY * playfieldHeight)
+	paddleRight.setCenterY(y)
+}
+
+function OnLeftTouch(touchId, touchX, touchY, previousX, previousY, normalizedX, normalizedY)
+{
+	var y = (normalizedY * playfieldHeight)
+	paddleLeft.setCenterY(y)
+}
+</script>
+
+</body>
+</html>

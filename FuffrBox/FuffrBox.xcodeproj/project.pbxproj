@@ -1,0 +1,541 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		21B26CAA18EBFCAC009FE791 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21B26CA918EBFCAC009FE791 /* Foundation.framework */; };
+		21B26CAC18EBFCAC009FE791 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21B26CAB18EBFCAC009FE791 /* CoreGraphics.framework */; };
+		21B26CAE18EBFCAC009FE791 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21B26CAD18EBFCAC009FE791 /* UIKit.framework */; };
+		21B26CB418EBFCAC009FE791 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 21B26CB218EBFCAC009FE791 /* InfoPlist.strings */; };
+		21B26CB618EBFCAC009FE791 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 21B26CB518EBFCAC009FE791 /* main.m */; };
+		21B26CBA18EBFCAC009FE791 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 21B26CB918EBFCAC009FE791 /* AppDelegate.m */; };
+		21B26CBC18EBFCAC009FE791 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 21B26CBB18EBFCAC009FE791 /* Images.xcassets */; };
+		21B26CC318EBFCAC009FE791 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21B26CC218EBFCAC009FE791 /* XCTest.framework */; };
+		21B26CC418EBFCAC009FE791 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21B26CA918EBFCAC009FE791 /* Foundation.framework */; };
+		21B26CC518EBFCAC009FE791 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21B26CAD18EBFCAC009FE791 /* UIKit.framework */; };
+		21B26CCD18EBFCAC009FE791 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 21B26CCB18EBFCAC009FE791 /* InfoPlist.strings */; };
+		21B26CCF18EBFCAC009FE791 /* FuffrBoxTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 21B26CCE18EBFCAC009FE791 /* FuffrBoxTests.m */; };
+		21B26CED18EBFDE2009FE791 /* libFuffrLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 21B26CE818EBFDD0009FE791 /* libFuffrLib.a */; };
+		21B26CF118EBFE71009FE791 /* AppViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 21B26CF018EBFE71009FE791 /* AppViewController.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		21B26CC618EBFCAC009FE791 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 21B26C9E18EBFCAC009FE791 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 21B26CA518EBFCAC009FE791;
+			remoteInfo = FuffrBox;
+		};
+		21B26CE718EBFDD0009FE791 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 21B26CE218EBFDD0009FE791 /* FuffrLib.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 219718C518D60662007B6E84;
+			remoteInfo = FuffrLib;
+		};
+		21B26CE918EBFDD0009FE791 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 21B26CE218EBFDD0009FE791 /* FuffrLib.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 219718D518D60662007B6E84;
+			remoteInfo = FuffrLibTests;
+		};
+		21B26CEB18EBFDD9009FE791 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 21B26CE218EBFDD0009FE791 /* FuffrLib.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 219718C418D60662007B6E84;
+			remoteInfo = FuffrLib;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		21B26CA618EBFCAC009FE791 /* FuffrBox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FuffrBox.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		21B26CA918EBFCAC009FE791 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		21B26CAB18EBFCAC009FE791 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		21B26CAD18EBFCAC009FE791 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		21B26CB118EBFCAC009FE791 /* FuffrBox-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "FuffrBox-Info.plist"; sourceTree = "<group>"; };
+		21B26CB318EBFCAC009FE791 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		21B26CB518EBFCAC009FE791 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		21B26CB718EBFCAC009FE791 /* FuffrBox-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FuffrBox-Prefix.pch"; sourceTree = "<group>"; };
+		21B26CB818EBFCAC009FE791 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		21B26CB918EBFCAC009FE791 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		21B26CBB18EBFCAC009FE791 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		21B26CC118EBFCAC009FE791 /* FuffrBoxTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FuffrBoxTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		21B26CC218EBFCAC009FE791 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		21B26CCA18EBFCAC009FE791 /* FuffrBoxTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "FuffrBoxTests-Info.plist"; sourceTree = "<group>"; };
+		21B26CCC18EBFCAC009FE791 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		21B26CCE18EBFCAC009FE791 /* FuffrBoxTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FuffrBoxTests.m; sourceTree = "<group>"; };
+		21B26CE218EBFDD0009FE791 /* FuffrLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FuffrLib.xcodeproj; path = ../FuffrLib/FuffrLib.xcodeproj; sourceTree = "<group>"; };
+		21B26CEF18EBFE71009FE791 /* AppViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppViewController.h; sourceTree = "<group>"; };
+		21B26CF018EBFE71009FE791 /* AppViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppViewController.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		21B26CA318EBFCAC009FE791 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				21B26CED18EBFDE2009FE791 /* libFuffrLib.a in Frameworks */,
+				21B26CAC18EBFCAC009FE791 /* CoreGraphics.framework in Frameworks */,
+				21B26CAE18EBFCAC009FE791 /* UIKit.framework in Frameworks */,
+				21B26CAA18EBFCAC009FE791 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		21B26CBE18EBFCAC009FE791 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				21B26CC318EBFCAC009FE791 /* XCTest.framework in Frameworks */,
+				21B26CC518EBFCAC009FE791 /* UIKit.framework in Frameworks */,
+				21B26CC418EBFCAC009FE791 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		21B26C9D18EBFCAC009FE791 = {
+			isa = PBXGroup;
+			children = (
+				21B26CAF18EBFCAC009FE791 /* FuffrBox */,
+				21B26CC818EBFCAC009FE791 /* FuffrBoxTests */,
+				21B26CA818EBFCAC009FE791 /* Frameworks */,
+				21B26CA718EBFCAC009FE791 /* Products */,
+				21B26CE218EBFDD0009FE791 /* FuffrLib.xcodeproj */,
+			);
+			sourceTree = "<group>";
+		};
+		21B26CA718EBFCAC009FE791 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				21B26CA618EBFCAC009FE791 /* FuffrBox.app */,
+				21B26CC118EBFCAC009FE791 /* FuffrBoxTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		21B26CA818EBFCAC009FE791 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				21B26CA918EBFCAC009FE791 /* Foundation.framework */,
+				21B26CAB18EBFCAC009FE791 /* CoreGraphics.framework */,
+				21B26CAD18EBFCAC009FE791 /* UIKit.framework */,
+				21B26CC218EBFCAC009FE791 /* XCTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		21B26CAF18EBFCAC009FE791 /* FuffrBox */ = {
+			isa = PBXGroup;
+			children = (
+				21B26CEF18EBFE71009FE791 /* AppViewController.h */,
+				21B26CF018EBFE71009FE791 /* AppViewController.m */,
+				21B26CB818EBFCAC009FE791 /* AppDelegate.h */,
+				21B26CB918EBFCAC009FE791 /* AppDelegate.m */,
+				21B26CBB18EBFCAC009FE791 /* Images.xcassets */,
+				21B26CB018EBFCAC009FE791 /* Supporting Files */,
+			);
+			path = FuffrBox;
+			sourceTree = "<group>";
+		};
+		21B26CB018EBFCAC009FE791 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				21B26CB118EBFCAC009FE791 /* FuffrBox-Info.plist */,
+				21B26CB218EBFCAC009FE791 /* InfoPlist.strings */,
+				21B26CB518EBFCAC009FE791 /* main.m */,
+				21B26CB718EBFCAC009FE791 /* FuffrBox-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		21B26CC818EBFCAC009FE791 /* FuffrBoxTests */ = {
+			isa = PBXGroup;
+			children = (
+				21B26CCE18EBFCAC009FE791 /* FuffrBoxTests.m */,
+				21B26CC918EBFCAC009FE791 /* Supporting Files */,
+			);
+			path = FuffrBoxTests;
+			sourceTree = "<group>";
+		};
+		21B26CC918EBFCAC009FE791 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				21B26CCA18EBFCAC009FE791 /* FuffrBoxTests-Info.plist */,
+				21B26CCB18EBFCAC009FE791 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		21B26CE318EBFDD0009FE791 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				21B26CE818EBFDD0009FE791 /* libFuffrLib.a */,
+				21B26CEA18EBFDD0009FE791 /* FuffrLibTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		21B26CA518EBFCAC009FE791 /* FuffrBox */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 21B26CD218EBFCAC009FE791 /* Build configuration list for PBXNativeTarget "FuffrBox" */;
+			buildPhases = (
+				21B26CA218EBFCAC009FE791 /* Sources */,
+				21B26CA318EBFCAC009FE791 /* Frameworks */,
+				21B26CA418EBFCAC009FE791 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				21B26CEC18EBFDD9009FE791 /* PBXTargetDependency */,
+			);
+			name = FuffrBox;
+			productName = FuffrBox;
+			productReference = 21B26CA618EBFCAC009FE791 /* FuffrBox.app */;
+			productType = "com.apple.product-type.application";
+		};
+		21B26CC018EBFCAC009FE791 /* FuffrBoxTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 21B26CD518EBFCAC009FE791 /* Build configuration list for PBXNativeTarget "FuffrBoxTests" */;
+			buildPhases = (
+				21B26CBD18EBFCAC009FE791 /* Sources */,
+				21B26CBE18EBFCAC009FE791 /* Frameworks */,
+				21B26CBF18EBFCAC009FE791 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				21B26CC718EBFCAC009FE791 /* PBXTargetDependency */,
+			);
+			name = FuffrBoxTests;
+			productName = FuffrBoxTests;
+			productReference = 21B26CC118EBFCAC009FE791 /* FuffrBoxTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		21B26C9E18EBFCAC009FE791 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0510;
+				ORGANIZATIONNAME = Fuffr;
+				TargetAttributes = {
+					21B26CC018EBFCAC009FE791 = {
+						TestTargetID = 21B26CA518EBFCAC009FE791;
+					};
+				};
+			};
+			buildConfigurationList = 21B26CA118EBFCAC009FE791 /* Build configuration list for PBXProject "FuffrBox" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 21B26C9D18EBFCAC009FE791;
+			productRefGroup = 21B26CA718EBFCAC009FE791 /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 21B26CE318EBFDD0009FE791 /* Products */;
+					ProjectRef = 21B26CE218EBFDD0009FE791 /* FuffrLib.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				21B26CA518EBFCAC009FE791 /* FuffrBox */,
+				21B26CC018EBFCAC009FE791 /* FuffrBoxTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		21B26CE818EBFDD0009FE791 /* libFuffrLib.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libFuffrLib.a;
+			remoteRef = 21B26CE718EBFDD0009FE791 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		21B26CEA18EBFDD0009FE791 /* FuffrLibTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = FuffrLibTests.xctest;
+			remoteRef = 21B26CE918EBFDD0009FE791 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		21B26CA418EBFCAC009FE791 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				21B26CB418EBFCAC009FE791 /* InfoPlist.strings in Resources */,
+				21B26CBC18EBFCAC009FE791 /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		21B26CBF18EBFCAC009FE791 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				21B26CCD18EBFCAC009FE791 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		21B26CA218EBFCAC009FE791 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				21B26CBA18EBFCAC009FE791 /* AppDelegate.m in Sources */,
+				21B26CF118EBFE71009FE791 /* AppViewController.m in Sources */,
+				21B26CB618EBFCAC009FE791 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		21B26CBD18EBFCAC009FE791 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				21B26CCF18EBFCAC009FE791 /* FuffrBoxTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		21B26CC718EBFCAC009FE791 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 21B26CA518EBFCAC009FE791 /* FuffrBox */;
+			targetProxy = 21B26CC618EBFCAC009FE791 /* PBXContainerItemProxy */;
+		};
+		21B26CEC18EBFDD9009FE791 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = FuffrLib;
+			targetProxy = 21B26CEB18EBFDD9009FE791 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		21B26CB218EBFCAC009FE791 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				21B26CB318EBFCAC009FE791 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		21B26CCB18EBFCAC009FE791 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				21B26CCC18EBFCAC009FE791 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		21B26CD018EBFCAC009FE791 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		21B26CD118EBFCAC009FE791 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		21B26CD318EBFCAC009FE791 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "FuffrBox/FuffrBox-Prefix.pch";
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				HEADER_SEARCH_PATHS = (
+					"\"$(TARGET_BUILD_DIR)/usr/local/lib/include\"",
+					"\"$(OBJROOT)/UninstalledProducts/include\"",
+					"\"$(BUILT_PRODUCTS_DIR)\"",
+				);
+				INFOPLIST_FILE = "FuffrBox/FuffrBox-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		21B26CD418EBFCAC009FE791 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "FuffrBox/FuffrBox-Prefix.pch";
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				HEADER_SEARCH_PATHS = (
+					"\"$(TARGET_BUILD_DIR)/usr/local/lib/include\"",
+					"\"$(OBJROOT)/UninstalledProducts/include\"",
+					"\"$(BUILT_PRODUCTS_DIR)\"",
+				);
+				INFOPLIST_FILE = "FuffrBox/FuffrBox-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		21B26CD618EBFCAC009FE791 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/FuffrBox.app/FuffrBox";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "FuffrBox/FuffrBox-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "FuffrBoxTests/FuffrBoxTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		21B26CD718EBFCAC009FE791 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/FuffrBox.app/FuffrBox";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "FuffrBox/FuffrBox-Prefix.pch";
+				INFOPLIST_FILE = "FuffrBoxTests/FuffrBoxTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		21B26CA118EBFCAC009FE791 /* Build configuration list for PBXProject "FuffrBox" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				21B26CD018EBFCAC009FE791 /* Debug */,
+				21B26CD118EBFCAC009FE791 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		21B26CD218EBFCAC009FE791 /* Build configuration list for PBXNativeTarget "FuffrBox" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				21B26CD318EBFCAC009FE791 /* Debug */,
+				21B26CD418EBFCAC009FE791 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		21B26CD518EBFCAC009FE791 /* Build configuration list for PBXNativeTarget "FuffrBoxTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				21B26CD618EBFCAC009FE791 /* Debug */,
+				21B26CD718EBFCAC009FE791 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 21B26C9E18EBFCAC009FE791 /* Project object */;
+}

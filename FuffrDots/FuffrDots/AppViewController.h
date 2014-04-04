@@ -17,4 +17,6 @@
 /** View where touches are drawn. */
 @property UIImageView* imageView;
 
+@property NSMutableDictionary* dotColors;
+
 @end

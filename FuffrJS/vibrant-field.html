@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+	<meta name="viewport" content="user-scalable=yes, initial-scale=1"/>
+    <title>Vibrant Field</title>
+	<script src="jquery/jquery.js"></script>
+	<script src="paperjs/paper.js"></script>
+	<script src="fuffr.js"></script>
+</head>
+<body>
+
+<canvas id="paper-canvas" resize></canvas>
+
+<script type="text/paperscript" canvas="paper-canvas">
+var windowWidth = $(window).width()
+var windowHeight = $(window).height()
+
+var mousePoint = view.center;
+var amount = 10; // 25;
+var colors = ['red', 'white', 'blue', 'white'];
+
+for (var i = 0; i < amount; i++)
+{
+	var rect = new Rectangle([0, 0], [25, 25]);
+	rect.center = mousePoint;
+	var path = new Path.Rectangle(rect, 6);
+	path.fillColor = colors[i % 4];
+	var scale = (1 - i / amount) * 10; // 20
+	path.scale(scale);
+}
+
+/*function onMouseMove(event) {
+	mousePoint = event.point;
+}*/
+
+var children = project.activeLayer.children;
+
+function onFrame(event)
+{
+	for (var i = 0, l = children.length; i < l; i++) {
+		var item = children[i];
+		var delta = (mousePoint - item.position) / (i + 5);
+		item.rotate(Math.sin((event.count + i) / 10) * 7);
+		if (delta.length > 0.1)
+			item.position += delta;
+	}
+}
+
+window.OnRightTouch = function(touchId, touchX, touchY, previousX, previousY, normalizedX, normalizedY)
+{
+	mousePoint.x = (normalizedX * windowWidth)
+	mousePoint.y = (normalizedY * windowHeight)
+}
+
+window.OnLeftTouch = function(touchId, touchX, touchY, previousX, previousY, normalizedX, normalizedY)
+{
+	mousePoint.x = (normalizedX * windowWidth)
+	mousePoint.y = (normalizedY * windowHeight)
+}
+</script>
+
+</body>
+</html>
