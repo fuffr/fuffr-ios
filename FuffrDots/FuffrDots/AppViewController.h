@@ -19,4 +19,6 @@
 
 @property NSMutableDictionary* dotColors;
 
+@property NSMutableSet* touches;
+
 @end

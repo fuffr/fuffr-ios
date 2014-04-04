@@ -40,10 +40,11 @@
 		UIViewAutoresizingFlexibleWidth;
     [self.view addSubview: self.imageView];
 
-	// Set background color.
     self.imageView.backgroundColor = UIColor.whiteColor;
 
 	self.dotColors = [NSMutableDictionary new];
+
+	self.touches = [NSMutableSet new];
 }
 
 -(void) viewDidAppear:(BOOL)animated
@@ -76,11 +77,10 @@
 	// bit-or:ed to capture touches on all four sides.
 	[manager
 		addTouchObserver: self
-		touchBegan: @selector(drawTouchesBegan:)
-		touchMoved: @selector(drawTouches:)
-		touchEnded: @selector(drawTouches:)
+		touchBegan: @selector(touchesBegan:)
+		touchMoved: @selector(touchesMoved:)
+		touchEnded: @selector(touchesEnded:)
 		side: FFRSideLeft | FFRSideRight | FFRSideTop | FFRSideBottom];
-
 }
 
 - (void) fuffrConnected
@@ -88,45 +88,49 @@
 	NSLog(@"fuffrConnected");
 }
 
-- (void) drawTouchesBegan: (NSSet*)touches
+- (void) touchesBegan: (NSSet*)touches
 {
 	for (FFRTouch* touch in touches)
 	{
-		if (nil == [self.dotColors objectForKey:
-				//[NSValue valueWithPointer: (__bridge const void *)(touch)]
-				[NSNumber numberWithInt: (int)touch.identifier]
-				])
-		{
-			DotColor* color = [DotColor new];
-			color.red = (CGFloat) arc4random_uniform(256) / 256;
-			color.green = (CGFloat) arc4random_uniform(256) / 256;
-			color.blue = (CGFloat) arc4random_uniform(256) / 256;
-			[self.dotColors
-				setObject: color
-				forKey:
-					//[NSValue valueWithPointer: (__bridge const void *)(touch)]
-					[NSNumber numberWithInt: (int)touch.identifier]
-			];
-		}
+		DotColor* color = [DotColor new];
+		color.red = (CGFloat) arc4random_uniform(256) / 256;
+		color.green = (CGFloat) arc4random_uniform(256) / 256;
+		color.blue = (CGFloat) arc4random_uniform(256) / 256;
+		[self.dotColors
+			setObject: color
+			forKey: [NSNumber numberWithInt: (int)touch.identifier]
+		];
+		[self.touches addObject: touch];
 	}
 
-	// Draw on main thread.
-	dispatch_async(dispatch_get_main_queue(),
-	^{
-		[self drawImageView: touches];
-    });
+	[self redrawView];
 }
 
-- (void) drawTouches: (NSSet*)touches
+- (void) touchesMoved: (NSSet*)touches
+{
+	[self redrawView];
+}
+
+- (void) touchesEnded: (NSSet*)touches
+{
+	for (FFRTouch* touch in touches)
+	{
+		[self.touches removeObject: touch];
+	}
+
+	[self redrawView];
+}
+
+- (void) redrawView
 {
 	// Draw on main thread.
 	dispatch_async(dispatch_get_main_queue(),
 	^{
-		[self drawImageView: touches];
+		[self drawImageView];
     });
 }
 
-- (void)drawImageView: (NSSet*)touches
+- (void)drawImageView
 {
 	CGFloat width = self.imageView.bounds.size.width;
 	CGFloat height = self.imageView.bounds.size.height;
@@ -135,15 +139,18 @@
     UIGraphicsBeginImageContext(self.view.frame.size);
     CGContextRef context = UIGraphicsGetCurrentContext();
 
-	for (FFRTouch* touch in touches)
+	for (FFRTouch* touch in self.touches)
 	{
 		if (touch.phase != UITouchPhaseEnded)
 		{
 			DotColor* color = [self.dotColors objectForKey:
-				[NSNumber numberWithInt: (int)touch.identifier]
-				//[NSValue valueWithPointer: (__bridge const void *)(touch)]
-				];
-    		CGContextSetRGBFillColor(context, color.red, color.green, color.blue, 1.0);
+				[NSNumber numberWithInt: (int)touch.identifier]];
+    		CGContextSetRGBFillColor(
+				context,
+				color.red,
+				color.green,
+				color.blue,
+				1.0);
 
 			CGFloat x = touch.normalizedLocation.x * width;
 			CGFloat y = touch.normalizedLocation.y * height;
