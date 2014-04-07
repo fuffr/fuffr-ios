@@ -36,7 +36,8 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 
 @interface FFRBLEManager ()
 
--(void) storeDiscoveredPeripheral:(CBPeripheral*) peripheral;
+// Removed discovery KVO mechanism.
+//-(void) storeDiscoveredPeripheral:(CBPeripheral*) peripheral;
 
 @end
 
@@ -127,6 +128,7 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
     [_manager stopScan];
 }
 
+/*
 -(void) storeDiscoveredPeripheral:(CBPeripheral*) peripheral
 {
     @synchronized(self.discoveredDevices)
@@ -181,9 +183,11 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
         }
     }
 }
+*/
 
+// Strange (duplicated) mechanism since services are discovered in didConnectPeriperal...
 -(void) addMonitoredService:(NSString *)serviceIdentifier
-	onDiscovery:(void (^)(CBService *, CBPeripheral* hostPeripheral))callback
+	onDiscovery:(void (^)(CBService* service, CBPeripheral* hostPeripheral))callback
 {
     [_monitoredServiceIdentifiers setObject:callback forKey:serviceIdentifier];
 
@@ -239,7 +243,7 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
     if (central.state == CBCentralManagerStatePoweredOn)
 	{
         [central scanForPeripheralsWithServices:nil options:nil];
-		NSLog(@"Scan started in centralManagerDidUpdateState");
+		NSLog(@"*** Scan started in centralManagerDidUpdateState");
         [_bluetoothAlertView dismissWithClickedButtonIndex:0 animated:TRUE];
         _bluetoothAlertView = nil;
     }
@@ -261,10 +265,15 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
     // store discovered device
     peripheral.discoveryRSSI = RSSI;
 
-	// This method sents KVO notification "discoveredDevices".
-    [self storeDiscoveredPeripheral:peripheral];
+	// This method sends KVO notification "discoveredDevices".
 
-	// Here connect is made to a known device. If this is done,
+    //[self storeDiscoveredPeripheral:peripheral];
+	
+	// Note: Above commented out beause maintaining a list and notifying observers
+	// just adds complexity! KVO was probably used with the list UI in SensorCaseDemo,
+	// and this is not needed in the current library.
+
+	// Here connect seems to be made to a known device. If this is done,
 	// observers of discovery should not be notified !?
 	// TODO: Investigate and fix.
     if ([peripheral.identifier isEqualToString:self.monitoredDeviceIdentifier])
@@ -277,7 +286,7 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
         }
     }
 
-	// This mechanism does not seem to be used.
+	// Use this mechanism to monitor discovered devices rather than the KVO model.
     if (self.onPeripheralDiscovery)
 	{
         self.onPeripheralDiscovery(peripheral);
@@ -296,6 +305,7 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
     });
 }
 
+// TODO: Find out how reconnect of disconnected peripheral works.
 -(void) centralManager:(CBCentralManager *)central
 	didDisconnectPeripheral:(CBPeripheral *)peripheral
 	error:(NSError *)error
@@ -308,12 +318,19 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
     [self.handler deviceDisconnected:peripheral];
 
     if (_disconnectedPeripheral != peripheral) {
+
+		// In case of shutdown, this seem to work.
+		NSLog(@"didDisconnectPeripheral: attempting to connect");
+
         [self performSelector:@selector(connectPeripheral:) withObject:peripheral afterDelay:0.3];
     }
     else {
+		NSLog(@"didDisconnectPeripheral: NOT attempting to connect");
         _disconnectedPeripheral = nil;
     }
 
+	// I guess the above mechanism of calling connectPeripheral is used
+	// rather than scanning again. Note that connectPeripheral does not time out.
     //[_manager scanForPeripheralsWithServices:nil options:nil];
 }
 
@@ -345,6 +362,7 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
             if ([service.UUID isEqualToString:identifier]) {
                 NSLog(@"is monitored service!");
 
+				// Note: The dispatch was commented out in the original SensorCaseDemo code.
                 // discover characteristics for the service
                 //dispatch_async(_receiveQueue, ^{
                     [peripheral discoverCharacteristics:nil forService:service];
@@ -389,14 +407,15 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 	didDiscoverCharacteristicsForService:(CBService *)service
 	error:(NSError *)error
 {
-    NSLog(@"didDiscoverCharacteristicsForService %@ %@ (%lu), error = %@", service.UUID, service, (unsigned long)[service.characteristics count], error);
+    //NSLog(@"didDiscoverCharacteristicsForService %@ %@ (%lu), error = %@", service.UUID, service, (unsigned long)[service.characteristics count], error);
 
-    for (CBCharacteristic* c in service.characteristics) {
-        NSLog(@"characteristic: %@, %@, %@", c.UUID, c.value, c);
-    }
+    //for (CBCharacteristic* c in service.characteristics) {
+    //    NSLog(@"characteristic: %@, %@, %@", c.UUID, c.value, c);
+    //}
 
     for (NSString* identifier in _monitoredServiceIdentifiers) {
         if ([service.UUID isEqualToString:identifier]) {
+
             NSLog(@"monitored service characteristics discovered!");
 
             void(^callback)(CBService*, CBPeripheral*) = [_monitoredServiceIdentifiers objectForKey:identifier];

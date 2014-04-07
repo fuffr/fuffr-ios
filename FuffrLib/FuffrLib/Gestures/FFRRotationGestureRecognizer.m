@@ -28,7 +28,7 @@
     return self;
 }
 
--(CGFloat) currentRotation
+-(CGFloat) calculateRotation
 {
 	return atan2(
 		self.touch2.location.x - self.touch1.location.x,
@@ -80,22 +80,28 @@
 	if (self.touch1 == nil && self.touch2 == nil)
 	{
 		// Save references to touches.
+		self.lowPassFilter = [FFRLowPassFilter new];
 		NSArray* touchArray = [touches allObjects];
 		self.touch1 = [touchArray objectAtIndex: 0];
 		self.touch2 = [touchArray objectAtIndex: 1];
-		self.startRotation = [self currentRotation];
-		self.previousRotation = self.startRotation;
+		self.previousRotation = [self calculateRotation];
 		self.rotation = 0.0;
 		self.state = UIGestureRecognizerStateBegan;
 	}
-	
-	CGFloat newRotation = [self currentRotation];
-	if (ABS(newRotation - self.startRotation) > ((self.rotationThreshold / 180) * M_PI))
+	else
 	{
-		self.previousRotation = newRotation;
-		self.state = UIGestureRecognizerStateChanged;
-		self.rotation = newRotation - self.startRotation;
-		[self performAction];
+		CGFloat newRotation = [self calculateRotation];
+		CGFloat deltaRotation = newRotation - self.previousRotation;
+		if (ABS(deltaRotation) > ((self.rotationThreshold / 180) * M_PI))
+		{
+			self.state = UIGestureRecognizerStateChanged;
+			self.previousRotation = newRotation;
+			deltaRotation = MIN(deltaRotation, 0.5);
+			deltaRotation = MAX(deltaRotation, -0.5);
+			self.rotation += deltaRotation;
+			//NSLog(@"rotation %f", self.rotation);
+			[self performAction];
+		}
 	}
 }
 

@@ -24,22 +24,6 @@
  */
 @interface FFRTouchManager : NSObject
 
-/** True if a BLE scan is ongoing. */
-@property BOOL scanIsOngoing;
-
-/**
- * Connection notification target object and selector.
- * Invoked when connected to Fuffr.
- */
-@property (nonatomic, weak) id connectedNotificatonTarget;
-@property SEL connectedSuccessSelector;
-
-/** List of touch observers. */
-@property NSMutableArray* touchObservers;
-
-/** List of gesture recognizers. */
-@property NSMutableArray* gestureRecognizers;
-
 /**
  * Public class method that returns singleton instance of 
  * this class.

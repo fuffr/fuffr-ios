@@ -35,6 +35,25 @@
 @implementation FFRTouchEventObserver
 @end
 
+@interface FFRTouchManager ()
+
+@property CBPeripheral* deviceWithMaxRSSI;
+
+/**
+ * Connection notification target object and selector.
+ * Invoked when connected to Fuffr.
+ */
+@property (nonatomic, weak) id connectedNotificatonTarget;
+@property SEL connectedSuccessSelector;
+
+/** List of touch observers. */
+@property NSMutableArray* touchObservers;
+
+/** List of gesture recognizers. */
+@property NSMutableArray* gestureRecognizers;
+
+@end
+
 @implementation FFRTouchManager
 
 // Helper function.
@@ -46,6 +65,7 @@ static BOOL stringContains(NSString* string, NSString* substring)
 }
 
 // Helper function.
+/* Unused
 static NSSet* filterTouchesBySide(NSSet* touches, FFRSide side)
 {
 	return [touches objectsPassingTest:
@@ -54,6 +74,7 @@ static NSSet* filterTouchesBySide(NSSet* touches, FFRSide side)
 			return side & ((FFRTouch*)obj).side;
     	}];
 }
+*/
 
 // Helper function.
 static NSSet* filterTouchesBySideAndPhase(NSSet* touches, FFRSide side, UITouchPhase phase)
@@ -118,7 +139,9 @@ static FFRTouchManager* sharedInstance = NULL;
 {
 	self.touchObservers = [NSMutableArray array];
 	self.gestureRecognizers = [NSMutableArray array];
+	self.deviceWithMaxRSSI = nil;
 	[self registerTouchMethods];
+	[self registerPeripheralDiscoverer];
 	return self;
 }
 
@@ -126,50 +149,94 @@ static FFRTouchManager* sharedInstance = NULL;
 	onSuccess: (SEL)successSelector
 	onError: (SEL)errorSelector;
 {
-	if (self.scanIsOngoing)
-	{
-		return NO;
-	}
-
 	self.connectedNotificatonTarget = object;
 	self.connectedSuccessSelector = successSelector;
 
-	[self startScan];
+	// Scan is started automatically by FFRBLEManager.
+	//[self startScan];
 
 	return YES;
 }
 
+// TODO: Delete.
 - (void) startScan
 {
 	NSLog(@"startScan");
 
-	self.scanIsOngoing = YES;
-
-    [[FFRBLEManager sharedManager]
+	// Callback is used instread of KVO.
+    /*[[FFRBLEManager sharedManager]
 		addObserver:self
 		forKeyPath:@"discoveredDevices"
 		options:
 			NSKeyValueChangeInsertion |
 			NSKeyValueChangeRemoval |
 			NSKeyValueChangeReplacement
-		context:nil];
+		context:nil];*/
 
-    [[FFRBLEManager sharedManager] startScan: YES];
+	// Not needed?
+    //[bleManager startScan: YES];
 }
 
+// TODO: Delete.
 - (void) stopScan
 {
 	NSLog(@"stopScan");
 
-	self.scanIsOngoing = NO;
-
-    [[FFRBLEManager sharedManager]
+    /* [[FFRBLEManager sharedManager]
 		removeObserver:self
-		forKeyPath:@"discoveredDevices"];
+		forKeyPath:@"discoveredDevices"]; */
     [[FFRBLEManager sharedManager] stopScan];
-
 }
 
+-(void) connectToDeviceWithMaxRSSI
+{
+	NSLog(@"connectToDeviceWithMaxRSSI");
+	[[FFRBLEManager sharedManager] connectPeripheral: self.deviceWithMaxRSSI];
+	[self initFuffr];
+}
+
+- (void) registerPeripheralDiscoverer
+{
+	__weak FFRTouchManager* me = self;
+
+	// Set discovery callback.
+    FFRBLEManager* bleManager = [FFRBLEManager sharedManager];
+	bleManager.onPeripheralDiscovery = ^(CBPeripheral* p)
+	{
+		NSLog(@"Found peripheral: %@", p);
+
+		if (stringContains(p.name, @"Fuffr") ||
+			stringContains(p.name, @"Neonode"))
+		{
+			if (nil == me.deviceWithMaxRSSI)
+			{
+				NSLog(@"start timer for connectToDeviceWithMaxRSSI");
+				me.deviceWithMaxRSSI = p;
+				[NSTimer
+					scheduledTimerWithTimeInterval: 3.0
+					target: me
+					selector:@selector(connectToDeviceWithMaxRSSI)
+					userInfo:nil
+					repeats:NO
+				];
+			}
+			else
+			{
+				NSNumber* rssiMax = me.deviceWithMaxRSSI.discoveryRSSI;
+				NSNumber* rssiNew = p.discoveryRSSI;
+				if (rssiNew.intValue > rssiMax.intValue)
+				{
+					NSLog(@"Found device with stronger RSSI");
+					me.deviceWithMaxRSSI = p;
+				}
+			}
+		}
+	};
+}
+
+
+// Callback used instead of KVO.
+/*
 - (void) observeValueForKeyPath: (NSString*)keyPath
 	ofObject: (id)object
 	change: (NSDictionary*)change
@@ -189,13 +256,10 @@ static FFRTouchManager* sharedInstance = NULL;
 					(stringContains(p.name, @"Fuffr") ||
 					stringContains(p.name, @"Neonode")))
 				{
-					//p.RSSI
-					
 					// connectPeripheral stops scan.
 					[[FFRBLEManager sharedManager] connectPeripheral: p];
 
 					[self initFuffr];
-					[self notifyConnected: YES];
 
 					break;
 				}
@@ -203,7 +267,15 @@ static FFRTouchManager* sharedInstance = NULL;
         });
     }
 }
+*/
 
+// Create BLE manager handler object and add a callback
+// that enables Fuffr when characteristics for the service
+// are discovered.
+// TODO: Why not rather do this in a more encapsulated way?
+// Perhaps belongs well here since objects are created and
+// connected, but the approach feels ad hoc, the two tasks
+// are not really related? Or?
 - (void) initFuffr
 {
     FFRBLEManager* bleManager = [FFRBLEManager sharedManager];
@@ -211,19 +283,31 @@ static FFRTouchManager* sharedInstance = NULL;
     if (![bleManager.handler isKindOfClass: [FFRCaseHandler class]])
 	{
         bleManager.handler = [FFRCaseHandler new];
-		if ([bleManager.connectedDevices count])
+		/*if ([bleManager.connectedDevices count] > 0)
 		{
+			NSLog(@"initFuffr loadPeripheral");
 			[bleManager.handler loadPeripheral:
 				[bleManager.connectedDevices firstObject]];
-		}
+			[self notifyConnected: YES];
+
+			// We hace connected, return at this point.
+			return;
+		}*/
     }
 
-    __weak FFRBLEManager* manager = bleManager;
+	// If we have not connected, proceed using the addMonitoredService
+	// mechanism...
+
+    __weak id me = self;
+	__weak FFRBLEManager* manager = bleManager;
+	// Starts service discovery.
     [bleManager
 		addMonitoredService: FFRCaseSensorServiceUuid
 		onDiscovery: ^(CBService* service, CBPeripheral* hostPeripheral)
 		{
+			NSLog(@"initFuffr loadPeripheral 2");
         	[manager.handler loadPeripheral:hostPeripheral];
+			[me notifyConnected: YES];
     	}
 	];
 }

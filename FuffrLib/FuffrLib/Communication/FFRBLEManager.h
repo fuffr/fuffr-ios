@@ -26,7 +26,8 @@
 /**
     Main Bluetooth Low Energy manager. Handles basic house keeping tasks, delegates actual device communication to FFRPeripheralHandler
  */
-@interface FFRBLEManager : NSObject<CBCentralManagerDelegate, CBPeripheralDelegate> {
+@interface FFRBLEManager : NSObject<CBCentralManagerDelegate, CBPeripheralDelegate>
+{
     CBCentralManager* _manager;
     CBPeripheral* _disconnectedPeripheral;
     UIAlertView* _bluetoothAlertView;
@@ -58,6 +59,7 @@
 
 /**
     List of connected devices. Due to the handlers single peripheral awareness, this is in essence limited to 1
+	TODO: "is in essence" should be "is" !!
  */
 @property (nonatomic, strong) NSMutableArray* connectedDevices;
 

@@ -30,8 +30,10 @@
 @property (nonatomic, weak) FFRTouch* touch1;
 @property (nonatomic, weak) FFRTouch* touch2;
 
-@property (nonatomic, assign) CGFloat startRotation;
+@property (nonatomic, assign) CGFloat currentRotation;
 
 @property (nonatomic, assign) CGFloat previousRotation;
+
+@property FFRLowPassFilter* lowPassFilter;
 
 @end

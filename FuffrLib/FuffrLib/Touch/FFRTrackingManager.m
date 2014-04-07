@@ -61,10 +61,14 @@ const float FFRTrackingManagerUpdateSpeed = 0.07f;
             existing.location = data.location;
         }
         else {
+
+			//NSLog(@"! touch unchanged side: %i id: %i", (int)data.side, (int)data.identifier);
+
             [[NSNotificationCenter defaultCenter] postNotificationName:FFRTrackingPulsedNotification object:[NSSet setWithArray:_trackedObjects] userInfo:nil];
         }
     }
     else {
+		//NSLog(@"! touch NEW side: %i id: %i", (int)data.side, (int)data.identifier);
         [self addTrackingObject:data];
     }
 }
