@@ -67,11 +67,14 @@
 
 	// Connect to Fuffr, the onSuccess method will be
 	// called when connection is established.
-	// Support for onError is not complete.
 	[manager
-		connectToFuffrNotifying: self
-		onSuccess: @selector(fuffrConnected)
-		onError: nil];
+		connectToFuffrOnSuccess: ^{
+    		[[FFRTouchManager sharedManager]
+				enableSides: FFRSideTop | FFRSideLeft | FFRSideRight | FFRSideBottom
+				touchesPerSide: @1 // Change to @2 in new parameter case
+				];
+		}
+		onError: ^{}];
 
 	// Register methods for touch events. Here the side constants are
 	// bit-or:ed to capture touches on all four sides.

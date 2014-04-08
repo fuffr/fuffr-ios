@@ -7,18 +7,24 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "FFRTouch.h"
 
 /**
     Simple protocol for handling a BLE peripheral
  */
 @protocol FFRPeripheralHandler <NSObject>
 
-
 /**
     Connect the hander to the peripheral
  */
 -(void) loadPeripheral:(CBPeripheral*) peripheral;
+
+/**
+ * Enable sides of Fuffr.
+ * @param sides Bitwise or:ed values (FFRSideTop, FFRSideLeft, FFRSideRight, FFRSideBottom)
+ * @param on YES or NO
+ */
+- (void) enableSides:(FFRSide)sides touchesPerSide: (NSNumber*)numberOfTouches;
 
 /**
  Called when notifyable characteristics update their values

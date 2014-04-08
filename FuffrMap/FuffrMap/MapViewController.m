@@ -62,9 +62,13 @@
 
 	// Connect to the case.
 	[manager
-		connectToFuffrNotifying: self
-		onSuccess: @selector(fuffrConnected)
-		onError: nil];
+		connectToFuffrOnSuccess: ^{
+			NSLog(@"fuffrConnected");
+    		[[FFRTouchManager sharedManager]
+				enableSides: FFRSideLeft | FFRSideRight
+				touchesPerSide: @1];
+		}
+		onError: ^{}];
 
 	// Register panning touch methods.
 	[manager

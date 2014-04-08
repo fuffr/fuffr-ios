@@ -20,9 +20,7 @@
 
 @end
 
-
 @implementation FFRCaseHandler
-
 
 NSString* const FFRCaseSensorServiceUuid = @"fff0";
 NSString* const FFRProximityEnablerCharacteristic = @"fff1";
@@ -31,8 +29,8 @@ NSString* const FFRSideBottomUdid = @"fff3";
 NSString* const FFRSideRightUdid = @"fff2";
 NSString* const FFRSideTopUdid = @"fff5";
 
-
--(instancetype) init {
+-(instancetype) init
+{
     if (self = [super init]) {
         self.spaceMapper = [[FFROverlaySpaceMapper alloc] init];
         _touches = [[FFRTrackingManager alloc] init];
@@ -42,6 +40,7 @@ NSString* const FFRSideTopUdid = @"fff5";
     return self;
 }
 
+// TODO: Seems to never be called?
 -(instancetype) initWithPeripheral:(CBPeripheral*)peripheral {
     if (self = [self init]) {
         [self loadPeripheral:peripheral];
@@ -50,22 +49,18 @@ NSString* const FFRSideTopUdid = @"fff5";
     return self;
 }
 
--(void) loadPeripheral:(CBPeripheral*) peripheral {
+-(void) loadPeripheral:(CBPeripheral*) peripheral
+{
     _peripheral = peripheral;
-
-    // enable sensor sides and proximity in general, spread out commands in time
-    [self enableSides:FFRSideTop|FFRSideLeft|FFRSideRight|FFRSideBottom setOn:TRUE];
-    [self performSelector:@selector(enablePeripheral:) withObject:@TRUE afterDelay:0.4];
-    //[self enablePeripheral:TRUE];
 }
 
--(void) dealloc {
+-(void) dealloc
+{
     _backgroundQueue = nil;
 
     // disable the case
-    //[self enableSides:FFRCaseTop|FFRCaseLeft|FFRCaseRight|FFRCaseBottom setOn:FALSE];
     @try {
-        [self enablePeripheral:FALSE];
+        [self enablePeripheral: 0];
     }
     @catch (NSException *exception) {
     }
@@ -75,11 +70,28 @@ NSString* const FFRSideTopUdid = @"fff5";
 
 #pragma mark - enable/disable sensors
 
--(void) enableSides:(FFRSide)sides setOn:(BOOL)on {
+/*
+From release notes document 2014-03-28:
+Implemented MSP430 power saving features. If no active side 
+(select side BitMap = 0x00) is selected MSP430 goes into 
+sleep mode. This is a very low power mode in which the MSP430 
+will halt all CPU operation and scanning and wait for command 
+from the CC2541 until then continuing operation again. This 
+LowPowerMode is also implemented when MSP430 is waiting for 
+NN1001 ASIC scan to be completed and also waiting for CC2541 
+to read data from MSP430.
+*/
+-(void) enableSides:(FFRSide)sides touchesPerSide: (NSNumber*)numberOfTouches
+{
     if (!_peripheral) {
         NSLog(@"No peripheral loaded in Case handler!");
         return;
     }
+
+	[self
+		performSelector: @selector(enablePeripheral:)
+		withObject: numberOfTouches
+		afterDelay: 0.4];
 
     // enabling the sensor sides is spread out in time to prevent connection timeouts, probably because the case becomes busy processing the commands
     if (sides & FFRSideTop) {
@@ -131,13 +143,27 @@ NSString* const FFRSideTopUdid = @"fff5";
     NSLog(@"case bottom enabled: %d", on.boolValue);
 }
 
--(void) enablePeripheral:(NSNumber*)on {
+/*
+From release notes document 2014-03-28:
+Implemented selectable amount of touches by using the 
+Enabler byte (0xFFF1 GATT attribute). Setting Enabler 
+byte to 1 gives 1 reported touch coordinate per selected
+side. Setting 2 gives 2 and so on. Maximum selectable is
+currently 5 touches. Setting 0 will disable the touch detection.
+*/
+-(void) enablePeripheral: (NSNumber*)touchesPerSide
+{
     const int DataLength = 1;
 
     // enable sensors
     Byte value[DataLength];
     memset(value, 0, DataLength);
-    value[0] = 1;
+
+    // Origical code:
+	//value[0] = 1;
+
+    // New code:
+	value[0] = (Byte) touchesPerSide.intValue;
 
     NSData* data = [NSData dataWithBytes:&value length:DataLength];
     __weak CBPeripheral* p = _peripheral;
@@ -153,7 +179,7 @@ NSString* const FFRSideTopUdid = @"fff5";
 
     //[_peripheral writeCharacteristicWithoutResponseForIdentifier:FFRProximityServiceUdid data:data];
 
-    NSLog(@"case sensor(s) activated: %d", on.boolValue);
+    NSLog(@"case sensor(s) activated per side: %d", touchesPerSide.intValue);
 }
 
 #pragma mark - Bluetooth

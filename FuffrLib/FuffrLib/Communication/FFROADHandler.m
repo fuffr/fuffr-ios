@@ -53,6 +53,11 @@ NSString* const FFRProgrammingUserInfoTimeLeftKey = @"FFRProgrammingTimeLeftKey"
     [self configureProfile];
 }
 
+-(void) enableSides:(FFRSide)sides touchesPerSide: (NSNumber*)numberOfTouches
+{
+	// This is a NOP in the OAD handler.
+}
+
 -(void) dealloc {
     [self deconfigureProfile];
     [self clearBuffer];

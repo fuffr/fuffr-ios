@@ -298,6 +298,8 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 {
     LOGMETHOD
 
+	NSLog(@"didConnectPeripheral: %@", peripheral);
+
     _disconnectedPeripheral = nil;
     [_discoveredDevices addObject:peripheral];
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -339,7 +341,9 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 	error:(NSError *)error
 {
     LOGMETHOD
-    
+
+	NSLog(@"didFailToConnectPeripheral: %@, error: %@", peripheral, error);
+
     [_connectedDevices removeObject:peripheral];
     [_discoveredDevices removeObject:peripheral];
 }

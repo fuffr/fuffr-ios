@@ -97,9 +97,13 @@
 	// called when a connaction is established.
 	// Support for onError is not complete.
 	[manager
-		connectToFuffrNotifying: self
-		onSuccess: @selector(fuffrConnected)
-		onError: nil];
+		connectToFuffrOnSuccess: ^{
+    		[[FFRTouchManager sharedManager]
+				enableSides: FFRSideLeft | FFRSideRight
+				touchesPerSide: @1
+				];
+		}
+		onError: ^{}];
 
 	// Register methods for right side touches. The touchEnded
 	// method is not used in this example.
@@ -118,11 +122,6 @@
 		touchMoved: @selector(touchLeftMoved:)
 		touchEnded: nil
 		side: FFRSideLeft];
-}
-
-- (void) fuffrConnected
-{
-	NSLog(@"fuffrConnected");
 }
 
 - (void) touchRightBegan: (NSSet*)touches

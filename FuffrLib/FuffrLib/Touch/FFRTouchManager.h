@@ -39,9 +39,34 @@
  * Support for the onError method is not yet 
  * implemented (this method is never called).
  */
-- (BOOL) connectToFuffrNotifying: (id)object
-	onSuccess: (SEL)successSelector
-	onError: (SEL)errorSelector;
+- (void) connectToFuffrOnSuccess: (void(^)())successBlock
+	onError: (void(^)())errorBlock;
+
+/**
+    Callback when a device is discovered
+ */
+@property (nonatomic, copy) void(^onPeripheralDiscovery)(CBPeripheral* p);
+
+/**
+ * Enable sides of Fuffr.
+ * @param sides Sides to enable, bitwise or:ed values 
+ * (FFRSideTop, FFRSideLeft, FFRSideRight, FFRSideBottom).
+ * @param numberOfTouches Number of touches per side, max 5.
+ * 0 means off and puts Fuffr into sleep mode.
+ */
+- (void) enableSides:(FFRSide)sides touchesPerSide: (NSNumber*)numberOfTouches;
+
+/**
+ * Disconnect from Fuffr. This saves Fuffr battery.
+ * Do this when the app goes to background.
+ */
+- (void) disconnectFuffr;
+
+/**
+ * Reconnect to Fuffr.
+ * Do this when the app goes to foreground.
+ */
+- (void) reconnectFuffr;
 
 /**
  * Add an object as observer for touch events.

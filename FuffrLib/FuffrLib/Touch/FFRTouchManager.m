@@ -37,14 +37,23 @@
 
 @interface FFRTouchManager ()
 
+/**
+ * The device with strongest signal strength, used during scanning
+ * to determine closest device.
+ */
 @property CBPeripheral* deviceWithMaxRSSI;
 
 /**
- * Connection notification target object and selector.
+ * The device we are connected to. Used when reconnecting.
+ */
+@property CBPeripheral* activeDevice;
+
+/**
+ * Connection success and error blocks.
  * Invoked when connected to Fuffr.
  */
-@property (nonatomic, weak) id connectedNotificatonTarget;
-@property SEL connectedSuccessSelector;
+@property (nonatomic, copy) void(^connectSuccessBlock)();
+@property (nonatomic, copy) void(^connectErrorBlock)();
 
 /** List of touch observers. */
 @property NSMutableArray* touchObservers;
@@ -103,6 +112,35 @@ static FFRTouchManager* sharedInstance = NULL;
 
 // Public instance methods.
 
+- (void) connectToFuffrOnSuccess: (void(^)())successBlock
+	onError: (void(^)())errorBlock
+{
+	self.connectSuccessBlock = successBlock;
+	self.connectErrorBlock = errorBlock;
+
+	// Scan is started automatically by FFRBLEManager.
+	//[self startScan];
+}
+
+- (void) disconnectFuffr
+{
+	FFRBLEManager* bleManager = [FFRBLEManager sharedManager];
+	self.activeDevice = [bleManager.connectedDevices firstObject];
+	if (self.activeDevice != nil)
+	{
+		[bleManager disconnectPeripheral: self.activeDevice];
+	}
+}
+
+- (void) reconnectFuffr
+{
+	FFRBLEManager* bleManager = [FFRBLEManager sharedManager];
+	if (self.activeDevice != nil)
+	{
+		[bleManager connectPeripheral: self.activeDevice];
+	}
+}
+
 - (void) addTouchObserver: (id)object
 	touchBegan: (SEL)touchBeganSelector
 	touchMoved: (SEL)touchMovedSelector
@@ -137,25 +175,15 @@ static FFRTouchManager* sharedInstance = NULL;
 
 - (id) init
 {
+	self.connectSuccessBlock = nil;
+	self.connectErrorBlock = nil;
 	self.touchObservers = [NSMutableArray array];
 	self.gestureRecognizers = [NSMutableArray array];
 	self.deviceWithMaxRSSI = nil;
+	self.activeDevice = nil;
 	[self registerTouchMethods];
 	[self registerPeripheralDiscoverer];
 	return self;
-}
-
-- (BOOL) connectToFuffrNotifying: (id)object
-	onSuccess: (SEL)successSelector
-	onError: (SEL)errorSelector;
-{
-	self.connectedNotificatonTarget = object;
-	self.connectedSuccessSelector = successSelector;
-
-	// Scan is started automatically by FFRBLEManager.
-	//[self startScan];
-
-	return YES;
 }
 
 // TODO: Delete.
@@ -213,7 +241,7 @@ static FFRTouchManager* sharedInstance = NULL;
 				NSLog(@"start timer for connectToDeviceWithMaxRSSI");
 				me.deviceWithMaxRSSI = p;
 				[NSTimer
-					scheduledTimerWithTimeInterval: 3.0
+					scheduledTimerWithTimeInterval: 2.0
 					target: me
 					selector:@selector(connectToDeviceWithMaxRSSI)
 					userInfo:nil
@@ -298,14 +326,14 @@ static FFRTouchManager* sharedInstance = NULL;
 	// If we have not connected, proceed using the addMonitoredService
 	// mechanism...
 
-    __weak id me = self;
+    __weak FFRTouchManager* me = self;
 	__weak FFRBLEManager* manager = bleManager;
 	// Starts service discovery.
     [bleManager
 		addMonitoredService: FFRCaseSensorServiceUuid
 		onDiscovery: ^(CBService* service, CBPeripheral* hostPeripheral)
 		{
-			NSLog(@"initFuffr loadPeripheral 2");
+			NSLog(@"initFuffr loadPeripheral monitored service");
         	[manager.handler loadPeripheral:hostPeripheral];
 			[me notifyConnected: YES];
     	}
@@ -314,11 +342,20 @@ static FFRTouchManager* sharedInstance = NULL;
 
 - (void) notifyConnected: (BOOL)success
 {
-	[self.connectedNotificatonTarget
-		performSelector: self.connectedSuccessSelector];
+	if (success)
+	{
+		self.connectSuccessBlock();
+	}
+	else
+	{
+		self.connectErrorBlock();
+	}
+}
 
-	self.connectedNotificatonTarget = nil;
-	self.connectedSuccessSelector = nil;
+- (void) enableSides:(FFRSide)sides touchesPerSide: (NSNumber*)numberOfTouches
+{
+	FFRBLEManager* bleManager = [FFRBLEManager sharedManager];
+	[bleManager.handler enableSides: sides touchesPerSide: numberOfTouches];
 }
 
 - (void) registerTouchMethods
@@ -382,7 +419,7 @@ static FFRTouchManager* sharedInstance = NULL;
 {
     NSSet* touches = data.object;
 
-	//NSLog(@"touchMoved count: %i", touches.count);
+	//NSLog(@"touchMoved count: %i", (int)touches.count);
 
 	// Notify touch observers.
     for (FFRTouchEventObserver* observer in self.touchObservers)

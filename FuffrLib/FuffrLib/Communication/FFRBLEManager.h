@@ -71,7 +71,8 @@
 /**
  Adds a service UUID that corresponding characteristics will be auto discovered on, as well as callback for working with the discovered service
  */
--(void) addMonitoredService:(NSString*) serviceIdentifier onDiscovery:(void(^)(CBService* service, CBPeripheral* hostPeripheral))callback;
+-(void) addMonitoredService:(NSString*) serviceIdentifier
+	onDiscovery:(void(^)(CBService* service, CBPeripheral* hostPeripheral))callback;
 
 /**
     Connects a peripheral. Upon connection, the services of the device will be scanned, and any monitored services will also be explored

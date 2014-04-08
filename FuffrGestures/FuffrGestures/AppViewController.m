@@ -85,7 +85,6 @@
 	[self connectToFuffr];
 	//[self setupTouches];
 	[self setupGestures];
-	//[self setupLeftRightGestures];
 }
 
 - (void) connectToFuffr
@@ -97,9 +96,14 @@
 	// called when connection is established.
 	// Support for onError is not complete.
 	[manager
-		connectToFuffrNotifying: self
-		onSuccess: @selector(fuffrConnected)
-		onError: nil];
+		connectToFuffrOnSuccess: ^{
+			NSLog(@"fuffrConnected");
+    		[[FFRTouchManager sharedManager]
+				enableSides: FFRSideTop | FFRSideLeft | FFRSideRight | FFRSideBottom
+				touchesPerSide: @1 // Update to @2 when using parameter case.
+				];
+		}
+		onError: ^{}];
 }
 
 - (void) setupTouches
@@ -153,12 +157,6 @@
 	tap.side = FFRSideTop | FFRSideBottom;
     [tap addTarget: self action: @selector(onTap:)];
 	[manager addGestureRecognizer: tap];
-
-}
-
-- (void) fuffrConnected
-{
-	NSLog(@"fuffrConnected");
 }
 
 - (void) logTouchBegan: (NSSet*)touches

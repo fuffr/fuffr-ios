@@ -13,7 +13,6 @@
 #import "FFRTrackingManager.h"
 #import "FFRExternalSpaceMapper.h"
 
-
 /**
  The identifier of the Fuffr BLE service
  */
@@ -44,7 +43,6 @@ extern NSString* const FFRSideRightUdid;
  */
 extern NSString* const FFRSideTopUdid;
 
-
 /**
     Main class for handling BLE communication with Fuffr
  */
@@ -58,13 +56,13 @@ extern NSString* const FFRSideTopUdid;
 }
 
 /**
-    Initializes the handler for the device, tries to enable the sensors and subscribe to the characteristics
- */
--(instancetype) initWithPeripheral:(CBPeripheral*)peripheral;
-
-/**
     The space mapper to use to give screen space coordinates from the side sensors
  */
 @property (nonatomic, strong) id<FFRExternalSpaceMapper> spaceMapper;
+
+/**
+    Initializes the handler for the device, tries to enable the sensors and subscribe to the characteristics
+ */
+-(instancetype) initWithPeripheral:(CBPeripheral*)peripheral;
 
 @end

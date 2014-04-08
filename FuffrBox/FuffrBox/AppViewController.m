@@ -158,11 +158,14 @@
 
 	// Connect to Fuffr, the onSuccess method will be
 	// called when connection is established.
-	// Support for onError is not complete.
 	[manager
-		connectToFuffrNotifying: self
-		onSuccess: @selector(fuffrConnected)
-		onError: nil];
+		connectToFuffrOnSuccess: ^{
+    		[[FFRTouchManager sharedManager]
+				enableSides: FFRSideTop | FFRSideLeft | FFRSideRight | FFRSideBottom
+				touchesPerSide: @1 // Update to @2 when using parameter case.
+				];
+		}
+		onError: ^{}];
 }
 
 - (void) setupTouches
@@ -231,11 +234,6 @@
 	{
 		self.urlField.text = @"fuffr.com";
 	}
-}
-
-- (void) fuffrConnected
-{
-	NSLog(@"fuffrConnected");
 }
 
 - (void) touchesBegan: (NSNotification*)data
