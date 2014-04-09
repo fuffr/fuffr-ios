@@ -70,7 +70,7 @@ static BOOL stringContains(NSString* string, NSString* substring)
 {
 	return [string
 		rangeOfString: substring
-		options:NSCaseInsensitiveSearch].location != NSNotFound;
+		options:NSCaseInsensitiveSearch].length > 0;
 }
 
 // Helper function.
@@ -218,7 +218,7 @@ static FFRTouchManager* sharedInstance = NULL;
 
 -(void) connectToDeviceWithMaxRSSI
 {
-	NSLog(@"connectToDeviceWithMaxRSSI");
+	NSLog(@"connectToDeviceWithMaxRSSI: %@", self.deviceWithMaxRSSI.name);
 	[[FFRBLEManager sharedManager] connectPeripheral: self.deviceWithMaxRSSI];
 	[self initFuffr];
 }
@@ -231,17 +231,17 @@ static FFRTouchManager* sharedInstance = NULL;
     FFRBLEManager* bleManager = [FFRBLEManager sharedManager];
 	bleManager.onPeripheralDiscovery = ^(CBPeripheral* p)
 	{
-		NSLog(@"Found peripheral: %@", p);
+		NSLog(@"Found peripheral: %@", p.name);
 
 		if (stringContains(p.name, @"Fuffr") ||
 			stringContains(p.name, @"Neonode"))
 		{
 			if (nil == me.deviceWithMaxRSSI)
 			{
-				NSLog(@"start timer for connectToDeviceWithMaxRSSI");
+				NSLog(@"start timer for connectToDeviceWithMaxRSSI: %@", p.name);
 				me.deviceWithMaxRSSI = p;
 				[NSTimer
-					scheduledTimerWithTimeInterval: 2.0
+					scheduledTimerWithTimeInterval: 1.0
 					target: me
 					selector:@selector(connectToDeviceWithMaxRSSI)
 					userInfo:nil
@@ -254,7 +254,7 @@ static FFRTouchManager* sharedInstance = NULL;
 				NSNumber* rssiNew = p.discoveryRSSI;
 				if (rssiNew.intValue > rssiMax.intValue)
 				{
-					NSLog(@"Found device with stronger RSSI");
+					NSLog(@"Found device with stronger RSSI: %@", p.name);
 					me.deviceWithMaxRSSI = p;
 				}
 			}

@@ -260,7 +260,7 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 	advertisementData:(NSDictionary*)advertisementData
 	RSSI:(NSNumber*)RSSI
 {
-    NSLog(@"centralManager: Found a BLE device: %@, RSSI: %f", peripheral, [RSSI floatValue]);
+    //NSLog(@"centralManager: Found a BLE device: %@, RSSI: %f", peripheral, [RSSI floatValue]);
 
     // store discovered device
     peripheral.discoveryRSSI = RSSI;
