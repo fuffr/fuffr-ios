@@ -32,7 +32,7 @@
     CBPeripheral* _disconnectedPeripheral;
     UIAlertView* _bluetoothAlertView;
 
-    NSMutableDictionary* _monitoredServiceIdentifiers;
+    //NSMutableDictionary* _monitoredServiceIdentifiers;
 
     dispatch_queue_t _receiveQueue;
 }
@@ -59,20 +59,35 @@
 
 /**
     List of connected devices. Due to the handlers single peripheral awareness, this is in essence limited to 1
-	TODO: "is in essence" should be "is" !!
+	TODO: "is in essence limited" should be "is limited" !!
  */
 @property (nonatomic, strong) NSMutableArray* connectedDevices;
 
 /**
-    Callback when a device is discovered
+ * Service UUID of the case.
  */
-@property (nonatomic, copy) void(^onPeripheralDiscovery)(CBPeripheral* p);
+@property (nonatomic, copy) NSString* sensorServiceUUID;
+
+/**
+ * Called when a device is discovered.
+ */
+@property (nonatomic, copy) void (^onPeripheralDiscovered)(CBPeripheral* peripheral);
+
+/**
+ * Called when a characteristics of the Fuffr service are discovered.
+ */
+@property (nonatomic, copy) void (^onCharacteristicsDiscovered)(CBService* service, CBPeripheral* peripheral);
+
+/**
+ * Called when a device is disconnected.
+ */
+@property (nonatomic, copy) void (^onPeriperalDisconnected)(CBPeripheral* peripheral);
 
 /**
  Adds a service UUID that corresponding characteristics will be auto discovered on, as well as callback for working with the discovered service
  */
--(void) addMonitoredService:(NSString*) serviceIdentifier
-	onDiscovery:(void(^)(CBService* service, CBPeripheral* hostPeripheral))callback;
+//-(void) addMonitoredService:(NSString*) serviceIdentifier
+//	onDiscovery:(void(^)(CBService* service, CBPeripheral* hostPeripheral))callback;
 
 /**
     Connects a peripheral. Upon connection, the services of the device will be scanned, and any monitored services will also be explored

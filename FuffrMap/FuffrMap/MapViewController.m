@@ -60,15 +60,20 @@
 	// Get a reference to the touch manager.
 	FFRTouchManager* manager = [FFRTouchManager sharedManager];
 
-	// Connect to the case.
+	// Set active sides.
 	[manager
-		connectToFuffrOnSuccess: ^{
-			NSLog(@"fuffrConnected");
-    		[[FFRTouchManager sharedManager]
+		onFuffrConnected:
+		^{
+			NSLog(@"Fuffr Connected");
+			[[FFRTouchManager sharedManager]
 				enableSides: FFRSideLeft | FFRSideRight
-				touchesPerSide: @1];
+				touchesPerSide: @1
+				];
 		}
-		onError: ^{}];
+		onFuffrDisconnected:
+		^{
+			NSLog(@"Fuffr Disconnected");
+		}];
 
 	// Register panning touch methods.
 	[manager

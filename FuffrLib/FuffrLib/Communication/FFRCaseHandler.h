@@ -16,7 +16,7 @@
 /**
  The identifier of the Fuffr BLE service
  */
-extern NSString* const FFRCaseSensorServiceUuid;
+extern NSString* const FFRCaseSensorServiceUUID;
 
 /**
  Characteristic to enable Fuffr
@@ -26,22 +26,22 @@ extern NSString* const FFRProximityEnablerCharacteristic;
 /**
  Characteristic to receive notifications of values from left side
  */
-extern NSString* const FFRSideLeftUdid;
+extern NSString* const FFRSideLeftUUID;
 
 /**
  Characteristic to receive notifications of values from bottom side
  */
-extern NSString* const FFRSideBottomUdid;
+extern NSString* const FFRSideBottomUUID;
 
 /**
  Characteristic to receive notifications of values from right side
  */
-extern NSString* const FFRSideRightUdid;
+extern NSString* const FFRSideRightUUID;
 
 /**
  Characteristic to receive notifications of values from top side
  */
-extern NSString* const FFRSideTopUdid;
+extern NSString* const FFRSideTopUUID;
 
 /**
     Main class for handling BLE communication with Fuffr

@@ -16,6 +16,73 @@
 #import <FuffrLib/FFRRotationGestureRecognizer.h>
 #import <FuffrLib/FFRLeftRightPluggableGestureRecognizer.h>
 
+/**
+ * Reference to the AppViewController instance.
+ */
+static AppViewController* theAppViewController;
+
+static BOOL FuffrIsConnected = NO;
+
+/**
+ * Bridge from JavaScript to Objective-C.
+ */
+@interface URLProtocolFuffrBridge : NSURLProtocol
+@end
+
+@implementation URLProtocolFuffrBridge
+
++ (BOOL)canInitWithRequest:(NSURLRequest*)theRequest
+{
+	return [theRequest.URL.path hasPrefix: @"/fuffr-bridge@"];
+}
+
++ (NSURLRequest*)canonicalRequestForRequest:(NSURLRequest*)theRequest
+{
+	return theRequest;
+}
+
+- (void)startLoading
+{
+	NSString* path = self.request.URL.path;
+
+	[theAppViewController executeJavaScriptCommand: path];
+
+	NSDictionary* headers = @{
+		@"Access-Control-Allow-Origin" : @"*",
+		@"Access-Control-Allow-Headers" : @"Content-Type"
+	};
+
+	NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc]
+		initWithURL: self.request.URL
+		statusCode: 200
+		HTTPVersion: @"1.1"
+		headerFields: headers];
+
+	NSData* data = [@"OK" dataUsingEncoding: NSUTF8StringEncoding];
+
+	/*NSURLResponse* response = [[NSURLResponse alloc]
+		initWithURL: self.request.URL
+		MIMEType: @"text/plain"
+		expectedContentLength: -1
+		textEncodingName: nil];*/
+	[[self client]
+		URLProtocol: self
+		didReceiveResponse: response
+		cacheStoragePolicy: NSURLCacheStorageNotAllowed];
+	[[self client] URLProtocol: self didLoadData: data];
+	[[self client] URLProtocolDidFinishLoading: self];
+
+	/*[[self client]
+			URLProtocol: self
+			didFailWithError: createError()];*/
+}
+
+- (void)stopLoading
+{
+}
+
+@end
+
 @implementation AppViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -25,6 +92,10 @@
     {
         // Add custom initialization if needed.
     }
+
+	// File global reference to the AppViewController instance.
+	theAppViewController = self;
+
     return self;
 }
 
@@ -98,12 +169,21 @@
 	// http://stackoverflow.com/questions/18947872/ios7-added-new-whitespace-in-uiwebview-removing-uiwebview-whitespace-in-ios7
 	self.automaticallyAdjustsScrollViewInsets = NO;
 	self.webView.scrollView.bounces = NO;
+	self.view.multipleTouchEnabled = YES;
 	[self.webView setBackgroundColor:[UIColor greenColor]];
 	[self.webView loadHTMLString:@"<html><body style='background:rgb(100,200,255);font-family:sans-serif;'><h1>Welcome to FuffrBox</h1><h3>Play games and make your own apps for Fuffr!</h3><h3>Enter url to page and select go.</h3></body></html>" baseURL:nil];
 
     [self.view addSubview: self.webView];
 
-	self.view.multipleTouchEnabled = YES;
+	[NSURLProtocol registerClass: [URLProtocolFuffrBridge class]];
+
+	// Connect to Evothings Studio.
+	NSURL* url = [NSURL URLWithString:@"http://192.168.20.115:4042"];
+	NSURLRequest* request = [NSURLRequest
+		requestWithURL: url
+		cachePolicy: NSURLRequestReloadIgnoringLocalAndRemoteCacheData
+		timeoutInterval: 10];
+	[self.webView loadRequest: request];
 }
 
 #pragma clang diagnostic push
@@ -156,16 +236,23 @@
 	// Get a reference to the touch manager.
 	FFRTouchManager* manager = [FFRTouchManager sharedManager];
 
-	// Connect to Fuffr, the onSuccess method will be
-	// called when connection is established.
+	// Set connected and disconnected action blocks.
 	[manager
-		connectToFuffrOnSuccess: ^{
-    		[[FFRTouchManager sharedManager]
+		onFuffrConnected:
+		^{
+			// Enable all sides as default.
+			[[FFRTouchManager sharedManager]
 				enableSides: FFRSideTop | FFRSideLeft | FFRSideRight | FFRSideBottom
 				touchesPerSide: @1 // Update to @2 when using parameter case.
 				];
+			FuffrIsConnected = YES;
+			[self callJS: @"fuffr.onConnected()"];
 		}
-		onError: ^{}];
+		onFuffrDisconnected:
+		^{
+			FuffrIsConnected = NO;
+			[self callJS: @"fuffr.onDisconnected()"];
+		}];
 }
 
 - (void) setupTouches
@@ -187,6 +274,30 @@
 		selector: @selector(touchesEnded:)
 		name: FFRTrackingEndedNotification
 		object: nil];
+}
+
+- (void) executeJavaScriptCommand: (NSString*) command
+{
+	NSArray* tokens = [command componentsSeparatedByString:@"@"];
+	NSString* commandName = [NSString stringWithString:[tokens objectAtIndex: 1]];
+
+	NSLog(@"executeJavaScriptCommand: %@", commandName);
+
+	if ([commandName isEqualToString: @"domLoaded"])
+	{
+		if (FuffrIsConnected)
+		{
+			[self callJS: @"fuffr.onConnected()"];
+		}
+	}
+	else if ([commandName isEqualToString: @"enableSides"])
+	{
+		NSString* sides = [NSString stringWithString:[tokens objectAtIndex: 2]];
+		NSString* touches = [NSString stringWithString:[tokens objectAtIndex: 3]];
+		[[FFRTouchManager sharedManager]
+			enableSides: (FFRSide)[sides intValue]
+			touchesPerSide: [NSNumber numberWithInt: [touches intValue]]];
+	}
 }
 
 - (void) onButtonBack: (id)sender
@@ -261,7 +372,17 @@
 		@"try{%@(%@)}catch(err){}",
 		functionName,
 		[self touchesAsJsArray: touches]];
-NSLog(@"calljs %@", functionName);
+	dispatch_async(dispatch_get_main_queue(),
+	^{
+		[self.webView stringByEvaluatingJavaScriptFromString: script];
+    });
+}
+
+- (void)callJS: (NSString*)code
+{
+	NSString* script = [NSString stringWithFormat:
+		@"try{%@}catch(err){}",
+		code];
 	dispatch_async(dispatch_get_main_queue(),
 	^{
 		[self.webView stringByEvaluatingJavaScriptFromString: script];

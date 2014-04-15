@@ -60,7 +60,7 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
         _manager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
         self.connectedDevices = [NSMutableArray array];
         self.discoveredDevices = [NSMutableArray array];
-        _monitoredServiceIdentifiers = [NSMutableDictionary dictionary];
+        //_monitoredServiceIdentifiers = [NSMutableDictionary dictionary];
 
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reactivated:) name:UIApplicationDidBecomeActiveNotification object:nil];
     }
@@ -84,8 +84,8 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
     @finally {
     }
 
-    [_monitoredServiceIdentifiers removeAllObjects];
-    _monitoredServiceIdentifiers = nil;
+    //[_monitoredServiceIdentifiers removeAllObjects];
+    //_monitoredServiceIdentifiers = nil;
 
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
@@ -105,7 +105,9 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 -(void) disconnectPeripheral:(CBPeripheral *)peripheral
 {
     [_connectedDevices removeObject:peripheral];
-    [self.handler deviceDisconnected:peripheral];
+	
+    // TODO: Called by didDisconnectPeripheral, remove this call.
+	//[self.handler deviceDisconnected:peripheral];
 
     _disconnectedPeripheral = peripheral;
     [_manager cancelPeripheralConnection:peripheral];
@@ -186,7 +188,7 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 */
 
 // Strange (duplicated) mechanism since services are discovered in didConnectPeriperal...
--(void) addMonitoredService:(NSString *)serviceIdentifier
+/*-(void) addMonitoredService:(NSString *)serviceIdentifier
 	onDiscovery:(void (^)(CBService* service, CBPeripheral* hostPeripheral))callback
 {
     [_monitoredServiceIdentifiers setObject:callback forKey:serviceIdentifier];
@@ -195,7 +197,7 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 	{
         [p discoverServices:nil];
     }
-}
+}*/
 
 -(void) startScan:(BOOL) continuous
 {
@@ -247,7 +249,8 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
         [_bluetoothAlertView dismissWithClickedButtonIndex:0 animated:TRUE];
         _bluetoothAlertView = nil;
     }
-    else if (errorMessage) {
+    else if (errorMessage)
+	{
         [self.discoveredDevices removeAllObjects];
         _bluetoothAlertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:errorMessage delegate:self cancelButtonTitle:NSLocalizedString(@"Ok", @"Ok") otherButtonTitles:nil];
         [_bluetoothAlertView show];
@@ -287,9 +290,9 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
     }
 
 	// Use this mechanism to monitor discovered devices rather than the KVO model.
-    if (self.onPeripheralDiscovery)
+    if (self.onPeripheralDiscovered)
 	{
-        self.onPeripheralDiscovery(peripheral);
+        self.onPeripheralDiscovered(peripheral);
     }
 }
 
@@ -319,14 +322,19 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
     [_connectedDevices removeObject:peripheral];
     [self.handler deviceDisconnected:peripheral];
 
-    if (_disconnectedPeripheral != peripheral) {
+	if (self.onPeriperalDisconnected)
+	{
+		self.onPeriperalDisconnected(peripheral);
+	}
 
+    if (_disconnectedPeripheral != peripheral)
+	{
 		// In case of shutdown, this seem to work.
-		NSLog(@"didDisconnectPeripheral: attempting to connect");
-
+		NSLog(@"didDisconnectPeripheral: attempting to reconnect");
         [self performSelector:@selector(connectPeripheral:) withObject:peripheral afterDelay:0.3];
     }
-    else {
+    else
+	{
 		NSLog(@"didDisconnectPeripheral: NOT attempting to connect");
         _disconnectedPeripheral = nil;
     }
@@ -355,14 +363,30 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 {
     LOGMETHOD
 
-    if (error) {
+    if (error)
+	{
         NSLog(@"peripheral:didDiscoverServices: error %@", error);
     }
 
-    for (CBService *service in peripheral.services) {
-        NSLog(@"service found: %@", service.UUID);
+    for (CBService *service in peripheral.services)
+	{
+        NSLog(@"Service found: %@", service.UUID);
 
-        for (NSString* identifier in _monitoredServiceIdentifiers) {
+		if ([service.UUID isEqualToString: self.sensorServiceUUID])
+		{
+			NSLog(@"Found Fuffr service!");
+
+			// Note: The dispatch was commented out in the original SensorCaseDemo code.
+			// discover characteristics for the service
+			//dispatch_async(_receiveQueue, ^{
+				[peripheral discoverCharacteristics:nil forService:service];
+			//});
+
+			break;
+		}
+
+        /* OLD CODE
+		for (NSString* identifier in _monitoredServiceIdentifiers) {
             if ([service.UUID isEqualToString:identifier]) {
                 NSLog(@"is monitored service!");
 
@@ -375,6 +399,7 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
                 break;
             }
         }
+		*/
     }
 }
 
@@ -417,7 +442,7 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
     //    NSLog(@"characteristic: %@, %@, %@", c.UUID, c.value, c);
     //}
 
-    for (NSString* identifier in _monitoredServiceIdentifiers) {
+    /*for (NSString* identifier in _monitoredServiceIdentifiers) {
         if ([service.UUID isEqualToString:identifier]) {
 
             NSLog(@"monitored service characteristics discovered!");
@@ -429,6 +454,15 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 
             break;
         }
+    }*/
+
+	if ([service.UUID isEqualToString: self.sensorServiceUUID])
+	{
+		NSLog(@"Service characteristics discovered!");
+		if (self.onCharacteristicsDiscovered)
+		{
+        	self.onCharacteristicsDiscovered(service, peripheral);
+    	}
     }
 }
 

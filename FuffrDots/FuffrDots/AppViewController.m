@@ -65,16 +65,21 @@
 	// Get a reference to the touch manager.
 	FFRTouchManager* manager = [FFRTouchManager sharedManager];
 
-	// Connect to Fuffr, the onSuccess method will be
-	// called when connection is established.
+	// Set active sides.
 	[manager
-		connectToFuffrOnSuccess: ^{
-    		[[FFRTouchManager sharedManager]
+		onFuffrConnected:
+		^{
+			NSLog(@"Fuffr Connected");
+			[[FFRTouchManager sharedManager]
 				enableSides: FFRSideTop | FFRSideLeft | FFRSideRight | FFRSideBottom
-				touchesPerSide: @1 // Change to @2 in new parameter case
+				touchesPerSide: @1 // Change to desired number of touches
+				                   // when using the new parameter case.
 				];
 		}
-		onError: ^{}];
+		onFuffrDisconnected:
+		^{
+			NSLog(@"Fuffr Disconnected");
+		}];
 
 	// Register methods for touch events. Here the side constants are
 	// bit-or:ed to capture touches on all four sides.
@@ -93,7 +98,7 @@
 
 - (void) touchesBegan: (NSSet*)touches
 {
-	NSLog(@"began %i", (int)touches.count);
+	//NSLog(@"began %i", (int)touches.count);
 
 	for (FFRTouch* touch in touches)
 	{
@@ -113,10 +118,10 @@
 
 - (void) touchesMoved: (NSSet*)touches
 {
-	NSLog(@"moved %i", (int)touches.count);
+	//NSLog(@"moved %i", (int)touches.count);
 	for (FFRTouch* touch in touches)
 	{
-		NSLog(@"  id %i", (int)touch.identifier);
+		//NSLog(@"  id %i", (int)touch.identifier);
 	}
 
 	[self redrawView];
@@ -124,7 +129,7 @@
 
 - (void) touchesEnded: (NSSet*)touches
 {
-	NSLog(@"ended %i", (int)touches.count);
+	//NSLog(@"ended %i", (int)touches.count);
 
 	for (FFRTouch* touch in touches)
 	{

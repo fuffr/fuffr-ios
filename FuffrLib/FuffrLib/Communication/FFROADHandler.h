@@ -11,7 +11,7 @@
 #import "FFRPeripheralHandler.h"
 
 /**
- The OAD service UDID as string
+ The OAD service UUID as string
  */
 extern NSString* const tiOADService;
 

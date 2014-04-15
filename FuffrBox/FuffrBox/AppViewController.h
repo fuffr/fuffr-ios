@@ -21,4 +21,6 @@
 /** The url field. */
 @property UITextField* urlField;
 
+- (void) executeJavaScriptCommand: (NSString*) command;
+
 @end

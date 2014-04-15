@@ -49,11 +49,11 @@
 @property CBPeripheral* activeDevice;
 
 /**
- * Connection success and error blocks.
- * Invoked when connected to Fuffr.
+ * Connected and disconnected blocks.
+ * Invoked when app is connected/disconnected to Fuffr.
  */
-@property (nonatomic, copy) void(^connectSuccessBlock)();
-@property (nonatomic, copy) void(^connectErrorBlock)();
+@property (nonatomic, copy) void(^onConnectedBlock)();
+@property (nonatomic, copy) void(^onDisconnectedBlock)();
 
 /** List of touch observers. */
 @property NSMutableArray* touchObservers;
@@ -112,11 +112,11 @@ static FFRTouchManager* sharedInstance = NULL;
 
 // Public instance methods.
 
-- (void) connectToFuffrOnSuccess: (void(^)())successBlock
-	onError: (void(^)())errorBlock
+- (void) onFuffrConnected: (void(^)())connectedBlock
+	onFuffrDisconnected: (void(^)())disconnectedBlock
 {
-	self.connectSuccessBlock = successBlock;
-	self.connectErrorBlock = errorBlock;
+	self.onConnectedBlock = connectedBlock;
+	self.onDisconnectedBlock = disconnectedBlock;
 
 	// Scan is started automatically by FFRBLEManager.
 	//[self startScan];
@@ -175,8 +175,8 @@ static FFRTouchManager* sharedInstance = NULL;
 
 - (id) init
 {
-	self.connectSuccessBlock = nil;
-	self.connectErrorBlock = nil;
+	self.onConnectedBlock = nil;
+	self.onDisconnectedBlock = nil;
 	self.touchObservers = [NSMutableArray array];
 	self.gestureRecognizers = [NSMutableArray array];
 	self.deviceWithMaxRSSI = nil;
@@ -229,7 +229,7 @@ static FFRTouchManager* sharedInstance = NULL;
 
 	// Set discovery callback.
     FFRBLEManager* bleManager = [FFRBLEManager sharedManager];
-	bleManager.onPeripheralDiscovery = ^(CBPeripheral* p)
+	bleManager.onPeripheralDiscovered = ^(CBPeripheral* p)
 	{
 		NSLog(@"Found peripheral: %@", p.name);
 
@@ -311,6 +311,8 @@ static FFRTouchManager* sharedInstance = NULL;
     if (![bleManager.handler isKindOfClass: [FFRCaseHandler class]])
 	{
         bleManager.handler = [FFRCaseHandler new];
+		
+		// OLD CODE
 		/*if ([bleManager.connectedDevices count] > 0)
 		{
 			NSLog(@"initFuffr loadPeripheral");
@@ -323,33 +325,29 @@ static FFRTouchManager* sharedInstance = NULL;
 		}*/
     }
 
-	// If we have not connected, proceed using the addMonitoredService
-	// mechanism...
-
+	bleManager.sensorServiceUUID = FFRCaseSensorServiceUUID;
     __weak FFRTouchManager* me = self;
 	__weak FFRBLEManager* manager = bleManager;
-	// Starts service discovery.
-    [bleManager
-		addMonitoredService: FFRCaseSensorServiceUuid
+	bleManager.onCharacteristicsDiscovered =
+		^(CBService* service, CBPeripheral* hostPeripheral)
+		{
+			NSLog(@"initFuffr onCharacteristicsDiscovered");
+        	[manager.handler loadPeripheral:hostPeripheral];
+			me.onConnectedBlock();
+    	};
+
+	// OLD CODE
+    /*[bleManager
+		addMonitoredService: FFRCaseSensorServiceUUID
 		onDiscovery: ^(CBService* service, CBPeripheral* hostPeripheral)
 		{
 			NSLog(@"initFuffr loadPeripheral monitored service");
         	[manager.handler loadPeripheral:hostPeripheral];
-			[me notifyConnected: YES];
+			me.onConnectedBlock();
     	}
-	];
-}
+	];*/
 
-- (void) notifyConnected: (BOOL)success
-{
-	if (success)
-	{
-		self.connectSuccessBlock();
-	}
-	else
-	{
-		self.connectErrorBlock();
-	}
+
 }
 
 - (void) enableSides:(FFRSide)sides touchesPerSide: (NSNumber*)numberOfTouches

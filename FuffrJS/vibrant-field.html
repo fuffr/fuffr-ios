@@ -4,14 +4,62 @@
     <meta charset="utf-8" />
 	<meta name="viewport" content="user-scalable=yes, initial-scale=1"/>
     <title>Vibrant Field</title>
-	<script src="jquery/jquery.js"></script>
-	<script src="paperjs/paper.js"></script>
-	<script src="fuffr.js"></script>
 </head>
 <body>
 
 <canvas id="paper-canvas" resize></canvas>
 
+<script src="jquery/jquery.js"></script>
+<script src="paperjs/paper.js"></script>
+<script src="fuffr.js"></script>
+<script>
+function touchHandler(touches)
+{
+	var foundLeftTouch = false;
+	var foundRightTouch = false;
+
+	for (var i = 0; i < touches.length; ++i)
+	{
+		var touch = touches[i]
+		if (touch.side == fuffr.FFRSideLeft && !foundLeftTouch)
+		{
+			 foundLeftTouch = true;
+			 OnLeftTouch(
+			 	touch.id,
+			 	touch.x,
+			 	touch.y,
+			 	touch.prevx,
+			 	touch.prevy,
+			 	touch.normx,
+			 	touch.normy)
+		}
+		if (touch.side == fuffr.FFRSideRight && !foundRightTouch)
+		{
+			 foundRightTouch = true;
+			 OnRightTouch(
+			 	touch.id,
+			 	touch.x,
+			 	touch.y,
+			 	touch.prevx,
+			 	touch.prevy,
+			 	touch.normx,
+			 	touch.normy)
+		}
+	}
+}
+
+fuffr.onTouchesBegan = touchHandler
+fuffr.onTouchesMoved = touchHandler
+fuffr.onTouchesEnded = touchHandler
+
+fuffr.onConnected = function()
+{
+	hyper.log('Fuffr Connected!')
+	fuffr.enableSides(
+		fuffr.FFRSideRight | fuffr.FFRSideLeft,
+		1)
+}
+</script>
 <script type="text/paperscript" canvas="paper-canvas">
 var windowWidth = $(window).width()
 var windowHeight = $(window).height()

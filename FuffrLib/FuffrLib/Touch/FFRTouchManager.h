@@ -33,19 +33,15 @@
 // Public instance methods.
 
 /**
- * Method for connecting to the Fuffr.
- * The onSuccess method is called on object
- * when the connection is establised. 
- * Support for the onError method is not yet 
- * implemented (this method is never called).
+ * Set callbacks for connected and disconnected events.
  */
-- (void) connectToFuffrOnSuccess: (void(^)())successBlock
-	onError: (void(^)())errorBlock;
+- (void) onFuffrConnected: (void(^)())connectedBlock
+	onFuffrDisconnected: (void(^)())disconnectedBlock;
 
 /**
     Callback when a device is discovered
  */
-@property (nonatomic, copy) void(^onPeripheralDiscovery)(CBPeripheral* p);
+// remove @property (nonatomic, copy) void(^onPeripheralDiscovery)(CBPeripheral* p);
 
 /**
  * Enable sides of Fuffr.

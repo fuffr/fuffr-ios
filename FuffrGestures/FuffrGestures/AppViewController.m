@@ -92,18 +92,20 @@
 	// Get a reference to the touch manager.
 	FFRTouchManager* manager = [FFRTouchManager sharedManager];
 
-	// Connect to Fuffr, the onSuccess method will be
-	// called when connection is established.
-	// Support for onError is not complete.
+	// Set active sides.
 	[manager
-		connectToFuffrOnSuccess: ^{
-			NSLog(@"fuffrConnected");
-    		[[FFRTouchManager sharedManager]
+		onFuffrConnected:
+		^{
+			NSLog(@"Fuffr Connected");
+			[[FFRTouchManager sharedManager]
 				enableSides: FFRSideTop | FFRSideLeft | FFRSideRight | FFRSideBottom
-				touchesPerSide: @1 // Update to @2 when using parameter case.
+				touchesPerSide: @1 // Change to 2 touches when using the new parameter case.
 				];
 		}
-		onError: ^{}];
+		onFuffrDisconnected:
+		^{
+			NSLog(@"Fuffr Disconnected");
+		}];
 }
 
 - (void) setupTouches
