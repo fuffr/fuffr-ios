@@ -21,6 +21,10 @@
 /** The url field. */
 @property UITextField* urlField;
 
+@property NSMutableDictionary* gestureListeners;
+
 - (void) executeJavaScriptCommand: (NSString*) command;
+
+- (void) callJS: (NSString*) code;
 
 @end

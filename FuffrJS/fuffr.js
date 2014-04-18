@@ -11,8 +11,41 @@ fuffr.FFRSideBottom = 2
 fuffr.FFRSideLeft = 4
 fuffr.FFRSideRight = 8
 
-// Event functions.
-// Assign your own functions to these functions.
+/**
+ * Values for gesture types.
+ */
+fuffr.FFRGesturePan = 1
+fuffr.FFRGesturePinch = 2
+fuffr.FFRGestureRotate = 3
+fuffr.FFRGestureTap = 4
+fuffr.FFRGestureDoubleTap = 5
+fuffr.FFRGestureLongPress = 6
+fuffr.FFRGestureSwipeLeft = 7
+fuffr.FFRGestureSwipeRight = 8
+fuffr.FFRGestureSwipeUp = 9
+fuffr.FFRGestureSwipeDown = 10
+
+/**
+ * Values for gesture states.
+ */
+fuffr.FFRGestureRecognizerStateUnknown = 0
+fuffr.FFRGestureRecognizerStateBegan = 1
+fuffr.FFRGestureRecognizerStateChanged = 2
+fuffr.FFRGestureRecognizerStateEnded = 3
+
+/**
+ * Counter for native callback ids.
+ */
+fuffr.callbackIdCounter = 0
+
+/**
+ * Table that holds native callback functions.
+ */
+fuffr.callbackTable = {}
+
+// BEGIN Event functions.
+
+// Assign your own functions to these members.
 
 /**
  * Called when connected to Fuffr.
@@ -41,6 +74,8 @@ fuffr.onTouchesBegan = function(touches) {}
 fuffr.onTouchesMoved = function(touches) {}
 fuffr.onTouchesEnded = function(touches) {}
 
+// END Event functions.
+
 /**
  * Set active sides and the number of touches per side.
  * @param sides - you can bit:or side values together, e.g.
@@ -55,6 +90,60 @@ fuffr.enableSides = function(sides, touchesPerSide, win, fail)
 		'enableSides@' + sides + '@' + touchesPerSide + '@',
 		win,
 		fail)
+}
+
+fuffr.addGesture = function(gestureType, side, callbackFun)
+{
+	var gestureId = ++fuffr.callbackIdCounter
+	fuffr.callbackTable[gestureId] = callbackFun
+	fuffr.callNative(
+		'addGesture@' + gestureType + '@' + side + '@' + gestureId + '@')
+	return gestureId
+}
+
+fuffr.removeGesture = function(gestureId)
+{
+	fuffr.removeCallback(gestureId)
+	fuffr.callNative(
+		'removeGesture@' + gestureId + '@')
+}
+
+fuffr.removeAllGestures = function()
+{
+	// TODO: Remove all gesture callbacks. Add list to hold ids.
+	fuffr.callNative('removeAllGestures@')
+}
+
+fuffr.addCallback = function(callbackFun)
+{
+	var callbackId = ++fuffr.callbackIdCounter
+	fuffr.callbackTable[callbackId] = callbackFun
+	return callbackId
+}
+
+/**
+ * Called from JS and native to remove callback.
+ */
+fuffr.removeCallback = function(callbackId)
+{
+	delete fuffr.callbackTable[callbackId]
+}
+
+/**
+ * Called from native to run callback.
+ */
+fuffr.performCallback = function(callbackId)
+{
+	var callbackFun = fuffr.callbackTable[callbackId]
+	if (callbackFun)
+	{
+		// Remove the first param, the callbackId.
+		var args = Array.prototype.slice.call(arguments)
+		args.shift()
+
+		// Call the function.
+		callbackFun.apply(null, args)
+	}
 }
 
 fuffr.callNative = function(command, win, fail)
@@ -81,5 +170,5 @@ fuffr.callNative = function(command, win, fail)
 
 document.addEventListener('DOMContentLoaded', function(event)
 {
-    fuffr.callNative('domLoaded@')
+    //fuffr.callNative('domLoaded@')
 })

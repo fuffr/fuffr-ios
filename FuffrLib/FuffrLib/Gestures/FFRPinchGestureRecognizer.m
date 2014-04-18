@@ -87,14 +87,14 @@
 		self.startDistance = [self currentDistance];
 		self.previousDistance = self.startDistance;
 		self.scale = 0.0;
-		self.state = UIGestureRecognizerStateBegan;
+		self.state = FFRGestureRecognizerStateBegan;
 	}
 
 	CGFloat newDistance = [self currentDistance];
 	if (ABS(newDistance - self.previousDistance) > self.pinchThresholdTouchDistance)
 	{
 		self.previousDistance = newDistance;
-		self.state = UIGestureRecognizerStateChanged;
+		self.state = FFRGestureRecognizerStateChanged;
 		self.scale = newDistance / self.startDistance;
 		[self performAction];
 	}
@@ -104,7 +104,7 @@
 {
 	if (self.touch1 != nil && self.touch1 != nil)
 	{
-		self.state = UIGestureRecognizerStateEnded;
+		self.state = FFRGestureRecognizerStateEnded;
 		[self performAction];
 	}
 

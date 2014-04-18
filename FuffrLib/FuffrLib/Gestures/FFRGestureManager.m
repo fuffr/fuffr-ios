@@ -6,6 +6,10 @@
 //  Copyright (c) 2013 Fuffr. All rights reserved.
 //
 
+// TODO: Remove class!
+
+#ifdef NOT_DEFINED_AT_ALL
+
 #import "FFRGestureManager.h"
 #import "FFRCaseHandler.h"
 #import "FFRGestureRecognizer.h"
@@ -72,7 +76,7 @@
     // pass on to any recognizer with views that the point is in and is in started state
     // detect if moved outside of view, send cancelled if in started state
     for (FFRGestureRecognizer* recognizer in _recognizers) {
-        if (recognizer.state == UIGestureRecognizerStateBegan || recognizer.state == UIGestureRecognizerStateChanged || recognizer.state == UIGestureRecognizerStatePossible) {
+        if (recognizer.state == FFRGestureRecognizerStateBegan || recognizer.state == FFRGestureRecognizerStateChanged || recognizer.state == UIGestureRecognizerStatePossible) {
             BOOL needsCancel = FALSE;
             for (FFRTouch* track in tracking) {
                 if (!CGRectContainsPoint(recognizer.view.frame, track.location)) {
@@ -102,7 +106,7 @@
 
     // pass on to any recognizer with views that the point is in and is in started state
     for (FFRGestureRecognizer* recognizer in _recognizers) {
-        if (recognizer.state == UIGestureRecognizerStateBegan || recognizer.state == UIGestureRecognizerStateChanged) {
+        if (recognizer.state == FFRGestureRecognizerStateBegan || recognizer.state == FFRGestureRecognizerStateChanged) {
 
             for (FFRTouch* track in tracking) {
                 if (CGRectContainsPoint(recognizer.view.frame, track.location)) {
@@ -114,3 +118,5 @@
 }
 
 @end
+
+#endif

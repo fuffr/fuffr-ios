@@ -86,7 +86,7 @@
 		self.touch2 = [touchArray objectAtIndex: 1];
 		self.previousRotation = [self calculateRotation];
 		self.rotation = 0.0;
-		self.state = UIGestureRecognizerStateBegan;
+		self.state = FFRGestureRecognizerStateBegan;
 	}
 	else
 	{
@@ -94,7 +94,7 @@
 		CGFloat deltaRotation = newRotation - self.previousRotation;
 		if (ABS(deltaRotation) > ((self.rotationThreshold / 180) * M_PI))
 		{
-			self.state = UIGestureRecognizerStateChanged;
+			self.state = FFRGestureRecognizerStateChanged;
 			self.previousRotation = newRotation;
 			deltaRotation = MIN(deltaRotation, 0.5);
 			deltaRotation = MAX(deltaRotation, -0.5);
@@ -109,7 +109,7 @@
 {
 	if (self.touch1 != nil && self.touch1 != nil)
 	{
-		self.state = UIGestureRecognizerStateEnded;
+		self.state = FFRGestureRecognizerStateEnded;
 		[self performAction];
 	}
 

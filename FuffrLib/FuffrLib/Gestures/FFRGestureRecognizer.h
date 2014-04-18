@@ -9,6 +9,18 @@
 #import <Foundation/Foundation.h>
 #import "FFRTouch.h"
 
+/**
+ * Type that defines constants for the sides Fuffr.
+ */
+typedef enum
+{
+    FFRGestureRecognizerStateUnknown = 0,
+    FFRGestureRecognizerStateBegan = 1,
+    FFRGestureRecognizerStateChanged = 2,
+    FFRGestureRecognizerStateEnded = 3
+}
+FFRGestureRecognizerState;
+
 @interface TargetActionPair : NSObject
 
 @property (nonatomic, weak) id target;
@@ -26,7 +38,7 @@
 /**
  State of gesture recognizer
  */
-@property (nonatomic, assign) UIGestureRecognizerState state;
+@property (nonatomic, assign) FFRGestureRecognizerState state;
 
 /**
  The side or sides the gestures recognized monitors.

@@ -26,7 +26,7 @@
         _startPoint = touch.location;
     }
 
-    self.state = UIGestureRecognizerStateBegan;
+    self.state = FFRGestureRecognizerStateBegan;
 }
 
 -(void) touchesMoved:(NSSet *)touches {
@@ -52,7 +52,7 @@
         [self performAction];
     }
 
-    self.state = UIGestureRecognizerStateEnded;
+    self.state = FFRGestureRecognizerStateEnded;
 }
 
 -(void) touchesCancelled:(NSSet *)touches {

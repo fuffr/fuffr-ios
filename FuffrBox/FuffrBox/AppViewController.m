@@ -14,13 +14,15 @@
 #import <FuffrLib/FFRPinchGestureRecognizer.h>
 #import <FuffrLib/FFRPanGestureRecognizer.h>
 #import <FuffrLib/FFRRotationGestureRecognizer.h>
-#import <FuffrLib/FFRLeftRightPluggableGestureRecognizer.h>
 
 /**
  * Reference to the AppViewController instance.
  */
 static AppViewController* theAppViewController;
 
+/**
+ * Could not resist shortcut using a global.
+ */
 static BOOL FuffrIsConnected = NO;
 
 /**
@@ -83,6 +85,186 @@ static BOOL FuffrIsConnected = NO;
 
 @end
 
+/**
+ * Gesture listener.
+ */
+@interface GestureListener : NSObject
+
+@property int gestureId;
+@property (nonatomic, strong) FFRGestureRecognizer* recognizer;
+@property (nonatomic, weak) AppViewController* controller;
+
++ (GestureListener*) withGestureId: (int) gestureId
+	type: (int) type
+	side: (FFRSide) side
+	controller: (AppViewController*) theController;
+
+- (void) onPan: (FFRPanGestureRecognizer*) recognizer;
+- (void) onPinch:(FFRPinchGestureRecognizer*) recognizer;
+- (void) onRotation:(FFRRotationGestureRecognizer*) recognizer;
+- (void) onTap:(FFRTapGestureRecognizer*) recognizer;
+//- (void) onDoubleTap:(FFRDoubleTapGestureRecognizer*) recognizer;
+- (void) onLongPress:(FFRLongPressGestureRecognizer*) recognizer;
+- (void) onSwipe:(FFRSwipeGestureRecognizer*) recognizer;
+
+@end
+
+@implementation GestureListener
+
++ (GestureListener*) withGestureId: (int) gestureId
+	type: (int) type
+	side: (FFRSide) side
+	controller: (AppViewController*) theController
+{
+	GestureListener* me = [GestureListener new];
+
+	me.gestureId = gestureId;
+	me.controller = theController;
+
+	if (1 == type)
+	{
+		me.recognizer = [FFRPanGestureRecognizer new];
+    	[me.recognizer
+			addTarget: me
+			action: @selector(onPan:)];
+	}
+	else if (2 == type)
+	{
+		me.recognizer = [FFRPinchGestureRecognizer new];
+    	[me.recognizer
+			addTarget: me
+			action: @selector(onPinch:)];
+	}
+	else if (3 == type)
+	{
+		me.recognizer = [FFRRotationGestureRecognizer new];
+    	[me.recognizer
+			addTarget: me
+			action: @selector(onRotation:)];
+	}
+	else if (4 == type)
+	{
+		me.recognizer = [FFRTapGestureRecognizer new];
+    	[me.recognizer
+			addTarget: me
+			action: @selector(onTap:)];
+	}
+	else if (5 == type)
+	{
+		// TODO: Implement.
+		//me.recognizer = [FFRDoubleTapGestureRecognizer new];
+	}
+	else if (6 == type)
+	{
+		me.recognizer = [FFRLongPressGestureRecognizer new];
+    	[me.recognizer
+			addTarget: me
+			action: @selector(onLongPress:)];
+	}
+	else if (7 == type)
+	{
+		FFRSwipeGestureRecognizer* swipe = [FFRSwipeGestureRecognizer new];
+		swipe.direction = UISwipeGestureRecognizerDirectionLeft;
+		me.recognizer = swipe;
+    	[me.recognizer
+			addTarget: me
+			action: @selector(onSwipe:)];
+	}
+	else if (8 == type)
+	{
+		FFRSwipeGestureRecognizer* swipe = [FFRSwipeGestureRecognizer new];
+		swipe.direction = UISwipeGestureRecognizerDirectionRight;
+		me.recognizer = swipe;
+    	[me.recognizer
+			addTarget: me
+			action: @selector(onSwipe:)];
+	}
+	else if (9 == type)
+	{
+		FFRSwipeGestureRecognizer* swipe = [FFRSwipeGestureRecognizer new];
+		swipe.direction = UISwipeGestureRecognizerDirectionUp;
+		me.recognizer = swipe;
+    	[me.recognizer
+			addTarget: me
+			action: @selector(onSwipe:)];
+	}
+	else if (10 == type)
+	{
+		FFRSwipeGestureRecognizer* swipe = [FFRSwipeGestureRecognizer new];
+		swipe.direction = UISwipeGestureRecognizerDirectionDown;
+		me.recognizer = swipe;
+    	[me.recognizer
+			addTarget: me
+			action: @selector(onSwipe:)];
+	}
+
+	me.recognizer.side = side;
+
+	[[FFRTouchManager sharedManager] addGestureRecognizer: me.recognizer];
+
+	return me;
+}
+
+- (void) onPan: (FFRPanGestureRecognizer*) recognizer
+{
+	NSString* code = [NSString stringWithFormat:
+		@"fuffr.performCallback(%i,%i,%f,%f)",
+		self.gestureId,
+		recognizer.state,
+		recognizer.translation.width,
+		recognizer.translation.height];
+	[self.controller callJS: code];
+}
+
+- (void) onPinch:(FFRPinchGestureRecognizer*) recognizer
+{
+	NSString* code = [NSString stringWithFormat:
+		@"fuffr.performCallback(%i,%i,%f)",
+		self.gestureId,
+		recognizer.state,
+		recognizer.scale];
+	[self.controller callJS: code];
+}
+
+- (void) onRotation:(FFRRotationGestureRecognizer*) recognizer
+{
+	NSString* code = [NSString stringWithFormat:
+		@"fuffr.performCallback(%i,%i,%f)",
+		self.gestureId,
+		recognizer.state,
+		recognizer.rotation];
+	[self.controller callJS: code];
+}
+
+- (void) onTap:(FFRTapGestureRecognizer*) recognizer
+{
+	NSString* code = [NSString stringWithFormat:
+		@"fuffr.performCallback(%i,%i)",
+		self.gestureId,
+		recognizer.state];
+	[self.controller callJS: code];
+}
+
+- (void) onLongPress:(FFRLongPressGestureRecognizer*) recognizer
+{
+	NSString* code = [NSString stringWithFormat:
+		@"fuffr.performCallback(%i,%i)",
+		self.gestureId,
+		recognizer.state];
+	[self.controller callJS: code];
+}
+
+- (void) onSwipe:(FFRSwipeGestureRecognizer*) recognizer
+{
+	NSString* code = [NSString stringWithFormat:
+		@"fuffr.performCallback(%i,%i)",
+		self.gestureId,
+		recognizer.state];
+	[self.controller callJS: code];
+}
+
+@end
+
 @implementation AppViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -93,8 +275,10 @@ static BOOL FuffrIsConnected = NO;
         // Add custom initialization if needed.
     }
 
-	// File global reference to the AppViewController instance.
+	// Global reference to the AppViewController instance.
 	theAppViewController = self;
+
+	self.gestureListeners = [NSMutableDictionary new];
 
     return self;
 }
@@ -178,7 +362,7 @@ static BOOL FuffrIsConnected = NO;
 	[NSURLProtocol registerClass: [URLProtocolFuffrBridge class]];
 
 	// Connect to Evothings Studio.
-	NSURL* url = [NSURL URLWithString:@"http://192.168.20.115:4042"];
+	NSURL* url = [NSURL URLWithString:@"http://192.168.43.131:4042"];
 	NSURLRequest* request = [NSURLRequest
 		requestWithURL: url
 		cachePolicy: NSURLRequestReloadIgnoringLocalAndRemoteCacheData
@@ -281,23 +465,73 @@ static BOOL FuffrIsConnected = NO;
 	NSArray* tokens = [command componentsSeparatedByString:@"@"];
 	NSString* commandName = [NSString stringWithString:[tokens objectAtIndex: 1]];
 
-	NSLog(@"executeJavaScriptCommand: %@", commandName);
+	NSLog(@"executeJavaScriptCommand: %@", command);
 
 	if ([commandName isEqualToString: @"domLoaded"])
 	{
-		if (FuffrIsConnected)
-		{
-			[self callJS: @"fuffr.onConnected()"];
-		}
+		[self jsCommandDomLoaded: tokens];
 	}
 	else if ([commandName isEqualToString: @"enableSides"])
 	{
-		NSString* sides = [NSString stringWithString:[tokens objectAtIndex: 2]];
-		NSString* touches = [NSString stringWithString:[tokens objectAtIndex: 3]];
-		[[FFRTouchManager sharedManager]
-			enableSides: (FFRSide)[sides intValue]
-			touchesPerSide: [NSNumber numberWithInt: [touches intValue]]];
+		[self jsCommandEnableSides: tokens];
 	}
+	else if ([commandName isEqualToString: @"addGesture"])
+	{
+		[self jsCommandAddGesture: tokens];
+	}
+	else if ([commandName isEqualToString: @"removeGesture"])
+	{
+		[self jsCommandRemoveGesture: tokens];
+	}
+}
+
+- (void) jsCommandDomLoaded: (NSArray*) tokens
+{
+	if (FuffrIsConnected)
+	{
+		[self callJS: @"fuffr.onConnected()"];
+	}
+}
+
+- (void) jsCommandEnableSides: (NSArray*) tokens
+{
+	NSString* sides = [NSString stringWithString:[tokens objectAtIndex: 2]];
+	NSString* touches = [NSString stringWithString:[tokens objectAtIndex: 3]];
+	[[FFRTouchManager sharedManager]
+		enableSides: (FFRSide)[sides intValue]
+		touchesPerSide: [NSNumber numberWithInt: [touches intValue]]];
+}
+
+- (void) jsCommandAddGesture: (NSArray*) tokens
+{
+	NSString* gestureType = [NSString stringWithString:[tokens objectAtIndex: 2]];
+	NSString* gestureSide = [NSString stringWithString:[tokens objectAtIndex: 3]];
+	NSString* gestureId = [NSString stringWithString:[tokens objectAtIndex: 4]];
+
+	int type = [gestureType intValue];
+	FFRSide side = [gestureSide intValue];
+	int gestId = [gestureId intValue];
+
+	GestureListener* gesture = [GestureListener
+		withGestureId: gestId
+		type: type
+		side: side
+		controller: self];
+
+	[self.gestureListeners setObject: gesture forKey: gestureId];
+}
+
+- (void) jsCommandRemoveGesture: (NSArray*) tokens
+{
+	NSString* gestureId = [NSString stringWithString:[tokens objectAtIndex: 2]];
+
+	// Remove gesture from list of gesture listeners.
+	[self.gestureListeners removeObjectForKey: gestureId];
+}
+
+- (void) jsCommandRemoveAllGestures: (NSArray*) tokens
+{
+	[self.gestureListeners removeAllObjects];
 }
 
 - (void) onButtonBack: (id)sender
@@ -366,7 +600,7 @@ static BOOL FuffrIsConnected = NO;
 }
 
 // Example call: fuffr.onTouchesBegan([{...},{...},...])
-- (void)callJS: (NSString*) functionName withTouches: (NSSet*)touches
+- (void) callJS: (NSString*) functionName withTouches: (NSSet*) touches
 {
 	NSString* script = [NSString stringWithFormat:
 		@"try{%@(%@)}catch(err){}",
@@ -378,7 +612,7 @@ static BOOL FuffrIsConnected = NO;
     });
 }
 
-- (void)callJS: (NSString*)code
+- (void) callJS: (NSString*) code
 {
 	NSString* script = [NSString stringWithFormat:
 		@"try{%@}catch(err){}",
@@ -389,7 +623,7 @@ static BOOL FuffrIsConnected = NO;
     });
 }
 
-- (NSString*) touchesAsJsArray: (NSSet*)touches
+- (NSString*) touchesAsJsArray: (NSSet*) touches
 {
 	NSMutableString* arrayString = [NSMutableString stringWithCapacity: 300];
 

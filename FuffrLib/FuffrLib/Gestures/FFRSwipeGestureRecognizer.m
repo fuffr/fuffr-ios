@@ -37,27 +37,27 @@
     }
 
     if (self.state == UIGestureRecognizerStatePossible) {
-        self.state = UIGestureRecognizerStateBegan;
+        self.state = FFRGestureRecognizerStateBegan;
     }
-    else if (self.state == UIGestureRecognizerStateBegan) {
+    else if (self.state == FFRGestureRecognizerStateBegan) {
         if (end - _start <= 0.5) {
             CGFloat distance = [self maxDistanceBetween:_startPoint andPoint:endPoint];
             if (distance > 30) {
                 if (self.direction == UISwipeGestureRecognizerDirectionRight && ABS(_startPoint.x - endPoint.x) > ABS(_startPoint.y - endPoint.y) && endPoint.x > _startPoint.x) {
                     [self performAction];
-                    self.state = UIGestureRecognizerStateEnded;
+                    self.state = FFRGestureRecognizerStateEnded;
                 }
                 else if (self.direction == UISwipeGestureRecognizerDirectionLeft && ABS(_startPoint.x - endPoint.x) > ABS(_startPoint.y - endPoint.y) && _startPoint.x > endPoint.x) {
                     [self performAction];
-                    self.state = UIGestureRecognizerStateEnded;
+                    self.state = FFRGestureRecognizerStateEnded;
                 }
                 else if (self.direction == UISwipeGestureRecognizerDirectionUp && ABS(_startPoint.y - endPoint.y) > ABS(_startPoint.x - endPoint.x) && _startPoint.y > endPoint.y) {
                     [self performAction];
-                    self.state = UIGestureRecognizerStateEnded;
+                    self.state = FFRGestureRecognizerStateEnded;
                 }
                 else if (self.direction == UISwipeGestureRecognizerDirectionDown && ABS(_startPoint.y - endPoint.y) > ABS(_startPoint.x - endPoint.x) && endPoint.y > _startPoint.y) {
                     [self performAction];
-                    self.state = UIGestureRecognizerStateEnded;
+                    self.state = FFRGestureRecognizerStateEnded;
                 }
                 else {
                     self.state = UIGestureRecognizerStateCancelled;
@@ -79,7 +79,7 @@
     LOGMETHOD
 
     //NSLog(@"touchesEnded: %@ - %@", touches, event);
-    self.state = UIGestureRecognizerStateEnded;
+    self.state = FFRGestureRecognizerStateEnded;
 }
 
 -(void) touchesCancelled:(NSSet *)touches {

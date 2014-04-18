@@ -6,6 +6,10 @@
 //  Copyright (c) 2013 Fuffr. All rights reserved.
 //
 
+// TODO: Remove class!
+
+#ifdef NOT_DEFINED_AT_ALL
+
 #import <Foundation/Foundation.h>
 
 
@@ -34,3 +38,5 @@
 -(void) removeGestureRecognizer:(FFRGestureRecognizer*)recognizer;
 
 @end
+
+#endif

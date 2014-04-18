@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+	<meta name="viewport" content="user-scalable=no, initial-scale=1"/>
+    <title>Map</title>
+	<style>
+	html, body, #map-canvas
+	{
+		height: 100%;
+		margin: 0px;
+        padding: 0px;
+	}
+	</style>
+</head>
+<body>
+
+<div id="map-canvas"></div>
+
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+<script src="fuffr.js"></script>
+
+<script>
+var map
+
+function initialize()
+{
+	var mapOptions =
+	{
+		zoom: 8,
+		center: new google.maps.LatLng(-34.397, 150.644)
+	}
+
+	map = new google.maps.Map(
+		document.getElementById('map-canvas'),
+		mapOptions)
+}
+
+google.maps.event.addDomListener(window, 'load', initialize)
+
+var prevPanX = 0
+var prevPanY = 0
+
+function onPan(state, panX, panY)
+{
+	hyper.log('Fuffr onPan: ' + state + ' ' + panX + ' ' + panY)
+
+	if (fuffr.FFRGestureRecognizerStateChanged == state)
+	{
+		var deltaX = panX - prevPanX
+		var deltaY = panY - prevPanY
+		prevPanX = panX
+		prevPanY = panY
+		map.panBy(deltaX * 2, -deltaY)
+	}
+
+	if (fuffr.FFRGestureRecognizerStateEnded == state)
+	{
+		prevPanX = 0
+		prevPanY = 0
+	}
+}
+
+// Zoom 1-21
+var baseZoom = 0
+
+function onPinch(state, scale)
+{
+	hyper.log('Fuffr onPinch: ' + state + ' ' + scale)
+
+	if (0 == baseZoom)
+	{
+		baseZoom = map.getZoom()
+	}
+
+	if (fuffr.FFRGestureRecognizerStateChanged == state)
+	{
+		var zoomStep = Math.round((2 * scale) - 2)
+		hyper.log('zoomStep: ' + zoomStep)
+		map.setZoom(baseZoom + zoomStep)
+	}
+
+	if (fuffr.FFRGestureRecognizerStateEnded == state)
+	{
+		baseZoom = map.getZoom()
+	}
+}
+
+fuffr.onConnected = function()
+{
+	hyper.log('Fuffr Connected!')
+	fuffr.enableSides(
+		fuffr.FFRSideRight | fuffr.FFRSideLeft,
+		2)
+}
+
+fuffr.removeAllGestures()
+fuffr.addGesture(
+	fuffr.FFRGesturePan,
+	fuffr.FFRSideRight,
+	onPan)
+fuffr.addGesture(
+	fuffr.FFRGesturePinch,
+	fuffr.FFRSideLeft,
+	onPinch)
+</script>
+
+</body>
+</html>

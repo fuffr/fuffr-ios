@@ -20,7 +20,7 @@
         _startPoint = touch.location;
     }
 
-    self.state = UIGestureRecognizerStateBegan;
+    self.state = FFRGestureRecognizerStateBegan;
 
     _timer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(timerFired:) userInfo:nil repeats:FALSE];
 }
@@ -34,8 +34,8 @@
         _currentPoint = touch.location;
     }
 
-    if (self.state == UIGestureRecognizerStateRecognized || self.state == UIGestureRecognizerStateChanged) {
-        self.state = UIGestureRecognizerStateChanged;
+    if (self.state == UIGestureRecognizerStateRecognized || self.state == FFRGestureRecognizerStateChanged) {
+        self.state = FFRGestureRecognizerStateChanged;
         [self performAction];
     }
 }
@@ -47,12 +47,12 @@
     _startTime = 0;
 
     //NSLog(@"touchesEnded: %@ - %@", touches, event);
-    if (self.state == UIGestureRecognizerStateRecognized || self.state == UIGestureRecognizerStateChanged) {
-        self.state = UIGestureRecognizerStateEnded;
+    if (self.state == UIGestureRecognizerStateRecognized || self.state == FFRGestureRecognizerStateChanged) {
+        self.state = FFRGestureRecognizerStateEnded;
         [self performAction];
     }
 
-    self.state = UIGestureRecognizerStateEnded;
+    self.state = FFRGestureRecognizerStateEnded;
 }
 
 -(void) touchesCancelled:(NSSet *)touches {
@@ -69,7 +69,7 @@
         NSLog(@"time: %f", touch.timestamp - _startTime);
     }
 
-    if (self.state == UIGestureRecognizerStateRecognized || self.state == UIGestureRecognizerStateChanged) {
+    if (self.state == UIGestureRecognizerStateRecognized || self.state == FFRGestureRecognizerStateChanged) {
         self.state = UIGestureRecognizerStateCancelled;
         [self performAction];
     }
@@ -82,7 +82,7 @@
 -(void) timerFired:(id)sender {
     CGFloat distance = [self maxDistanceBetween:_startPoint andPoint:_currentPoint];
 
-    if (distance < 10 && self.state == UIGestureRecognizerStateBegan) {
+    if (distance < 10 && self.state == FFRGestureRecognizerStateBegan) {
         self.state = UIGestureRecognizerStateRecognized;
         [self performAction];
     }

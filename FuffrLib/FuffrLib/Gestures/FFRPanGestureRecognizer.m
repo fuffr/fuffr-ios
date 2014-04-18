@@ -86,7 +86,7 @@
 		self.touch = [touchArray objectAtIndex: 0];
 		self.startPoint = self.touch.location;
 		self.translation = CGSizeMake(0,0);
-		self.state = UIGestureRecognizerStateBegan;
+		self.state = FFRGestureRecognizerStateBegan;
 		self.lowPassFilterX = [FFRLowPassFilter new];
 		self.lowPassFilterY = [FFRLowPassFilter new];
 	}
@@ -127,7 +127,7 @@
 	self.translation = CGSizeMake(
 		[self.lowPassFilterX filter: (self.touch.location.x - self.startPoint.x)],
 		[self.lowPassFilterY filter: (self.touch.location.y - self.startPoint.y)]);
-	self.state = UIGestureRecognizerStateChanged;
+	self.state = FFRGestureRecognizerStateChanged;
 	[self performAction];
 }
 
@@ -160,7 +160,7 @@
 		}
 		else
 		{
-			self.state = UIGestureRecognizerStateEnded;
+			self.state = FFRGestureRecognizerStateEnded;
 			[self performAction];
 			self.touch = nil;
 		}
