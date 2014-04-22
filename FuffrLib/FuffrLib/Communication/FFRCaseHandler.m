@@ -258,7 +258,7 @@ currently 5 touches. Setting 0 will disable the touch detection.
     CGPoint rawPoint = CGPointMake((raw.highX << 8) | raw.lowX, (raw.highY << 8) | raw.lowY);
     CGPoint normalizedPoint = [self normalizePoint:rawPoint onSide:side];
 
-    //NSLog(@"raw: %@, side: %d, normalized: %@", NSStringFromCGPoint(rawPoint), side, NSStringFromCGPoint(normalizedPoint));
+    //NSLog(@"id: %d, raw: %@, side: %d, normalized: %@", raw.identifier, NSStringFromCGPoint(rawPoint), side, NSStringFromCGPoint(normalizedPoint));
 
     FFRTouch* touch = [[FFRTouch alloc] init];
     touch.identifier = raw.identifier;

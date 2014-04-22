@@ -99,7 +99,7 @@
 			NSLog(@"Fuffr Connected");
 			[[FFRTouchManager sharedManager]
 				enableSides: FFRSideTop | FFRSideLeft | FFRSideRight | FFRSideBottom
-				touchesPerSide: @1 // Change to 2 touches when using the new parameter case.
+				touchesPerSide: @2 // Change to 2 touches when using the new parameter case.
 				];
 		}
 		onFuffrDisconnected:
@@ -153,7 +153,7 @@
 	rotation.side = FFRSideRight;
     [rotation addTarget: self action: @selector(onRotation:)];
 	// Uncomment this line to add rotation to right side.
-	//[manager addGestureRecognizer: rotation];
+	[manager addGestureRecognizer: rotation];
 
 	FFRTapGestureRecognizer* tap = [FFRTapGestureRecognizer new];
 	tap.side = FFRSideTop | FFRSideBottom;

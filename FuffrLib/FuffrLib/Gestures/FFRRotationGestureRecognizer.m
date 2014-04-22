@@ -30,9 +30,9 @@
 
 -(CGFloat) calculateRotation
 {
-	return atan2(
-		self.touch2.location.x - self.touch1.location.x,
-		self.touch2.location.y - self.touch1.location.y);
+	return -atan2(
+		self.touch1.location.y - self.touch2.location.y,
+		self.touch1.location.x - self.touch2.location.x);
 }
 
 -(bool) isValidRotationTouch: (NSSet*)touches
@@ -96,8 +96,8 @@
 		{
 			self.state = FFRGestureRecognizerStateChanged;
 			self.previousRotation = newRotation;
-			deltaRotation = MIN(deltaRotation, 0.5);
-			deltaRotation = MAX(deltaRotation, -0.5);
+			deltaRotation = MIN(deltaRotation, 0.05);
+			deltaRotation = MAX(deltaRotation, -0.05);
 			self.rotation += deltaRotation;
 			//NSLog(@"rotation %f", self.rotation);
 			[self performAction];
