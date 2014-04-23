@@ -9,6 +9,7 @@
 #import "AppViewController.h"
 
 #import <FuffrLib/FFRTapGestureRecognizer.h>
+#import <FuffrLib/FFRDoubleTapGestureRecognizer.h>
 #import <FuffrLib/FFRLongPressGestureRecognizer.h>
 #import <FuffrLib/FFRSwipeGestureRecognizer.h>
 #import <FuffrLib/FFRPinchGestureRecognizer.h>
@@ -159,6 +160,11 @@
 	tap.side = FFRSideTop | FFRSideBottom;
     [tap addTarget: self action: @selector(onTap:)];
 	[manager addGestureRecognizer: tap];
+    
+	FFRDoubleTapGestureRecognizer* dtap = [FFRDoubleTapGestureRecognizer new];
+	dtap.side = FFRSideTop | FFRSideBottom;
+    [dtap addTarget: self action: @selector(onDoubleTap:)];
+	[manager addGestureRecognizer: dtap];
 }
 
 - (void) logTouchBegan: (NSSet*)touches
@@ -249,6 +255,13 @@
 -(void) onTap: (FFRPanGestureRecognizer*)gesture
 {
     NSLog(@"onTap");
+	[self initializeRenderingParameters];
+	[self redrawImageView];
+}
+
+-(void) onDoubleTap: (FFRPanGestureRecognizer*)gesture
+{
+    NSLog(@"onDoubleTap");
 	[self initializeRenderingParameters];
 	[self redrawImageView];
 }

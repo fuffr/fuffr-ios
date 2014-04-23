@@ -70,6 +70,8 @@
 		21C8CCE918D6634000E70941 /* FFRRawTrackingData.h in Headers */ = {isa = PBXBuildFile; fileRef = 2197193A18D60711007B6E84 /* FFRRawTrackingData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		21C8CCEA18D6634000E70941 /* FFRFirmwareMetaData.h in Headers */ = {isa = PBXBuildFile; fileRef = 2197193C18D60711007B6E84 /* FFRFirmwareMetaData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		21C8CCEB18D6634000E70941 /* FFRFirmwareUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = 2197193E18D60711007B6E84 /* FFRFirmwareUtility.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		29923FF81907BD7D00D945EB /* FFRDoubleTapGestureRecognizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 29923FF61907BD7D00D945EB /* FFRDoubleTapGestureRecognizer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		29923FF91907BD7D00D945EB /* FFRDoubleTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 29923FF71907BD7D00D945EB /* FFRDoubleTapGestureRecognizer.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -147,6 +149,8 @@
 		2197196818D6138D007B6E84 /* FFRoad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFRoad.h; sourceTree = "<group>"; };
 		21BCD6BF18EF21D900944ACC /* FFRLowPassFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFRLowPassFilter.h; sourceTree = "<group>"; };
 		21BCD6C018EF21D900944ACC /* FFRLowPassFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFRLowPassFilter.m; sourceTree = "<group>"; };
+		29923FF61907BD7D00D945EB /* FFRDoubleTapGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFRDoubleTapGestureRecognizer.h; sourceTree = "<group>"; };
+		29923FF71907BD7D00D945EB /* FFRDoubleTapGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFRDoubleTapGestureRecognizer.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -195,6 +199,8 @@
 				215E0B2718DC67CF00484E43 /* FFRRotationGestureRecognizer.m */,
 				215E0B2818DC67CF00484E43 /* FFRSwipeGestureRecognizer.h */,
 				215E0B2918DC67CF00484E43 /* FFRSwipeGestureRecognizer.m */,
+				29923FF61907BD7D00D945EB /* FFRDoubleTapGestureRecognizer.h */,
+				29923FF71907BD7D00D945EB /* FFRDoubleTapGestureRecognizer.m */,
 				215E0B2A18DC67CF00484E43 /* FFRTapGestureRecognizer.h */,
 				215E0B2B18DC67CF00484E43 /* FFRTapGestureRecognizer.m */,
 			);
@@ -370,6 +376,7 @@
 				215E0B3418DC67CF00484E43 /* FFRLongPressGestureRecognizer.h in Headers */,
 				2114C12918EAEB70006A578D /* FFRLeftRightPluggableGestureRecognizer.h in Headers */,
 				215E0B3E18DC67CF00484E43 /* FFRTapGestureRecognizer.h in Headers */,
+				29923FF81907BD7D00D945EB /* FFRDoubleTapGestureRecognizer.h in Headers */,
 				215E0B3818DC67CF00484E43 /* FFRPinchGestureRecognizer.h in Headers */,
 				21C8CCE618D6634000E70941 /* FFRTouchManager.h in Headers */,
 				21C8CCE718D6634000E70941 /* FFRTracker.h in Headers */,
@@ -469,6 +476,7 @@
 				2197195B18D60711007B6E84 /* FFRTouchManager.m in Sources */,
 				215E0B3318DC67CF00484E43 /* FFRGestureRecognizer.m in Sources */,
 				2197194118D60711007B6E84 /* FFROverlaySpaceMapper.m in Sources */,
+				29923FF91907BD7D00D945EB /* FFRDoubleTapGestureRecognizer.m in Sources */,
 				2197194018D60711007B6E84 /* FFRLeftRightSpaceMapper.m in Sources */,
 				215E0B3718DC67CF00484E43 /* FFRPanGestureRecognizer.m in Sources */,
 				2197194218D60711007B6E84 /* FFRQuadrantSpaceMapper.m in Sources */,
