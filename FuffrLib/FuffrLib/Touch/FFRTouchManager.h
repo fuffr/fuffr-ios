@@ -33,15 +33,27 @@
 // Public instance methods.
 
 /**
- * Set callbacks for connected and disconnected events.
+ * Set both callbacks for connected and disconnected events
+ * in one call.
  */
 - (void) onFuffrConnected: (void(^)())connectedBlock
 	onFuffrDisconnected: (void(^)())disconnectedBlock;
 
 /**
+ * Set callback for connected event.
+ */
+- (void) onFuffrConnected: (void(^)())connectedBlock;
+
+/**
+ * Set callback for disconnected event.
+ */
+- (void) onFuffrDisconnected: (void(^)())disconnectedBlock;
+
+/**
     Callback when a device is discovered
  */
-// remove @property (nonatomic, copy) void(^onPeripheralDiscovery)(CBPeripheral* p);
+// TODO: remove
+//@property (nonatomic, copy) void(^onPeripheralDiscovery)(CBPeripheral* p);
 
 /**
  * Enable sides of Fuffr.

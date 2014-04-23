@@ -119,7 +119,18 @@ static FFRTouchManager* sharedInstance = NULL;
 	self.onDisconnectedBlock = disconnectedBlock;
 
 	// Scan is started automatically by FFRBLEManager.
+	// No need to do this here.
 	//[self startScan];
+}
+
+- (void) onFuffrConnected: (void(^)())connectedBlock
+{
+	self.onConnectedBlock = connectedBlock;
+}
+
+- (void) onFuffrDisconnected: (void(^)())disconnectedBlock
+{
+	self.onDisconnectedBlock = disconnectedBlock;
 }
 
 - (void) disconnectFuffr
@@ -326,14 +337,28 @@ static FFRTouchManager* sharedInstance = NULL;
     }
 
 	bleManager.sensorServiceUUID = FFRCaseSensorServiceUUID;
-    __weak FFRTouchManager* me = self;
 	__weak FFRBLEManager* manager = bleManager;
+    __weak FFRTouchManager* me = self;
+
 	bleManager.onCharacteristicsDiscovered =
 		^(CBService* service, CBPeripheral* hostPeripheral)
 		{
 			NSLog(@"initFuffr onCharacteristicsDiscovered");
         	[manager.handler loadPeripheral:hostPeripheral];
-			me.onConnectedBlock();
+			if (me.onConnectedBlock)
+			{
+				me.onConnectedBlock();
+			}
+    	};
+
+	bleManager.onPeriperalDisconnected =
+		^(CBPeripheral* hostPeripheral)
+		{
+			NSLog(@"initFuffr onPeriperalDisconnected");
+			if (me.onDisconnectedBlock)
+			{
+				me.onDisconnectedBlock();
+			}
     	};
 
 	// OLD CODE
@@ -346,8 +371,6 @@ static FFRTouchManager* sharedInstance = NULL;
 			me.onConnectedBlock();
     	}
 	];*/
-
-
 }
 
 - (void) enableSides:(FFRSide)sides touchesPerSide: (NSNumber*)numberOfTouches
