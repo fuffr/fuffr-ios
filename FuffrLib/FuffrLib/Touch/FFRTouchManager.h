@@ -116,6 +116,42 @@
 - (void) removeTouchObserver: (id)object;
 
 /**
+ * Add a touch began block at the specified side.
+ * @param block Block that is called with the set of touches that began.
+ * @param side The side(s) of Fuffr that will be observed. 
+ * See documentation of method addTouchObserver for details.
+ * @return An identifier that can be used to remove the block.
+ */
+- (int) addTouchBeganBlock: (void(^)(NSSet* touches))block
+	side: (FFRSide)side;
+
+/**
+ * Add a touch moved block at the specified side.
+ * @param block Block that is called with the set of touches that moved.
+ * @param side The side(s) of Fuffr that will be observed. 
+ * See documentation of method addTouchObserver for details.
+ * @return An identifier that can be used to remove the block.
+ */
+- (int) addTouchMovedBlock: (void(^)(NSSet* touches))block
+	side: (FFRSide)side;
+
+/**
+ * Add a touch ended block at the specified side.
+ * @param block Block that is called with the set of touches that ended.
+ * @param side The side(s) of Fuffr that will be observed. 
+ * See documentation of method addTouchObserver for details.
+ * @return An identifier that can be used to remove the block.
+ */
+- (int) addTouchEndedBlock: (void(^)(NSSet* touches))block
+	side: (FFRSide)side;
+
+/**
+ * Remove a touch block.
+ * @param blockId Identifier returned by one of the addTouch*Block methods.
+ */
+- (void) removeTouchBlock: (int)blockId;
+
+/**
  Add a gesture recognizer.
  */
 -(void) addGestureRecognizer: (FFRGestureRecognizer*) gestureRecognizer;

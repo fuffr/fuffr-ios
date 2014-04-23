@@ -15,7 +15,16 @@
 /**
  * Class used internally by the touch manager to track
  * touch observers. These observers are notified when touch
- * events occur.
+ * events occur. 
+ *
+ * This class also holds touch blocks. A bit of a shortcut,
+ * and potentially confusing but simplifies code since just 
+ * one class is used. Also note that this is an internal class
+ * that is not exposed to the public API. Therefore it can
+ * be changed if another implementation is desired.
+ *
+ * Note the trick of delegating the block call to the event
+ * observer itself using selector callBlockWithTouches:.
  */
 @interface FFRTouchEventObserver : NSObject
 
@@ -30,9 +39,27 @@
 // Sides (can be combined with bitwise-or).
 @property FFRSide side;
 
+// Touch block (used by the block touch listener mechanism).
+@property (nonatomic, copy) void(^touchBlock)(NSSet* touches);
+
+// Id used to identify a touch block. Used for removal.
+@property int touchBlockId;
+
+// Method that calls the block.
+- (void) callBlockWithTouches: (NSSet*)touches;
+
 @end
 
 @implementation FFRTouchEventObserver
+
+- (void) callBlockWithTouches: (NSSet*)touches
+{
+	if (self.touchBlock)
+	{
+		self.touchBlock(touches);
+	}
+}
+
 @end
 
 @interface FFRTouchManager ()
@@ -55,8 +82,11 @@
 @property (nonatomic, copy) void(^onConnectedBlock)();
 @property (nonatomic, copy) void(^onDisconnectedBlock)();
 
-/** List of touch observers. */
+/** List of touch observers (instances of FFRTouchEventObserver). */
 @property NSMutableArray* touchObservers;
+
+/** Dictionary with touch blocks (instances of FFRTouchEventObserver). */
+@property NSMutableDictionary* touchBlocks;
 
 /** List of gesture recognizers. */
 @property NSMutableArray* gestureRecognizers;
@@ -97,6 +127,9 @@ static NSSet* filterTouchesBySideAndPhase(NSSet* touches, FFRSide side, UITouchP
 
 // Singleton instance.
 static FFRTouchManager* sharedInstance = NULL;
+
+// Touch block id counter.
+static int touchBlockIdCounter = 0;
 
 // Public class method.
 
@@ -164,12 +197,65 @@ static FFRTouchManager* sharedInstance = NULL;
 	observer.movedSelector = touchMovedSelector;
 	observer.endedSelector = touchEndedSelector;
 	observer.side = side;
+	observer.touchBlock = nil;
+	observer.touchBlockId = 0;
 	[self.touchObservers addObject: observer];
 }
 
 - (void) removeTouchObserver: (id)object
 {
 	[self.touchObservers removeObject: object];
+}
+
+- (int) addTouchBeganBlock: (void(^)(NSSet* touches))block
+	side: (FFRSide)side
+{
+	FFRTouchEventObserver* observer = [self
+		addTouchBlockObserver: block
+		side: side];
+	observer.beganSelector = @selector(callBlockWithTouches:);
+	return observer.touchBlockId;
+}
+
+- (int) addTouchMovedBlock: (void(^)(NSSet* touches))block
+	side: (FFRSide)side
+{
+	FFRTouchEventObserver* observer = [self
+		addTouchBlockObserver: block
+		side: side];
+	observer.movedSelector = @selector(callBlockWithTouches:);
+	return observer.touchBlockId;
+}
+
+- (int) addTouchEndedBlock: (void(^)(NSSet* touches))block
+	side: (FFRSide)side
+{
+	FFRTouchEventObserver* observer = [self
+		addTouchBlockObserver: block
+		side: side];
+	observer.endedSelector = @selector(callBlockWithTouches:);
+	return observer.touchBlockId;
+}
+
+- (void) removeTouchBlock: (int)blockId
+{
+	FFRTouchEventObserver* observerToRemove = nil;
+
+	// Find observer to remove.
+	for (FFRTouchEventObserver* observer in self.touchObservers)
+	{
+		if (observer.touchBlockId == blockId)
+		{
+			observerToRemove = observer;
+			break;
+		}
+	}
+
+	// Remove it.
+	if (observerToRemove)
+	{
+		[self.touchObservers removeObject: observerToRemove];
+	}
 }
 
 -(void) addGestureRecognizer: (FFRGestureRecognizer*) gestureRecognizer
@@ -189,12 +275,29 @@ static FFRTouchManager* sharedInstance = NULL;
 	self.onConnectedBlock = nil;
 	self.onDisconnectedBlock = nil;
 	self.touchObservers = [NSMutableArray array];
+	self.touchBlocks = [NSMutableDictionary new];
 	self.gestureRecognizers = [NSMutableArray array];
 	self.deviceWithMaxRSSI = nil;
 	self.activeDevice = nil;
 	[self registerTouchMethods];
 	[self registerPeripheralDiscoverer];
 	return self;
+}
+
+// Internal helper method.
+- (FFRTouchEventObserver*) addTouchBlockObserver: (void(^)(NSSet* touches))block
+	side: (FFRSide)side
+{
+	FFRTouchEventObserver* observer = [FFRTouchEventObserver new];
+	observer.object = observer;
+	observer.beganSelector = nil;
+	observer.movedSelector = nil;
+	observer.endedSelector = nil;
+	observer.side = side;
+	observer.touchBlock = block;
+	observer.touchBlockId = ++touchBlockIdCounter;
+	[self.touchObservers addObject: observer];
+	return observer;
 }
 
 // TODO: Delete.
@@ -460,6 +563,7 @@ static FFRTouchManager* sharedInstance = NULL;
 		}
 	}
 
+	// Notify gesture recognizers.
     for (FFRGestureRecognizer* recognizer in self.gestureRecognizers)
 	{
 		NSSet* observedTouches = filterTouchesBySideAndPhase(

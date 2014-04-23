@@ -42,9 +42,58 @@
 
     self.imageView.backgroundColor = UIColor.whiteColor;
 
+	// Active touches.
+	self.touches = [NSMutableSet new];
+
+	// Set up colors for touches. Max touch id should
+	// be 20 in the current case implementation (5 touches,
+	// 4 sides, touch ids starting at 1).
 	self.dotColors = [NSMutableDictionary new];
 
-	self.touches = [NSMutableSet new];
+	[self addColorAtIndex: 1  red: 0.5 green: 0.0 blue: 0.0];
+	[self addColorAtIndex: 2  red: 1.0 green: 0.0 blue: 0.0];
+
+	[self addColorAtIndex: 3  red: 0.0 green: 0.5 blue: 0.0];
+	[self addColorAtIndex: 4  red: 0.0 green: 1.0 blue: 0.0];
+
+	[self addColorAtIndex: 5  red: 0.0 green: 0.0 blue: 0.5];
+	[self addColorAtIndex: 6  red: 0.0 green: 0.0 blue: 1.0];
+
+	[self addColorAtIndex: 7  red: 0.5 green: 0.5 blue: 0.0];
+	[self addColorAtIndex: 8  red: 0.5 green: 1.0 blue: 0.0];
+
+	[self addColorAtIndex: 9  red: 1.0 green: 0.5 blue: 0.0];
+	[self addColorAtIndex: 10 red: 1.0 green: 1.0 blue: 0.0];
+
+	[self addColorAtIndex: 11 red: 0.5 green: 0.0 blue: 0.5];
+	[self addColorAtIndex: 12 red: 0.5 green: 0.0 blue: 1.0];
+
+	[self addColorAtIndex: 13 red: 1.0 green: 0.0 blue: 0.5];
+	[self addColorAtIndex: 14 red: 1.0 green: 0.0 blue: 1.0];
+
+	[self addColorAtIndex: 15 red: 0.0 green: 0.5 blue: 0.5];
+	[self addColorAtIndex: 16 red: 0.0 green: 0.5 blue: 1.0];
+
+	[self addColorAtIndex: 17 red: 0.0 green: 1.0 blue: 0.5];
+	[self addColorAtIndex: 18 red: 0.0 green: 1.0 blue: 1.0];
+
+	[self addColorAtIndex: 19 red: 0.7 green: 0.7 blue: 0.7];
+	[self addColorAtIndex: 20 red: 0.3 green: 0.3 blue: 0.3];
+}
+
+-(void) addColorAtIndex: (int)index
+	red: (CGFloat)red
+	green: (CGFloat)green
+	blue: (CGFloat)blue
+{
+	DotColor* color = [DotColor new];
+	color.red = red;
+	color.green = green;
+	color.blue = blue;
+	[self.dotColors
+		setObject: color
+		forKey: [NSNumber numberWithInt: index]
+	];
 }
 
 -(void) viewDidAppear:(BOOL)animated
@@ -72,7 +121,7 @@
 			NSLog(@"Fuffr Connected");
 			[[FFRTouchManager sharedManager]
 				enableSides: FFRSideTop | FFRSideLeft | FFRSideRight | FFRSideBottom
-				touchesPerSide: @2 // Change to desired number of touches
+				touchesPerSide: @1 // Change to desired number of touches
 				                   // when using the new parameter case.
 				];
 		}
@@ -83,11 +132,26 @@
 
 	// Register methods for touch events. Here the side constants are
 	// bit-or:ed to capture touches on all four sides.
-	[manager
+	// Note: Commented out, instead the block syntax below is used.
+	// This code kept here as a reference, to compare the two methods.
+	/*[manager
 		addTouchObserver: self
 		touchBegan: @selector(touchesBegan:)
 		touchMoved: @selector(touchesMoved:)
 		touchEnded: @selector(touchesEnded:)
+		side: FFRSideLeft | FFRSideRight | FFRSideTop | FFRSideBottom];*/
+
+	// This code illustrates the use of blocks for capturing touch events.
+	// Using blocks is an alternative to the above synax that uses an object
+	// and selectors for each touch event.
+	[manager
+		addTouchBeganBlock: ^(NSSet* touches){ [self touchesBegan: touches]; }
+		side: FFRSideLeft | FFRSideRight | FFRSideTop | FFRSideBottom];
+	[manager
+		addTouchMovedBlock: ^(NSSet* touches){ [self touchesMoved: touches]; }
+		side: FFRSideLeft | FFRSideRight | FFRSideTop | FFRSideBottom];
+	[manager
+		addTouchEndedBlock: ^(NSSet* touches){ [self touchesEnded: touches]; }
 		side: FFRSideLeft | FFRSideRight | FFRSideTop | FFRSideBottom];
 }
 
@@ -102,14 +166,17 @@
 
 	for (FFRTouch* touch in touches)
 	{
-		DotColor* color = [DotColor new];
-		color.red = (CGFloat) arc4random_uniform(256) / 256;
-		color.green = (CGFloat) arc4random_uniform(256) / 256;
-		color.blue = (CGFloat) arc4random_uniform(256) / 256;
-		[self.dotColors
-			setObject: color
-			forKey: [NSNumber numberWithInt: (int)touch.identifier]
-		];
+		// A static color table is created in viewDidLoad,
+		// replacing commented out code below.
+		//DotColor* color = [DotColor new];
+		//color.red = (CGFloat) arc4random_uniform(256) / 256;
+		//color.green = (CGFloat) arc4random_uniform(256) / 256;
+		//color.blue = (CGFloat) arc4random_uniform(256) / 256;
+		//[self.dotColors
+		//	setObject: color
+		//	forKey: [NSNumber numberWithInt: (int)touch.identifier]
+		//];
+
 		[self.touches addObject: touch];
 	}
 
@@ -163,12 +230,24 @@
 		{
 			DotColor* color = [self.dotColors objectForKey:
 				[NSNumber numberWithInt: (int)touch.identifier]];
-    		CGContextSetRGBFillColor(
-				context,
-				color.red,
-				color.green,
-				color.blue,
-				1.0);
+			if (color)
+			{
+    			CGContextSetRGBFillColor(
+					context,
+					color.red,
+					color.green,
+					color.blue,
+					1.0);
+			}
+			else
+			{
+    			CGContextSetRGBFillColor(
+					context,
+					0.0,
+					0.0,
+					0.0,
+					1.0);
+			}
 
 			CGFloat x = touch.normalizedLocation.x * width;
 			CGFloat y = touch.normalizedLocation.y * height;
