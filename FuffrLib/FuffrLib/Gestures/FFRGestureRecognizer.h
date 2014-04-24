@@ -10,7 +10,7 @@
 #import "FFRTouch.h"
 
 /**
- * Type that defines constants for the sides Fuffr.
+ * Type that defines constants for gesture states.
  */
 typedef enum
 {
@@ -90,10 +90,5 @@ FFRGestureRecognizerState;
  Signals to the gesture recognizer that (nn)touches ended
  */
 -(void) touchesEnded:(NSSet*) touches;
-
-/**
- Signals to the gesture recognizer that (nn)touches were cancelled
- */
--(void) touchesCancelled:(NSSet*) touches;
 
 @end

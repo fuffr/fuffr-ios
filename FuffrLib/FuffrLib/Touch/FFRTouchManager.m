@@ -85,9 +85,6 @@
 /** List of touch observers (instances of FFRTouchEventObserver). */
 @property NSMutableArray* touchObservers;
 
-/** Dictionary with touch blocks (instances of FFRTouchEventObserver). */
-@property NSMutableDictionary* touchBlocks;
-
 /** List of gesture recognizers. */
 @property NSMutableArray* gestureRecognizers;
 
@@ -275,7 +272,6 @@ static int touchBlockIdCounter = 0;
 	self.onConnectedBlock = nil;
 	self.onDisconnectedBlock = nil;
 	self.touchObservers = [NSMutableArray array];
-	self.touchBlocks = [NSMutableDictionary new];
 	self.gestureRecognizers = [NSMutableArray array];
 	self.deviceWithMaxRSSI = nil;
 	self.activeDevice = nil;

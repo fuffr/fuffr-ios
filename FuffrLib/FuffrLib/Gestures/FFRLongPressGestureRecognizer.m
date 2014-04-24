@@ -55,28 +55,6 @@
     self.state = FFRGestureRecognizerStateEnded;
 }
 
--(void) touchesCancelled:(NSSet *)touches {
-    LOGMETHOD
-
-    //NSLog(@"touchesCancelled: %@ - %@", touches, event);
-
-    _startPoint = CGPointZero;
-    _startTime = 0;
-
-    for (FFRTouch* touch in touches) {
-        //CGPoint p = [touch locationInView:self.view];
-        //NSLog(@"movement: %f,%f, %f", p.x - _point.x, p.y - _point.y, [[NSDate date] timeIntervalSinceDate:_start]);
-        NSLog(@"time: %f", touch.timestamp - _startTime);
-    }
-
-    if (self.state == UIGestureRecognizerStateRecognized || self.state == FFRGestureRecognizerStateChanged) {
-        self.state = UIGestureRecognizerStateCancelled;
-        [self performAction];
-    }
-
-    self.state = UIGestureRecognizerStateCancelled;
-}
-
 #pragma mark - Timer
 
 -(void) timerFired:(id)sender {

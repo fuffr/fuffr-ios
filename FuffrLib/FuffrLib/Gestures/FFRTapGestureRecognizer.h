@@ -9,15 +9,18 @@
 #import <Foundation/Foundation.h>
 #import "FFRGestureRecognizer.h"
 
-
 /**
- A tap gesture recognizer
+ * A tap gesture recognizer.
  */
 @interface FFRTapGestureRecognizer : FFRGestureRecognizer
-{
-    NSTimeInterval _start;
-    CGPoint _startPoint;
-}
 
+/**
+ * The tracked touch.
+ */
+@property (nonatomic, weak) FFRTouch* touch;
+
+@property NSTimeInterval startTime;
+
+@property CGPoint startPoint;
 
 @end

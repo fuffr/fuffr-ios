@@ -8,7 +8,6 @@
 
 #import "FFRGestureRecognizer.h"
 
-
 @implementation TargetActionPair
 
 @synthesize target = _target;
@@ -16,9 +15,7 @@
 
 @end
 
-
 @implementation FFRGestureRecognizer
-
 
 -(id) init {
     if (self = [super init]) {
@@ -74,11 +71,6 @@
 }
 
 -(void) touchesEnded:(NSSet *)touches {
-}
-
-// This event is not gerenreted by Fuffer.
-// TODO: Used for touch screen debugging, remove eventually.
--(void) touchesCancelled:(NSSet *)touches {
 }
 
 @end

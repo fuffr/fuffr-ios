@@ -50,11 +50,7 @@
     [super viewDidAppear: animated];
 
 	[self setupFuffr];
-
-	[self setupGestures];
-
 	[self initializeRenderingParameters];
-
 	[self redrawImageView];
 }
 
@@ -84,8 +80,8 @@
 - (void) setupFuffr
 {
 	[self connectToFuffr];
-	//[self setupTouches];
 	[self setupGestures];
+	//[self setupTouches]; // For debugging, currently not used.
 }
 
 - (void) connectToFuffr
@@ -109,13 +105,12 @@
 		}];
 }
 
+// Log touch events for debugging (not used).
+
 - (void) setupTouches
 {
-	// Get a reference to the touch manager.
 	FFRTouchManager* manager = [FFRTouchManager sharedManager];
 
-	// Register methods for touch events. Here the side constants are
-	// bit-or:ed to capture touches on all four sides.
 	[manager
 		addTouchObserver: self
 		touchBegan: @selector(logTouchBegan:)
@@ -123,6 +118,26 @@
 		touchEnded: @selector(logTouchEnded:)
 		side: FFRSideRight];
 }
+
+- (void) logTouchBegan: (NSSet*)touches
+{
+	NSLog(@"logTouchBegan: %i", (int)touches.count);
+}
+
+- (void) logTouchMoved: (NSSet*)touches
+{
+	NSArray* touchArray = [touches allObjects];
+	FFRTouch* touch = [touchArray objectAtIndex: 0];
+	NSLog(@"logTouchMoved: %i %f %f", (int)touches.count,
+		touch.location.x, touch.location.y);
+}
+
+- (void) logTouchEnded: (NSSet*)touches
+{
+	NSLog(@"logTouchEnded: %i", (int)touches.count);
+}
+
+// Define gesture handlers.
 
 // Comment/uncomment lines [manager addGestureRecognizer: ...
 // to add/remove gestures.
@@ -157,76 +172,40 @@
 	[manager addGestureRecognizer: rotation];
 
 	FFRTapGestureRecognizer* tap = [FFRTapGestureRecognizer new];
-	tap.side = FFRSideTop | FFRSideBottom;
+	tap.side = FFRSideBottom;
     [tap addTarget: self action: @selector(onTap:)];
 	[manager addGestureRecognizer: tap];
     
 	FFRDoubleTapGestureRecognizer* dtap = [FFRDoubleTapGestureRecognizer new];
-	dtap.side = FFRSideTop | FFRSideBottom;
+	dtap.side = FFRSideBottom;
     [dtap addTarget: self action: @selector(onDoubleTap:)];
 	[manager addGestureRecognizer: dtap];
+
+	FFRLongPressGestureRecognizer* longPress = [FFRLongPressGestureRecognizer new];
+	longPress.side = FFRSideBottom;
+    [longPress addTarget: self action: @selector(onLongPress:)];
+	[manager addGestureRecognizer: longPress];
+
+	FFRSwipeGestureRecognizer* swipeLeft = [FFRSwipeGestureRecognizer new];
+	swipeLeft.side = FFRSideRight;
+	swipeLeft.direction = FFRSwipeGestureRecognizerDirectionLeft;
+    [swipeLeft addTarget: self action: @selector(onSwipeLeft:)];
+	[manager addGestureRecognizer: swipeLeft];
+
+	FFRSwipeGestureRecognizer* swipeRight = [FFRSwipeGestureRecognizer new];
+	swipeRight.side = FFRSideRight;
+	swipeRight.direction = FFRSwipeGestureRecognizerDirectionLeft;
+    [swipeRight addTarget: self action: @selector(onSwipeRight:)];
+	[manager addGestureRecognizer: swipeRight];
 }
 
-- (void) logTouchBegan: (NSSet*)touches
-{
-	NSLog(@"logTouchBegan: %i", (int)touches.count);
-
-	// Get one touch from each left/right side and pass to gestures.
-}
-
-- (void) logTouchMoved: (NSSet*)touches
-{
-	NSArray* touchArray = [touches allObjects];
-	FFRTouch* touch = [touchArray objectAtIndex: 0];
-	NSLog(@"logTouchMoved: %i %f %f", (int)touches.count,
-		touch.location.x, touch.location.y);
-}
-
-- (void) logTouchEnded: (NSSet*)touches
-{
-	NSLog(@"logTouchEnded: %i", (int)touches.count);
-}
-
--(void) onPinch: (FFRPinchGestureRecognizer*)gesture
-{
-    //NSLog(@"onPinch: %f", gesture.scale);
-
-	if (gesture.state == UIGestureRecognizerStateChanged)
-	{
-		CGFloat scale = self.baseScale * gesture.scale;
-		scale = MIN(scale, 5.0);
-		scale = MAX(scale, 0.5);
-		self.currentScale = scale;
-	}
-	else if (gesture.state == UIGestureRecognizerStateEnded)
-	{
-		self.baseScale = self.currentScale;
-	}
-
-	[self redrawImageView];
-}
-
--(void) onRotation: (FFRRotationGestureRecognizer*)gesture
-{
-	if (gesture.state == UIGestureRecognizerStateChanged)
-	{
-		CGFloat rotation = self.baseRotation - (gesture.rotation * 1.5);
-
-		self.currentRotation = rotation;
-	}
-	else if (gesture.state == UIGestureRecognizerStateEnded)
-	{
-		self.baseRotation = self.currentRotation;
-	}
-
-	[self redrawImageView];
-}
+// Gesture handler methods.
 
 -(void) onPan: (FFRPanGestureRecognizer*)gesture
 {
     //NSLog(@"onPan: %f %f", gesture.translation.width, gesture.translation.height);
 
-	if (gesture.state == UIGestureRecognizerStateChanged)
+	if (gesture.state == FFRGestureRecognizerStateChanged)
 	{
 		// Panning is relative to the base translation.
 		CGPoint p = self.baseTranslation;
@@ -244,7 +223,7 @@
 
 		self.currentTranslation = p;
 	}
-	else if (gesture.state == UIGestureRecognizerStateEnded)
+	else if (gesture.state == FFRGestureRecognizerStateEnded)
 	{
 		self.baseTranslation = self.currentTranslation;
 	}
@@ -252,19 +231,71 @@
 	[self redrawImageView];
 }
 
--(void) onTap: (FFRPanGestureRecognizer*)gesture
+-(void) onPinch: (FFRPinchGestureRecognizer*)gesture
+{
+    //NSLog(@"onPinch: %f", gesture.scale);
+
+	if (gesture.state == FFRGestureRecognizerStateChanged)
+	{
+		CGFloat scale = self.baseScale * gesture.scale;
+		scale = MIN(scale, 5.0);
+		scale = MAX(scale, 0.5);
+		self.currentScale = scale;
+	}
+	else if (gesture.state == FFRGestureRecognizerStateEnded)
+	{
+		self.baseScale = self.currentScale;
+	}
+
+	[self redrawImageView];
+}
+
+-(void) onRotation: (FFRRotationGestureRecognizer*)gesture
+{
+	if (gesture.state == FFRGestureRecognizerStateChanged)
+	{
+		CGFloat rotation = self.baseRotation - (gesture.rotation * 1.5);
+
+		self.currentRotation = rotation;
+	}
+	else if (gesture.state == FFRGestureRecognizerStateEnded)
+	{
+		self.baseRotation = self.currentRotation;
+	}
+
+	[self redrawImageView];
+}
+
+-(void) onTap: (FFRTapGestureRecognizer*)gesture
 {
     NSLog(@"onTap");
 	[self initializeRenderingParameters];
 	[self redrawImageView];
 }
 
--(void) onDoubleTap: (FFRPanGestureRecognizer*)gesture
+-(void) onDoubleTap: (FFRDoubleTapGestureRecognizer*)gesture
 {
     NSLog(@"onDoubleTap");
 	[self initializeRenderingParameters];
 	[self redrawImageView];
 }
+
+-(void) onLongPress: (FFRLongPressGestureRecognizer*)gesture
+{
+	NSLog(@"onLongPress");
+}
+
+-(void) onSwipeLeft: (FFRSwipeGestureRecognizer*)gesture
+{
+	NSLog(@"onSwipeLeft");
+}
+
+-(void) onSwipeRight: (FFRSwipeGestureRecognizer*)gesture
+{
+	NSLog(@"onSwipeRight");
+}
+
+// Drawing the view.
 
 - (void) redrawImageView
 {

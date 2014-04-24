@@ -9,9 +9,7 @@
 #import "FFRSwipeGestureRecognizer.h"
 #import "FFRTouch.h"
 
-
 @implementation FFRSwipeGestureRecognizer
-
 
 -(void) touchesBegan:(NSSet*)touches {
     LOGMETHOD
@@ -43,19 +41,19 @@
         if (end - _start <= 0.5) {
             CGFloat distance = [self maxDistanceBetween:_startPoint andPoint:endPoint];
             if (distance > 30) {
-                if (self.direction == UISwipeGestureRecognizerDirectionRight && ABS(_startPoint.x - endPoint.x) > ABS(_startPoint.y - endPoint.y) && endPoint.x > _startPoint.x) {
+                if (self.direction == FFRSwipeGestureRecognizerDirectionRight && ABS(_startPoint.x - endPoint.x) > ABS(_startPoint.y - endPoint.y) && endPoint.x > _startPoint.x) {
                     [self performAction];
                     self.state = FFRGestureRecognizerStateEnded;
                 }
-                else if (self.direction == UISwipeGestureRecognizerDirectionLeft && ABS(_startPoint.x - endPoint.x) > ABS(_startPoint.y - endPoint.y) && _startPoint.x > endPoint.x) {
+                else if (self.direction == FFRSwipeGestureRecognizerDirectionLeft && ABS(_startPoint.x - endPoint.x) > ABS(_startPoint.y - endPoint.y) && _startPoint.x > endPoint.x) {
                     [self performAction];
                     self.state = FFRGestureRecognizerStateEnded;
                 }
-                else if (self.direction == UISwipeGestureRecognizerDirectionUp && ABS(_startPoint.y - endPoint.y) > ABS(_startPoint.x - endPoint.x) && _startPoint.y > endPoint.y) {
+                else if (self.direction == FFRSwipeGestureRecognizerDirectionUp && ABS(_startPoint.y - endPoint.y) > ABS(_startPoint.x - endPoint.x) && _startPoint.y > endPoint.y) {
                     [self performAction];
                     self.state = FFRGestureRecognizerStateEnded;
                 }
-                else if (self.direction == UISwipeGestureRecognizerDirectionDown && ABS(_startPoint.y - endPoint.y) > ABS(_startPoint.x - endPoint.x) && endPoint.y > _startPoint.y) {
+                else if (self.direction == FFRSwipeGestureRecognizerDirectionDown && ABS(_startPoint.y - endPoint.y) > ABS(_startPoint.x - endPoint.x) && endPoint.y > _startPoint.y) {
                     [self performAction];
                     self.state = FFRGestureRecognizerStateEnded;
                 }
@@ -80,23 +78,6 @@
 
     //NSLog(@"touchesEnded: %@ - %@", touches, event);
     self.state = FFRGestureRecognizerStateEnded;
-}
-
--(void) touchesCancelled:(NSSet *)touches {
-    LOGMETHOD
-
-    //NSLog(@"touchesCancelled: %@ - %@", touches, event);
-
-    _startPoint = CGPointZero;
-    _start = 0;
-
-    for (FFRTouch* touch in touches) {
-        //CGPoint p = [touch locationInView:self.view];
-        //NSLog(@"movement: %f,%f, %f", p.x - _point.x, p.y - _point.y, [[NSDate date] timeIntervalSinceDate:_start]);
-        NSLog(@"time: %f", touch.timestamp - _start);
-    }
-
-    self.state = UIGestureRecognizerStateCancelled;
 }
 
 @end

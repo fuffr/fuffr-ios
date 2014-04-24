@@ -8,6 +8,14 @@
 
 #import "FFRGestureRecognizer.h"
 
+typedef enum
+{
+    FFRSwipeGestureRecognizerDirectionRight = 0x1,
+    FFRSwipeGestureRecognizerDirectionLeft  = 0x2,
+    FFRSwipeGestureRecognizerDirectionUp    = 0x4,
+    FFRSwipeGestureRecognizerDirectionDown  = 0x8
+}
+FFRSwipeGestureRecognizerDirection;
 
 /**
  A swipe gesture recognizer
@@ -20,6 +28,6 @@
 /**
  The direction that the recognizer is listening for
  */
-@property (nonatomic, assign) UISwipeGestureRecognizerDirection direction;
+@property (nonatomic, assign) FFRSwipeGestureRecognizerDirection direction;
 
 @end

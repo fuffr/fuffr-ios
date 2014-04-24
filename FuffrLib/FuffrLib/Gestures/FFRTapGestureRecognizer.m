@@ -9,65 +9,46 @@
 #import "FFRTapGestureRecognizer.h"
 #import "FFRTouch.h"
 
-
 @implementation FFRTapGestureRecognizer
-
-// TODO: Unused, remove.
-//@synthesize view = _view;
 
 #pragma mark - touch debug
 
--(void) touchesBegan:(NSSet*)touches {
+-(void) touchesBegan:(NSSet*)touches
+{
     LOGMETHOD
 
-    //NSLog(@"touchesBegan: %@ - %@", touches, event);
-    for (FFRTouch* touch in touches) {
-        _start = touch.timestamp;
-        _startPoint = touch.location;
-    }
-
-    self.state = FFRGestureRecognizerStateBegan;
+	if (self.touch == nil)
+	{
+		// Start tracking the first touch.
+		NSArray* touchArray = [touches allObjects];
+		self.touch = [touchArray objectAtIndex: 0];
+		self.startTime = self.touch.timestamp;
+		self.startPoint = self.touch.location;
+	}
 }
 
--(void) touchesMoved:(NSSet *)touches {
-    LOGMETHOD
-    //NSLog(@"touchesMoved: %@ - %@", touches, event);
+-(void) touchesMoved:(NSSet *)touches
+{
 }
 
--(void) touchesEnded:(NSSet *)touches {
+-(void) touchesEnded:(NSSet *)touches
+{
     LOGMETHOD
 
-    //NSLog(@"touchesEnded: %@ - %@", touches, event);
+    //NSLog(@"touchesEnded: %@", self);
 
-    CGPoint endPoint;
-    NSTimeInterval end;
-    for (FFRTouch* touch in touches) {
-        endPoint = touch.location;
-        end = touch.timestamp;
-    }
-
-    CGFloat distance = [self maxDistanceBetween:_startPoint andPoint:endPoint];
-    //NSLog(@"Tap diff: %f %f %f", end, _start, end - _start);
-    if (distance < 10 && end - _start < 1.5) {
-        [self performAction];
-    }
-
-    self.state = FFRGestureRecognizerStateEnded;
-}
-
--(void) touchesCancelled:(NSSet *)touches {
-    LOGMETHOD
-
-    //NSLog(@"touchesCancelled: %@ - %@", touches, event);
-    _startPoint = CGPointZero;
-    _start = 0;
-
-    for (FFRTouch* touch in touches) {
-        //NSLog(@"movement: %f,%f, %f", p.x - _point.x, p.y - _point.y, [[NSDate date] timeIntervalSinceDate:_start]);
-        NSLog(@"time: %f", touch.timestamp - _start);
-    }
-
-    self.state = UIGestureRecognizerStateCancelled;
+	if (self.touch)
+	{
+        CGPoint endPoint = self.touch.location;
+        NSTimeInterval endTime = self.touch.timestamp;
+    	CGFloat distance = [self maxDistanceBetween: self.startPoint andPoint: endPoint];
+    	//NSLog(@"Tap diff time: %f dist: %f", endTime - self.startTime, distance);
+    	if (distance < 50.0 && endTime - self.startTime < 0.5)
+		{
+        	[self performAction];
+		}
+    	self.touch = nil;
+	}
 }
 
 @end
