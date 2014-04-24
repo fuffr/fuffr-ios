@@ -132,26 +132,11 @@
 
 	// Register methods for touch events. Here the side constants are
 	// bit-or:ed to capture touches on all four sides.
-	// Note: Commented out, instead the block syntax below is used.
-	// This code kept here as a reference, to compare the two methods.
-	/*[manager
+	[manager
 		addTouchObserver: self
 		touchBegan: @selector(touchesBegan:)
 		touchMoved: @selector(touchesMoved:)
 		touchEnded: @selector(touchesEnded:)
-		side: FFRSideLeft | FFRSideRight | FFRSideTop | FFRSideBottom];*/
-
-	// This code illustrates the use of blocks for capturing touch events.
-	// Using blocks is an alternative to the above synax that uses an object
-	// and selectors for each touch event.
-	[manager
-		addTouchBeganBlock: ^(NSSet* touches){ [self touchesBegan: touches]; }
-		side: FFRSideLeft | FFRSideRight | FFRSideTop | FFRSideBottom];
-	[manager
-		addTouchMovedBlock: ^(NSSet* touches){ [self touchesMoved: touches]; }
-		side: FFRSideLeft | FFRSideRight | FFRSideTop | FFRSideBottom];
-	[manager
-		addTouchEndedBlock: ^(NSSet* touches){ [self touchesEnded: touches]; }
 		side: FFRSideLeft | FFRSideRight | FFRSideTop | FFRSideBottom];
 }
 
