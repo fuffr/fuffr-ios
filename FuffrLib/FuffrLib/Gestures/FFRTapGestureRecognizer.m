@@ -11,12 +11,22 @@
 
 @implementation FFRTapGestureRecognizer
 
-#pragma mark - touch debug
+- (id) init
+{
+	self = [super init];
+
+	if (self)
+	{
+		self.touch = nil;
+		self.maximumDistance = 50.0;
+		self.maximumDuration = 0.5;
+	}
+
+	return self;
+}
 
 -(void) touchesBegan:(NSSet*)touches
 {
-    LOGMETHOD
-
 	if (self.touch == nil)
 	{
 		// Start tracking the first touch.
@@ -33,21 +43,21 @@
 
 -(void) touchesEnded:(NSSet *)touches
 {
-    LOGMETHOD
+	//NSLog(@"touchesEnded: %@", self);
 
-    //NSLog(@"touchesEnded: %@", self);
-
-	if (self.touch)
+	if (self.touch && self.touch.phase == FFRTouchPhaseEnded)
 	{
-        CGPoint endPoint = self.touch.location;
-        NSTimeInterval endTime = self.touch.timestamp;
-    	CGFloat distance = [self maxDistanceBetween: self.startPoint andPoint: endPoint];
-    	//NSLog(@"Tap diff time: %f dist: %f", endTime - self.startTime, distance);
-    	if (distance < 50.0 && endTime - self.startTime < 0.5)
+		CGPoint endPoint = self.touch.location;
+		NSTimeInterval endTime = self.touch.timestamp;
+		CGFloat distance = [self maxDistanceBetween: self.startPoint andPoint: endPoint];
+		//NSLog(@"Tap diff time: %f dist: %f", endTime - self.startTime, distance);
+		if (distance < self.maximumDistance &&
+			(endTime - self.startTime) < self.maximumDuration)
 		{
-        	[self performAction];
+			self.state = UIGestureRecognizerStateEnded;
+			[self performAction];
 		}
-    	self.touch = nil;
+		self.touch = nil;
 	}
 }
 

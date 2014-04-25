@@ -12,63 +12,62 @@
 
 @implementation FFRDoubleTapGestureRecognizer
 
--(id) init {
-    if (self = [super init]) {
-        _count = 0;
-        _down = false;
-    }
-    
-    return self;
+- (id) init
+{
+	self = [super init];
+
+	if (self)
+	{
+		self.touch = nil;
+		self.touchCount = 0;
+		self.maximumDistance = 100.0;
+		self.maximumDuration = 1.5;
+	}
+
+	return self;
 }
 
-#pragma mark - touch debug
+-(void) touchesBegan:(NSSet*)touches
+{
+	if (self.touch == nil)
+	{
+		// Start tracking the first touch.
+		NSArray* touchArray = [touches allObjects];
+		self.touch = [touchArray objectAtIndex: 0];
 
--(void) touchesBegan:(NSSet*)touches {
-    LOGMETHOD
-    
-    //NSLog(@"touchesBegan: %@", touches);
-    if(!_down) for (FFRTouch* touch in touches) {
-        NSTimeInterval diff = touch.timestamp - _startTime;
-        if(_count > 2 || diff > 3 || _count == 0) {
-            _startTime = touch.timestamp;
-            _startPoint = touch.location;
-            _count = 0;
-        }
-        _down = true;
-    }
-    
-    self.state = FFRGestureRecognizerStateBegan;
+		if (self.touchCount == 0)
+		{
+			self.startTime = self.touch.timestamp;
+			self.startPoint = self.touch.location;
+		}
+
+		self.touchCount ++;
+	}
 }
 
--(void) touchesMoved:(NSSet *)touches {
-    LOGMETHOD
-    //NSLog(@"touchesMoved: %@ - %@", touches, event);
+-(void) touchesMoved:(NSSet *)touches
+{
 }
 
--(void) touchesEnded:(NSSet *)touches {
-    LOGMETHOD
-    
-    //NSLog(@"touchesEnded: %@", touches);
-    
-    CGPoint endPoint;
-    NSTimeInterval end;
-    for (FFRTouch* touch in touches) {
-        endPoint = touch.location;
-        end = touch.timestamp;
-        _down = false;
-    }
-    
-    CGFloat distance = [self maxDistanceBetween:_startPoint andPoint:endPoint];
-    //NSLog(@"Tap diff: %f %f", distance, end - _startTime);
-    if (distance < 100 && end - _startTime < 1.5) {
-        _count++;
-    }
-    if(_count == 2) {
-        [self performAction];
-        _count = 0;
-    }
-    
-    self.state = FFRGestureRecognizerStateEnded;
+-(void) touchesEnded:(NSSet *)touches
+{
+	if (self.touch && self.touch.phase == FFRTouchPhaseEnded)
+	{
+		if (self.touchCount == 2)
+		{
+			CGPoint endPoint = self.touch.location;
+			NSTimeInterval endTime = self.touch.timestamp;
+			CGFloat distance = [self maxDistanceBetween: self.startPoint andPoint: endPoint];
+			if (distance < self.maximumDistance &&
+				(endTime - self.startTime) < self.maximumDuration)
+			{
+				self.state = UIGestureRecognizerStateEnded;
+				[self performAction];
+			}
+			_touchCount = 0;
+		}
+		_touch = nil;
+	}
 }
 
 @end

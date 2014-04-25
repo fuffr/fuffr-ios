@@ -175,10 +175,10 @@
 		215E0B1B18DC67CF00484E43 /* Gestures */ = {
 			isa = PBXGroup;
 			children = (
-				215E0B1E18DC67CF00484E43 /* FFRGestureRecognizer.h */,
-				215E0B1F18DC67CF00484E43 /* FFRGestureRecognizer.m */,
 				215E0B2018DC67CF00484E43 /* FFRLongPressGestureRecognizer.h */,
 				215E0B2118DC67CF00484E43 /* FFRLongPressGestureRecognizer.m */,
+				215E0B1E18DC67CF00484E43 /* FFRGestureRecognizer.h */,
+				215E0B1F18DC67CF00484E43 /* FFRGestureRecognizer.m */,
 				215E0B2218DC67CF00484E43 /* FFRPanGestureRecognizer.h */,
 				215E0B2318DC67CF00484E43 /* FFRPanGestureRecognizer.m */,
 				215E0B2418DC67CF00484E43 /* FFRPinchGestureRecognizer.h */,

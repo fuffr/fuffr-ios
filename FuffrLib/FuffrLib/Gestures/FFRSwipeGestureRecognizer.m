@@ -11,73 +11,94 @@
 
 @implementation FFRSwipeGestureRecognizer
 
--(void) touchesBegan:(NSSet*)touches {
-    LOGMETHOD
+- (id) init
+{
+	self = [super init];
 
-    //NSLog(@"touchesBegan: %@ - %@", touches, event);
-    for (FFRTouch* touch in touches) {
-        _start = touch.timestamp;
-        _startPoint = touch.location;
-    }
+	if (self)
+	{
+		self.touch = nil;
+		self.minimumDistance = 200.0;
+		self.maximumDuration = 1.0;
+	}
 
-    self.state = UIGestureRecognizerStatePossible;
+	return self;
 }
 
--(void) touchesMoved:(NSSet *)touches {
-    LOGMETHOD
-    //NSLog(@"touchesMoved: %@ - %@", touches, event);
-
-    CGPoint endPoint;
-    NSTimeInterval end;
-    for (FFRTouch* touch in touches) {
-        end = touch.timestamp;
-        endPoint = touch.location;
-    }
-
-    if (self.state == UIGestureRecognizerStatePossible) {
-        self.state = FFRGestureRecognizerStateBegan;
-    }
-    else if (self.state == FFRGestureRecognizerStateBegan) {
-        if (end - _start <= 0.5) {
-            CGFloat distance = [self maxDistanceBetween:_startPoint andPoint:endPoint];
-            if (distance > 30) {
-                if (self.direction == FFRSwipeGestureRecognizerDirectionRight && ABS(_startPoint.x - endPoint.x) > ABS(_startPoint.y - endPoint.y) && endPoint.x > _startPoint.x) {
-                    [self performAction];
-                    self.state = FFRGestureRecognizerStateEnded;
-                }
-                else if (self.direction == FFRSwipeGestureRecognizerDirectionLeft && ABS(_startPoint.x - endPoint.x) > ABS(_startPoint.y - endPoint.y) && _startPoint.x > endPoint.x) {
-                    [self performAction];
-                    self.state = FFRGestureRecognizerStateEnded;
-                }
-                else if (self.direction == FFRSwipeGestureRecognizerDirectionUp && ABS(_startPoint.y - endPoint.y) > ABS(_startPoint.x - endPoint.x) && _startPoint.y > endPoint.y) {
-                    [self performAction];
-                    self.state = FFRGestureRecognizerStateEnded;
-                }
-                else if (self.direction == FFRSwipeGestureRecognizerDirectionDown && ABS(_startPoint.y - endPoint.y) > ABS(_startPoint.x - endPoint.x) && endPoint.y > _startPoint.y) {
-                    [self performAction];
-                    self.state = FFRGestureRecognizerStateEnded;
-                }
-                else {
-                    self.state = UIGestureRecognizerStateCancelled;
-                    return;
-                }
-            }
-        }
-        else  {
-            self.state = UIGestureRecognizerStateFailed;
-            return;
-        }
-    }
-    else {
-        return;
-    }
+-(void) touchesBegan:(NSSet*)touches
+{
+	if (self.touch == nil)
+	{
+		// Start tracking the first touch.
+		NSArray* touchArray = [touches allObjects];
+		self.touch = [touchArray objectAtIndex: 0];
+		self.startTime = self.touch.timestamp;
+		self.startPoint = self.touch.location;
+	}
 }
 
--(void) touchesEnded:(NSSet *)touches {
-    LOGMETHOD
+-(void) touchesMoved:(NSSet *)touches
+{
+	if (!self.touch)
+	{
+		return;
+	}
 
-    //NSLog(@"touchesEnded: %@ - %@", touches, event);
-    self.state = FFRGestureRecognizerStateEnded;
+	NSTimeInterval duration  = self.touch.timestamp - self.startTime;
+	if (!(duration < self.maximumDuration))
+	{
+		// Timed out.
+		self.touch = nil;
+		return;
+	}
+
+	CGPoint point = self.touch.location;
+	CGFloat distanceX = ABS(self.startPoint.x - point.x);
+	CGFloat distanceY = ABS(self.startPoint.y - point.y);
+	BOOL gestureHasTriggered = NO;
+
+	if (self.direction == FFRSwipeGestureRecognizerDirectionLeft)
+	{
+		gestureHasTriggered =
+			distanceX > self.minimumDistance &&
+			distanceX > distanceY &&
+			self.startPoint.x > point.x;
+	}
+	else if (self.direction == FFRSwipeGestureRecognizerDirectionRight)
+	{
+		gestureHasTriggered =
+			distanceX > self.minimumDistance &&
+			distanceX > distanceY &&
+			self.startPoint.x < point.x;
+	}
+	else if (self.direction == FFRSwipeGestureRecognizerDirectionUp)
+	{
+		//NSLog(@"UP distX %f distY: %f", distanceX, distanceY);
+		gestureHasTriggered =
+			distanceY > self.minimumDistance &&
+			distanceX < distanceY &&
+			self.startPoint.y > point.x;
+	}
+	else if (self.direction == FFRSwipeGestureRecognizerDirectionDown)
+	{
+		//NSLog(@"DOWN distX %f distY: %f", distanceX, distanceY);
+		gestureHasTriggered =
+			distanceY > self.minimumDistance &&
+			distanceX < distanceY &&
+			self.startPoint.y < point.x;
+	}
+
+	if (gestureHasTriggered)
+	{
+		self.state = FFRGestureRecognizerStateEnded;
+		[self performAction];
+		self.touch = nil;
+	}
+}
+
+-(void) touchesEnded:(NSSet *)touches
+{
+	self.touch = nil;
 }
 
 @end

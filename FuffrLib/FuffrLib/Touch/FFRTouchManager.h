@@ -50,7 +50,7 @@
 - (void) onFuffrDisconnected: (void(^)())disconnectedBlock;
 
 /**
-    Callback when a device is discovered
+	Callback when a device is discovered
  */
 // TODO: remove
 //@property (nonatomic, copy) void(^onPeripheralDiscovery)(CBPeripheral* p);
@@ -88,7 +88,7 @@
  *
  * The touchBegan, touchMoved and touchEnded methods
  * have the format:
- *    methodName: (NSSet*) touches
+ *	methodName: (NSSet*) touches
  * where touches is a set of FFRTouch objects.
  * The touch method selectors can be set to nil, in which 
  * case that touch event will not be received.
@@ -152,6 +152,11 @@
 - (void) removeTouchBlock: (int)blockId;
 
 /**
+ * Remove all touch observers and touch blocks.
+ */
+- (void) removeAllTouchObserversAndTouchBlocks;
+
+/**
  Add a gesture recognizer.
  */
 -(void) addGestureRecognizer: (FFRGestureRecognizer*) gestureRecognizer;
@@ -160,5 +165,10 @@
  Remove a gesture recognizer.
  */
 -(void) removeGestureRecognizer: (FFRGestureRecognizer*) gestureRecognizer;
+
+/**
+ Remove all gesture recognizers.
+ */
+-(void) removeAllGestureRecognizers;
 
 @end

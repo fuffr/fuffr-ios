@@ -18,50 +18,50 @@
 @implementation FFRGestureRecognizer
 
 -(id) init {
-    if (self = [super init]) {
-        _actionPairs = [NSMutableArray array];
-        self.state = UIGestureRecognizerStatePossible;
-    }
+	if (self = [super init]) {
+		_actionPairs = [NSMutableArray array];
+		self.state = UIGestureRecognizerStatePossible;
+	}
 
-    return self;
+	return self;
 }
 
 -(CGFloat) maxDistanceBetween:(CGPoint)point1 andPoint:(CGPoint)point2 {
-    return MAX(ABS(point1.x-point2.x), ABS(point1.y-point2.y));
+	return MAX(ABS(point1.x-point2.x), ABS(point1.y-point2.y));
 }
 
 -(CGFloat) distanceBetween:(CGPoint)point1 andPoint:(CGPoint)point2 {
-    return sqrt((point1.x-point2.x)*(point1.x-point2.x) + (point1.y-point2.y)*(point1.y-point2.y));
+	return sqrt((point1.x-point2.x)*(point1.x-point2.x) + (point1.y-point2.y)*(point1.y-point2.y));
 }
 
 -(void) addTarget:(id)target action:(SEL)action {
-    TargetActionPair* pair = [[TargetActionPair alloc] init];
-    pair.target = target;
-    pair.action = action;
+	TargetActionPair* pair = [[TargetActionPair alloc] init];
+	pair.target = target;
+	pair.action = action;
 
-    [_actionPairs addObject:pair];
+	[_actionPairs addObject:pair];
 }
 
 -(void) performAction {
-    LOGMETHOD
-    
-    for (TargetActionPair* pair in _actionPairs) {
+	LOGMETHOD
+	
+	for (TargetActionPair* pair in _actionPairs) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-        [pair.target performSelector:pair.action withObject:self];
+		[pair.target performSelector:pair.action withObject:self];
 #pragma clang diagnostic pop
-    }
+	}
 }
 
 -(void) performActionWithObject: (id)object {
-    LOGMETHOD
-    
-    for (TargetActionPair* pair in _actionPairs) {
+	LOGMETHOD
+	
+	for (TargetActionPair* pair in _actionPairs) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-        [pair.target performSelector:pair.action withObject:object];
+		[pair.target performSelector:pair.action withObject:object];
 #pragma clang diagnostic pop
-    }
+	}
 }
 
 -(void) touchesBegan:(NSSet*)touches {

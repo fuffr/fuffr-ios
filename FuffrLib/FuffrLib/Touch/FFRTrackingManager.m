@@ -56,8 +56,10 @@ const float FFRTrackingManagerUpdateSpeed = 0.07f;
 		{
             existing.rawPoint = data.rawPoint;
             existing.normalizedLocation = data.normalizedLocation;
-            //existing.phase = data.phase;
-            existing.phase = UITouchPhaseMoved;
+            // This sets phase to FFRTouchPhaseBegan which is wrong/mesleading:
+			//existing.phase = data.phase;
+			// Always setting to FFRTouchPhaseMoved instead.
+            existing.phase = FFRTouchPhaseMoved;
             existing.location = data.location;
         }
         else {
@@ -95,7 +97,7 @@ const float FFRTrackingManagerUpdateSpeed = 0.07f;
     }
 
     FFRTouch* t = [_trackedObjects objectAtIndex:index];
-    t.phase = UITouchPhaseEnded;
+    t.phase = FFRTouchPhaseEnded;
 
     [self willChange:NSKeyValueChangeRemoval valuesAtIndexes:[NSIndexSet indexSetWithIndex:index] forKey:@"trackedObjects"];
     [_trackedObjects removeObjectAtIndex:index];
@@ -162,7 +164,7 @@ const float FFRTrackingManagerUpdateSpeed = 0.07f;
     if ([keyPath compare:@"location"] == NSOrderedSame) {
         NSValue* value = [change objectForKey:NSKeyValueChangeNewKey];
         FFRTouch* t = object;
-        t.phase = UITouchPhaseMoved;
+        t.phase = FFRTouchPhaseMoved;
         [[NSNotificationCenter defaultCenter] postNotificationName:FFRTrackingMovedNotification object:[NSSet setWithArray:_trackedObjects] userInfo:@{@"location": value}];
     }
 }

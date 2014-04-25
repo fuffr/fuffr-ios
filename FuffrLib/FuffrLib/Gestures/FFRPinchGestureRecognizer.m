@@ -16,16 +16,16 @@
 {
 	self = [super init];
 
-    if (self)
+	if (self)
 	{
 		self.minimumTouchDistance = 50;
 		self.pinchThresholdTouchDistance = 10.0;
 		self.scale = 0.0;
-        self.touch1 = nil;
-        self.touch2 = nil;
-    }
+		self.touch1 = nil;
+		self.touch2 = nil;
+	}
 
-    return self;
+	return self;
 }
 
 -(CGFloat) currentDistance

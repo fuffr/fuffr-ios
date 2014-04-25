@@ -11,20 +11,18 @@
 
 @implementation FFRPanGestureRecognizer
 
-#pragma mark - Touch handling
-
 - (id) init
 {
 	self = [super init];
 
-    if (self)
+	if (self)
 	{
-        self.maximumTouchDistance = 0;
+		self.maximumTouchDistance = 0;
 		self.translation = CGSizeMake(0,0);
 		self.touch = nil;
-    }
+	}
 
-    return self;
+	return self;
 }
 
 -(bool) isValidPanTouch: (NSSet*)touches
@@ -74,7 +72,7 @@
 
 - (void) touchesBegan: (NSSet*)touches
 {
-    LOGMETHOD
+	LOGMETHOD
 
 	//NSLog(@"touchesBegan: %i", (int)touches.count);
 
@@ -106,12 +104,12 @@
 
 -(void) touchesMoved:(NSSet*)touches
 {
-    LOGMETHOD
+	LOGMETHOD
 
 	//[self logTouchData: touches];
 
 	// Check that the tracked touch is valid.
-	if (self.touch == nil || self.touch.phase != UITouchPhaseMoved)
+	if (self.touch == nil || self.touch.phase != FFRTouchPhaseMoved)
 	{
 		return;
 	}
@@ -133,18 +131,18 @@
 
 -(void) touchesEnded: (NSSet*)touches
 {
-    LOGMETHOD
+	LOGMETHOD
 
 	//NSLog(@"touchesEnded: %i", (int)touches.count);
 
 	for (FFRTouch* touch in touches)
 	{
-		assert(touch.phase == UITouchPhaseEnded);
+		assert(touch.phase == FFRTouchPhaseEnded);
 	}
 
-	if (self.touch != nil && self.touch.phase == UITouchPhaseEnded)
+	if (self.touch != nil && self.touch.phase == FFRTouchPhaseEnded)
 	{
-		if (self.touch2 != nil && self.touch2.phase != UITouchPhaseEnded)
+		if (self.touch2 != nil && self.touch2.phase != FFRTouchPhaseEnded)
 		{
 			/*NSLog(@"  Swithing touch points offset: %i %i",
 				(int)(self.touch2.location.x - self.touch.location.x),

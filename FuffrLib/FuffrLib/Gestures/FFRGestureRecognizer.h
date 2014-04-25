@@ -14,10 +14,10 @@
  */
 typedef enum
 {
-    FFRGestureRecognizerStateUnknown = 0,
-    FFRGestureRecognizerStateBegan = 1,
-    FFRGestureRecognizerStateChanged = 2,
-    FFRGestureRecognizerStateEnded = 3
+	FFRGestureRecognizerStateUnknown = 0,
+	FFRGestureRecognizerStateBegan = 1,
+	FFRGestureRecognizerStateChanged = 2,
+	FFRGestureRecognizerStateEnded = 3
 }
 FFRGestureRecognizerState;
 
@@ -32,7 +32,7 @@ FFRGestureRecognizerState;
  Base class to hold state of a gesture recognizer
  */
 @interface FFRGestureRecognizer : NSObject {
-    NSMutableArray* _actionPairs;
+	NSMutableArray* _actionPairs;
 }
 
 /**

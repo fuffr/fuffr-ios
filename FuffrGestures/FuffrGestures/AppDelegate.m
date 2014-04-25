@@ -14,15 +14,15 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 	// Set window size and color.
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.window.backgroundColor = [UIColor whiteColor];
+	self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+	self.window.backgroundColor = [UIColor whiteColor];
 
-    // Create and display the view controller.
-    AppViewController* viewController = [AppViewController new];
+	// Create and display the view controller.
+	AppViewController* viewController = [AppViewController new];
 	self.window.rootViewController = viewController;
-    [self.window makeKeyAndVisible];
+	[self.window makeKeyAndVisible];
 
-    return YES;
+	return YES;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

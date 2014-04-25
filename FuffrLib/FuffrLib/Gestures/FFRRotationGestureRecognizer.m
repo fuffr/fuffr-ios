@@ -16,16 +16,16 @@
 {
 	self = [super init];
 
-    if (self)
+	if (self)
 	{
 		self.minimumTouchDistance = 50;
 		self.rotationThreshold = 0.1;
 		self.rotation = 0.0;
-        self.touch1 = nil;
-        self.touch2 = nil;
-    }
+		self.touch1 = nil;
+		self.touch2 = nil;
+	}
 
-    return self;
+	return self;
 }
 
 -(CGFloat) calculateRotation

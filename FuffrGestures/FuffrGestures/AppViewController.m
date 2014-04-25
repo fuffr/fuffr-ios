@@ -6,6 +6,41 @@
 //  Copyright (c) 2014 Fuffr. All rights reserved.
 //
 
+/*
+How to use
+----------
+
+The app has two states. You swithing between states by 
+long pressing the bottom side of Fuffr. The Face will
+change color to indicate the current state.
+
+State 1 has the following gestures:
+
+  Right side:
+    Pinch and Rotate
+	Double tap to set random face color
+	Long-press to reset face
+  Left side: 
+    Pan
+	Double tap to set random face color
+	Long-press to reset face
+  Bottom side: 
+    Tap to switch state
+
+State 2 has the following gestures:
+
+  Right side:
+    Swipe left/right/up/down to move face to the sides
+	Double tap to set random face color
+	Long-press to reset face
+  Left side: 
+    Pan
+	Double tap to set random face color
+	Long-press to reset face
+  Bottom side: 
+    Tap to switch state
+*/
+
 #import "AppViewController.h"
 
 #import <FuffrLib/FFRTapGestureRecognizer.h>
@@ -20,34 +55,38 @@
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self)
-    {
-        // Add custom initialization if needed.
-    }
-    return self;
+	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+	if (self)
+	{
+		// Add custom initialization if needed.
+	}
+	return self;
 }
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
+	[super viewDidLoad];
 
 	// Create an image view for drawing.
 	self.imageView = [[UIImageView alloc] initWithFrame: self.view.bounds];
-    self.imageView.autoresizingMask =
+	self.imageView.autoresizingMask =
 		UIViewAutoresizingFlexibleHeight |
 		UIViewAutoresizingFlexibleWidth;
-    [self.view addSubview: self.imageView];
+	[self.view addSubview: self.imageView];
 
 	// Set background color.
-    self.imageView.backgroundColor = UIColor.blueColor;
+	self.imageView.backgroundColor = [UIColor
+		colorWithRed: 1.0
+		green: 1.0
+		blue: 0.7
+		alpha: 1.0];
 
 	self.view.multipleTouchEnabled = YES;
 }
 
 -(void) viewDidAppear:(BOOL)animated
 {
-    [super viewDidAppear: animated];
+	[super viewDidAppear: animated];
 
 	[self setupFuffr];
 	[self initializeRenderingParameters];
@@ -56,7 +95,7 @@
 
 - (void)didReceiveMemoryWarning
 {
-    [super didReceiveMemoryWarning];
+	[super didReceiveMemoryWarning];
 }
 
 -(void) initializeRenderingParameters
@@ -70,6 +109,11 @@
 	self.baseRotation = 0.0;
 	self.currentRotation = self.baseRotation;
 
+	[self setFaceColor1];
+}
+
+-(void) setFaceColor1
+{
 	MyColor color;
 	color.red = 0.0;
 	color.green = 1.0;
@@ -77,10 +121,28 @@
 	self.objectColor = color;
 }
 
+-(void) setFaceColor2
+{
+	MyColor color;
+	color.red = 0.3;
+	color.green = 0.3;
+	color.blue = 1.0;
+	self.objectColor = color;
+}
+
+-(void) setRandomFaceColor
+{
+	MyColor color;
+	color.red = (CGFloat) arc4random_uniform(256) / 256;
+	color.green = (CGFloat) arc4random_uniform(256) / 256;
+	color.blue = (CGFloat) arc4random_uniform(256) / 256;
+	self.objectColor = color;
+}
+
 - (void) setupFuffr
 {
 	[self connectToFuffr];
-	[self setupGestures];
+	[self setupGestures1];
 	//[self setupTouches]; // For debugging, currently not used.
 }
 
@@ -141,69 +203,109 @@
 
 // Comment/uncomment lines [manager addGestureRecognizer: ...
 // to add/remove gestures.
-- (void) setupGestures
+- (void) setupGestures1
 {
 	// Get a reference to the touch manager.
 	FFRTouchManager* manager = [FFRTouchManager sharedManager];
 
-	// Gestures.
+	// Remove any existing gestures.
+	[manager removeAllGestureRecognizers];
+
+	// Add gestures.
 
 	FFRPanGestureRecognizer* pan = [FFRPanGestureRecognizer new];
-	pan.side = FFRSideRight;
-    [pan addTarget: self action: @selector(onPan:)];
-	// Uncomment this line to add pan to right side.
-	//[manager addGestureRecognizer: pan];
-
-	pan = [FFRPanGestureRecognizer new];
 	pan.side = FFRSideLeft;
-    [pan addTarget: self action: @selector(onPan:)];
+	[pan addTarget: self action: @selector(onPan:)];
 	[manager addGestureRecognizer: pan];
 
 	FFRPinchGestureRecognizer* pinch = [FFRPinchGestureRecognizer new];
 	pinch.side = FFRSideRight;
-    [pinch addTarget: self action: @selector(onPinch:)];
+	[pinch addTarget: self action: @selector(onPinch:)];
 	// Comment out this line to remove pinch from right side.
 	[manager addGestureRecognizer: pinch];
 
 	FFRRotationGestureRecognizer* rotation = [FFRRotationGestureRecognizer new];
 	rotation.side = FFRSideRight;
-    [rotation addTarget: self action: @selector(onRotation:)];
+	[rotation addTarget: self action: @selector(onRotation:)];
 	// Uncomment this line to add rotation to right side.
 	[manager addGestureRecognizer: rotation];
 
 	FFRTapGestureRecognizer* tap = [FFRTapGestureRecognizer new];
 	tap.side = FFRSideBottom;
-    [tap addTarget: self action: @selector(onTap:)];
+	[tap addTarget: self action: @selector(onTapInState1:)];
 	[manager addGestureRecognizer: tap];
-    
+	
 	FFRDoubleTapGestureRecognizer* dtap = [FFRDoubleTapGestureRecognizer new];
-	dtap.side = FFRSideBottom;
-    [dtap addTarget: self action: @selector(onDoubleTap:)];
+	dtap.side = FFRSideRight | FFRSideLeft;
+	[dtap addTarget: self action: @selector(onDoubleTap:)];
 	[manager addGestureRecognizer: dtap];
 
 	FFRLongPressGestureRecognizer* longPress = [FFRLongPressGestureRecognizer new];
-	longPress.side = FFRSideBottom;
-    [longPress addTarget: self action: @selector(onLongPress:)];
+	longPress.side = FFRSideLeft | FFRSideRight;
+	[longPress addTarget: self action: @selector(onLongPress:)];
+	[manager addGestureRecognizer: longPress];
+}
+
+- (void) setupGestures2
+{
+	// Get a reference to the touch manager.
+	FFRTouchManager* manager = [FFRTouchManager sharedManager];
+
+	// Remove any existing gestures.
+	[manager removeAllGestureRecognizers];
+
+	// Add gestures.
+
+	FFRPanGestureRecognizer* pan = [FFRPanGestureRecognizer new];
+	pan.side = FFRSideLeft;
+	[pan addTarget: self action: @selector(onPan:)];
+	[manager addGestureRecognizer: pan];
+
+	FFRTapGestureRecognizer* tap = [FFRTapGestureRecognizer new];
+	tap.side = FFRSideBottom;
+	[tap addTarget: self action: @selector(onTapInState2:)];
+	[manager addGestureRecognizer: tap];
+
+	FFRDoubleTapGestureRecognizer* dtap = [FFRDoubleTapGestureRecognizer new];
+	dtap.side = FFRSideRight | FFRSideLeft;
+	[dtap addTarget: self action: @selector(onDoubleTap:)];
+	[manager addGestureRecognizer: dtap];
+
+	FFRLongPressGestureRecognizer* longPress = [FFRLongPressGestureRecognizer new];
+	longPress.side = FFRSideLeft | FFRSideRight;
+	[longPress addTarget: self action: @selector(onLongPress:)];
 	[manager addGestureRecognizer: longPress];
 
 	FFRSwipeGestureRecognizer* swipeLeft = [FFRSwipeGestureRecognizer new];
 	swipeLeft.side = FFRSideRight;
 	swipeLeft.direction = FFRSwipeGestureRecognizerDirectionLeft;
-    [swipeLeft addTarget: self action: @selector(onSwipeLeft:)];
+	[swipeLeft addTarget: self action: @selector(onSwipeLeft:)];
 	[manager addGestureRecognizer: swipeLeft];
 
 	FFRSwipeGestureRecognizer* swipeRight = [FFRSwipeGestureRecognizer new];
 	swipeRight.side = FFRSideRight;
-	swipeRight.direction = FFRSwipeGestureRecognizerDirectionLeft;
-    [swipeRight addTarget: self action: @selector(onSwipeRight:)];
+	swipeRight.direction = FFRSwipeGestureRecognizerDirectionRight;
+	[swipeRight addTarget: self action: @selector(onSwipeRight:)];
 	[manager addGestureRecognizer: swipeRight];
+
+	FFRSwipeGestureRecognizer* swipeUp = [FFRSwipeGestureRecognizer new];
+	swipeUp.side = FFRSideRight;
+	swipeUp.direction = FFRSwipeGestureRecognizerDirectionUp;
+	[swipeUp addTarget: self action: @selector(onSwipeUp:)];
+	[manager addGestureRecognizer: swipeUp];
+
+	FFRSwipeGestureRecognizer* swipeDown = [FFRSwipeGestureRecognizer new];
+	swipeDown.side = FFRSideRight;
+	swipeDown.direction = FFRSwipeGestureRecognizerDirectionDown;
+	[swipeDown addTarget: self action: @selector(onSwipeDown:)];
+	[manager addGestureRecognizer: swipeDown];
 }
 
 // Gesture handler methods.
 
 -(void) onPan: (FFRPanGestureRecognizer*)gesture
 {
-    //NSLog(@"onPan: %f %f", gesture.translation.width, gesture.translation.height);
+	//NSLog(@"onPan: %f %f", gesture.translation.width, gesture.translation.height);
 
 	if (gesture.state == FFRGestureRecognizerStateChanged)
 	{
@@ -233,7 +335,7 @@
 
 -(void) onPinch: (FFRPinchGestureRecognizer*)gesture
 {
-    //NSLog(@"onPinch: %f", gesture.scale);
+	//NSLog(@"onPinch: %f", gesture.scale);
 
 	if (gesture.state == FFRGestureRecognizerStateChanged)
 	{
@@ -266,33 +368,81 @@
 	[self redrawImageView];
 }
 
--(void) onTap: (FFRTapGestureRecognizer*)gesture
+-(void) onLongPress: (FFRLongPressGestureRecognizer*)gesture
 {
-    NSLog(@"onTap");
+	NSLog(@"onLongPress");
 	[self initializeRenderingParameters];
 	[self redrawImageView];
 }
 
 -(void) onDoubleTap: (FFRDoubleTapGestureRecognizer*)gesture
 {
-    NSLog(@"onDoubleTap");
-	[self initializeRenderingParameters];
+	NSLog(@"onDoubleTap");
+	
+	[self setRandomFaceColor];
 	[self redrawImageView];
 }
 
--(void) onLongPress: (FFRLongPressGestureRecognizer*)gesture
+-(void) onTapInState1: (FFRTapGestureRecognizer*)gesture
 {
-	NSLog(@"onLongPress");
+	NSLog(@"onTap1");
+
+	[self setupGestures2];
+	[self setFaceColor2];
+	[self redrawImageView];
+}
+
+-(void) onTapInState2: (FFRTapGestureRecognizer*)gesture
+{
+	NSLog(@"onTap2");
+
+	[self setupGestures1];
+	[self setFaceColor1];
+	[self redrawImageView];
 }
 
 -(void) onSwipeLeft: (FFRSwipeGestureRecognizer*)gesture
 {
-	NSLog(@"onSwipeLeft");
+	NSLog(@"<<<<<<<<<<<<<<<< onSwipeLeft");
+
+	CGPoint p = self.currentTranslation;
+	p.x = -self.imageView.bounds.size.width / 2;
+	self.currentTranslation = p;
+
+	[self redrawImageView];
 }
 
 -(void) onSwipeRight: (FFRSwipeGestureRecognizer*)gesture
 {
-	NSLog(@"onSwipeRight");
+	NSLog(@">>>>>>>>>>>>>>>> onSwipeRight");
+
+	CGPoint p = self.currentTranslation;
+	p.x = self.imageView.bounds.size.width / 2;
+	self.currentTranslation = p;
+
+	[self redrawImageView];
+}
+
+-(void) onSwipeUp: (FFRSwipeGestureRecognizer*)gesture
+{
+	NSLog(@"^^^^^^^^^^^^^^^^ onSwipeUp");
+
+	CGPoint p = self.currentTranslation;
+	p.y = -self.imageView.bounds.size.height / 2;
+	self.currentTranslation = p;
+
+	[self redrawImageView];
+}
+
+-(void) onSwipeDown: (FFRSwipeGestureRecognizer*)gesture
+{
+	NSLog(@"vvvvvvvvvvvvvvvv onSwipeDown");
+
+	CGPoint p = self.currentTranslation;
+	p.y = self.imageView.bounds.size.height / 2;
+	self.currentTranslation = p;
+
+	[self redrawImageView];
 }
 
 // Drawing the view.
@@ -303,7 +453,7 @@
 	dispatch_async(dispatch_get_main_queue(),
 	^{
 		[self drawImageView];
-    });
+	});
 }
 
 - (void) drawImageView
@@ -314,9 +464,9 @@
 	// Original unscaled size.
 	CGFloat rectSize = 120;
 
-    //UIGraphicsBeginImageContext(self.view.frame.size);
-    UIGraphicsBeginImageContext(self.imageView.bounds.size);
-    CGContextRef context = UIGraphicsGetCurrentContext();
+	//UIGraphicsBeginImageContext(self.view.frame.size);
+	UIGraphicsBeginImageContext(self.imageView.bounds.size);
+	CGContextRef context = UIGraphicsGetCurrentContext();
 	CGContextSaveGState(context);
 
 	//NSLog(@"drawImage scale: %f", self.objectScale);
@@ -357,10 +507,10 @@
 	CGContextFillRect(context, CGRectMake(-40, -20, 15, 15)); // Left eye
 	CGContextFillRect(context, CGRectMake(40-15, -20, 15, 15)); // Right eye
 
-    self.imageView.image = UIGraphicsGetImageFromCurrentImageContext();
+	self.imageView.image = UIGraphicsGetImageFromCurrentImageContext();
 
 	CGContextRestoreGState(context);
-    UIGraphicsEndImageContext();
+	UIGraphicsEndImageContext();
 }
 
 @end

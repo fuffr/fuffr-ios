@@ -10,24 +10,35 @@
 #import "FFRRawTrackingData.h"
 
 /**
+ * Type that defines constants for the states of a touch.
+ */
+typedef enum
+{
+	FFRTouchPhaseBegan = 1,
+	FFRTouchPhaseMoved = 2,
+	FFRTouchPhaseEnded = 3
+}
+FFRTouchPhase;
+
+/**
  * Type that defines constants for the sides Fuffr.
  */
 typedef enum
 {
-    /** Touch unknown/not set. */
-    FFRSideNotSet = 0,
+	/** Touch unknown/not set. */
+	FFRSideNotSet = 0,
 
-    /** Touch tracked along top edge. */
-    FFRSideTop = 0x1,
+	/** Touch tracked along top edge. */
+	FFRSideTop = 0x1,
 
-    /** Touch tracked along bottom edge. */
-    FFRSideBottom = 0x2,
+	/** Touch tracked along bottom edge. */
+	FFRSideBottom = 0x2,
 
-    /** Touch tracked along left edge. */
-    FFRSideLeft = 0x4,
+	/** Touch tracked along left edge. */
+	FFRSideLeft = 0x4,
 
-    /** Touch tracked along right edge. */
-    FFRSideRight = 0x8
+	/** Touch tracked along right edge. */
+	FFRSideRight = 0x8
 }
 FFRSide;
 
@@ -65,7 +76,7 @@ FFRSide;
 /** 
  * The phase of the touch: began, moved, ended. 
  */
-@property (nonatomic, assign) UITouchPhase phase;
+@property (nonatomic, assign) FFRTouchPhase phase;
 
 /** 
  * The point on the screen, as determined by a

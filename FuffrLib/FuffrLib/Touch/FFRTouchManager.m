@@ -108,18 +108,18 @@ static NSSet* filterTouchesBySide(NSSet* touches, FFRSide side)
 		^BOOL(id obj, BOOL* stop)
 		{
 			return side & ((FFRTouch*)obj).side;
-    	}];
+		}];
 }
 */
 
 // Helper function.
-static NSSet* filterTouchesBySideAndPhase(NSSet* touches, FFRSide side, UITouchPhase phase)
+static NSSet* filterTouchesBySideAndPhase(NSSet* touches, FFRSide side, FFRTouchPhase phase)
 {
 	return [touches objectsPassingTest:
 		^BOOL(id obj, BOOL* stop)
 		{
 			return (side & ((FFRTouch*)obj).side) && (phase == ((FFRTouch*)obj).phase);
-    	}];
+		}];
 }
 
 // Singleton instance.
@@ -255,6 +255,11 @@ static int touchBlockIdCounter = 0;
 	}
 }
 
+- (void) removeAllTouchObserversAndTouchBlocks
+{
+	[self.touchObservers removeAllObjects];
+}
+
 -(void) addGestureRecognizer: (FFRGestureRecognizer*) gestureRecognizer
 {
 	[self.gestureRecognizers addObject: gestureRecognizer];
@@ -263,6 +268,11 @@ static int touchBlockIdCounter = 0;
 -(void) removeGestureRecognizer: (FFRGestureRecognizer*) gestureRecognizer
 {
 	[self.gestureRecognizers removeObject: gestureRecognizer];
+}
+
+- (void) removeAllGestureRecognizers
+{
+	[self.gestureRecognizers removeAllObjects];
 }
 
 // Internal instance methods.
@@ -302,7 +312,7 @@ static int touchBlockIdCounter = 0;
 	NSLog(@"startScan");
 
 	// Callback is used instread of KVO.
-    /*[[FFRBLEManager sharedManager]
+	/*[[FFRBLEManager sharedManager]
 		addObserver:self
 		forKeyPath:@"discoveredDevices"
 		options:
@@ -312,7 +322,7 @@ static int touchBlockIdCounter = 0;
 		context:nil];*/
 
 	// Not needed?
-    //[bleManager startScan: YES];
+	//[bleManager startScan: YES];
 }
 
 // TODO: Delete.
@@ -320,10 +330,10 @@ static int touchBlockIdCounter = 0;
 {
 	NSLog(@"stopScan");
 
-    /* [[FFRBLEManager sharedManager]
+	/* [[FFRBLEManager sharedManager]
 		removeObserver:self
 		forKeyPath:@"discoveredDevices"]; */
-    [[FFRBLEManager sharedManager] stopScan];
+	[[FFRBLEManager sharedManager] stopScan];
 }
 
 -(void) connectToDeviceWithMaxRSSI
@@ -338,7 +348,7 @@ static int touchBlockIdCounter = 0;
 	__weak FFRTouchManager* me = self;
 
 	// Set discovery callback.
-    FFRBLEManager* bleManager = [FFRBLEManager sharedManager];
+	FFRBLEManager* bleManager = [FFRBLEManager sharedManager];
 	bleManager.onPeripheralDiscovered = ^(CBPeripheral* p)
 	{
 		NSLog(@"Found peripheral: %@", p.name);
@@ -372,7 +382,6 @@ static int touchBlockIdCounter = 0;
 	};
 }
 
-
 // Callback used instead of KVO.
 /*
 - (void) observeValueForKeyPath: (NSString*)keyPath
@@ -380,15 +389,15 @@ static int touchBlockIdCounter = 0;
 	change: (NSDictionary*)change
 	context: (void*)context
 {
-    if ([keyPath compare:@"discoveredDevices"] == NSOrderedSame)
+	if ([keyPath compare:@"discoveredDevices"] == NSOrderedSame)
 	{
-        dispatch_async(dispatch_get_main_queue(),
+		dispatch_async(dispatch_get_main_queue(),
 		^{
-            // Found device.
+			// Found device.
 			FFRBLEManager* manager = [FFRBLEManager sharedManager];
 			for (int i = 0; i < manager.discoveredDevices.count; ++i)
 			{
-        		CBPeripheral* p = [manager.discoveredDevices objectAtIndex:i];
+				CBPeripheral* p = [manager.discoveredDevices objectAtIndex:i];
 				NSLog(@"Found device: %@", p);
 				if (self.scanIsOngoing &&
 					(stringContains(p.name, @"Fuffr") ||
@@ -401,9 +410,9 @@ static int touchBlockIdCounter = 0;
 
 					break;
 				}
-    		}
-        });
-    }
+			}
+		});
+	}
 }
 */
 
@@ -416,11 +425,11 @@ static int touchBlockIdCounter = 0;
 // are not really related? Or?
 - (void) initFuffr
 {
-    FFRBLEManager* bleManager = [FFRBLEManager sharedManager];
+	FFRBLEManager* bleManager = [FFRBLEManager sharedManager];
 
-    if (![bleManager.handler isKindOfClass: [FFRCaseHandler class]])
+	if (![bleManager.handler isKindOfClass: [FFRCaseHandler class]])
 	{
-        bleManager.handler = [FFRCaseHandler new];
+		bleManager.handler = [FFRCaseHandler new];
 		
 		// OLD CODE
 		/*if ([bleManager.connectedDevices count] > 0)
@@ -433,22 +442,22 @@ static int touchBlockIdCounter = 0;
 			// We hace connected, return at this point.
 			return;
 		}*/
-    }
+	}
 
 	bleManager.sensorServiceUUID = FFRCaseSensorServiceUUID;
 	__weak FFRBLEManager* manager = bleManager;
-    __weak FFRTouchManager* me = self;
+	__weak FFRTouchManager* me = self;
 
 	bleManager.onCharacteristicsDiscovered =
 		^(CBService* service, CBPeripheral* hostPeripheral)
 		{
 			NSLog(@"initFuffr onCharacteristicsDiscovered");
-        	[manager.handler loadPeripheral:hostPeripheral];
+			[manager.handler loadPeripheral:hostPeripheral];
 			if (me.onConnectedBlock)
 			{
 				me.onConnectedBlock();
 			}
-    	};
+		};
 
 	bleManager.onPeriperalDisconnected =
 		^(CBPeripheral* hostPeripheral)
@@ -458,17 +467,17 @@ static int touchBlockIdCounter = 0;
 			{
 				me.onDisconnectedBlock();
 			}
-    	};
+		};
 
 	// OLD CODE
-    /*[bleManager
+	/*[bleManager
 		addMonitoredService: FFRCaseSensorServiceUUID
 		onDiscovery: ^(CBService* service, CBPeripheral* hostPeripheral)
 		{
 			NSLog(@"initFuffr loadPeripheral monitored service");
-        	[manager.handler loadPeripheral:hostPeripheral];
+			[manager.handler loadPeripheral:hostPeripheral];
 			me.onConnectedBlock();
-    	}
+		}
 	];*/
 }
 
@@ -480,17 +489,17 @@ static int touchBlockIdCounter = 0;
 
 - (void) registerTouchMethods
 {
-    [[NSNotificationCenter defaultCenter]
+	[[NSNotificationCenter defaultCenter]
 		addObserver: self
 		selector: @selector(handleTouchBeganNotification:)
 		name: FFRTrackingBeganNotification
 		object: nil];
-    [[NSNotificationCenter defaultCenter]
+	[[NSNotificationCenter defaultCenter]
 		addObserver: self
 		selector: @selector(handleTouchMovedNotification:)
 		name: FFRTrackingMovedNotification
 		object: nil];
-    [[NSNotificationCenter defaultCenter]
+	[[NSNotificationCenter defaultCenter]
 		addObserver: self
 		selector: @selector(handleTouchEndedNotification:)
 		name: FFRTrackingEndedNotification
@@ -499,19 +508,20 @@ static int touchBlockIdCounter = 0;
 
 - (void) handleTouchBeganNotification: (NSNotification*)data
 {
-    NSSet* touches = data.object;
+	NSSet* touches = data.object;
 
 	//NSLog(@"touchBegan count: %i", touches.count);
 
 	// Notify touch observers.
-    for (FFRTouchEventObserver* observer in self.touchObservers)
+	NSArray* observers = [self.touchObservers copy];
+	for (FFRTouchEventObserver* observer in observers)
 	{
 		if (observer.beganSelector)
 		{
 			NSSet* observedTouches = filterTouchesBySideAndPhase(
 				touches,
 				observer.side,
-				UITouchPhaseBegan);
+				FFRTouchPhaseBegan);
 			if ([observedTouches count] > 0)
 			{
 				[observer.object
@@ -522,12 +532,13 @@ static int touchBlockIdCounter = 0;
 	}
 
 	// Notify gesture recognizers.
-    for (FFRGestureRecognizer* recognizer in self.gestureRecognizers)
+	NSArray* recognizers = [self.gestureRecognizers copy];
+	for (FFRGestureRecognizer* recognizer in recognizers)
 	{
 		NSSet* observedTouches = filterTouchesBySideAndPhase(
 			touches,
 			recognizer.side,
-			UITouchPhaseBegan);
+			FFRTouchPhaseBegan);
 		if ([observedTouches count] > 0)
 		{
 			[recognizer touchesBegan: observedTouches];
@@ -537,19 +548,20 @@ static int touchBlockIdCounter = 0;
 
 - (void) handleTouchMovedNotification: (NSNotification*)data
 {
-    NSSet* touches = data.object;
+	NSSet* touches = data.object;
 
 	//NSLog(@"touchMoved count: %i", (int)touches.count);
 
 	// Notify touch observers.
-    for (FFRTouchEventObserver* observer in self.touchObservers)
+	NSArray* observers = [self.touchObservers copy];
+	for (FFRTouchEventObserver* observer in observers)
 	{
 		if (observer.movedSelector)
 		{
 			NSSet* observedTouches = filterTouchesBySideAndPhase(
 				touches,
 				observer.side,
-				UITouchPhaseMoved);
+				FFRTouchPhaseMoved);
 			if ([observedTouches count] > 0)
 			{
 				[observer.object
@@ -560,12 +572,13 @@ static int touchBlockIdCounter = 0;
 	}
 
 	// Notify gesture recognizers.
-    for (FFRGestureRecognizer* recognizer in self.gestureRecognizers)
+	NSArray* recognizers = [self.gestureRecognizers copy];
+	for (FFRGestureRecognizer* recognizer in recognizers)
 	{
 		NSSet* observedTouches = filterTouchesBySideAndPhase(
 			touches,
 			recognizer.side,
-			UITouchPhaseMoved);
+			FFRTouchPhaseMoved);
 		if ([observedTouches count] > 0)
 		{
 			[recognizer touchesMoved: observedTouches];
@@ -575,19 +588,20 @@ static int touchBlockIdCounter = 0;
 
 - (void) handleTouchEndedNotification: (NSNotification*)data
 {
-    NSSet* touches = data.object;
+	NSSet* touches = data.object;
 
 	//NSLog(@"touchEnded count: %i", touches.count);
 
 	// Notify touch observers.
-    for (FFRTouchEventObserver* observer in self.touchObservers)
+	NSArray* observers = [self.touchObservers copy];
+	for (FFRTouchEventObserver* observer in observers)
 	{
 		if (observer.endedSelector)
 		{
 			NSSet* observedTouches = filterTouchesBySideAndPhase(
 				touches,
 				observer.side,
-				UITouchPhaseEnded);
+				FFRTouchPhaseEnded);
 			if ([observedTouches count] > 0)
 			{
 				[observer.object
@@ -598,12 +612,13 @@ static int touchBlockIdCounter = 0;
 	}
 
 	// Notify gesture recognizers.
-    for (FFRGestureRecognizer* recognizer in self.gestureRecognizers)
+	NSArray* recognizers = [self.gestureRecognizers copy];
+	for (FFRGestureRecognizer* recognizer in recognizers)
 	{
 		NSSet* observedTouches = filterTouchesBySideAndPhase(
 			touches,
 			recognizer.side,
-			UITouchPhaseEnded);
+			FFRTouchPhaseEnded);
 		if ([observedTouches count] > 0)
 		{
 			[recognizer touchesEnded: observedTouches];

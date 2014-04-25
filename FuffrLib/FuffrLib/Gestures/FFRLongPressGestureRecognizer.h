@@ -11,14 +11,25 @@
 /**
  A long press gesture recognizer
  */
-@interface FFRLongPressGestureRecognizer : FFRGestureRecognizer {
-    NSTimeInterval _startTime;
-    CGPoint _startPoint;
+@interface FFRLongPressGestureRecognizer : FFRGestureRecognizer
 
-    NSTimeInterval _currentTime;
-    CGPoint _currentPoint;
+/**
+ * User settable. Time for finger down to be
+ * considered a long press gesture.
+ */
+@property NSTimeInterval minimumDuration;
 
-    NSTimer* _timer;
-}
+/**
+ * User settable. Max distance for finger to move to be 
+ * considered a long press gesture.
+ */
+@property CGFloat maximumDistance;
+
+/**
+ * Internal properties.
+ */
+@property FFRTouch* touch;
+@property NSTimer* timer;
+@property CGPoint startPoint;
 
 @end

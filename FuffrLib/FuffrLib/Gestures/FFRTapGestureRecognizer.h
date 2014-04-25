@@ -15,12 +15,30 @@
 @interface FFRTapGestureRecognizer : FFRGestureRecognizer
 
 /**
- * The tracked touch.
+ * User settable. Max time for finger down to be 
+ * considered a tap gesture.
+ */
+@property NSTimeInterval maximumDuration;
+
+/**
+ * User settable. Max distance for finger to move to be 
+ * considered a tap gesture.
+ */
+@property CGFloat maximumDistance;
+
+/**
+ * Internal. The tracked touch.
  */
 @property (nonatomic, weak) FFRTouch* touch;
 
+/**
+ * Internal. Start time of the touch.
+ */
 @property NSTimeInterval startTime;
 
+/**
+ * Internal. Start point of the touch.
+ */
 @property CGPoint startPoint;
 
 @end
