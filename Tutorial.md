@@ -29,13 +29,15 @@ Download the code as a zip-file by clicking **Download ZIP** on [GitHub](https:/
 
 The quickest way to get started is by exploring the example apps:
 
-**FuffrHello** - This is a minimal example that shows how to control two circles using the left and right sensor arrays. This example uses a single touch interaction style for each side.
+The quickest way to get started is by exploring the example apps:
 
-**FuffrDots** - A minimal example that illustrates how to access multi touch data. For each touch point, a circle is drawn.
+[**FuffrHello**](https://github.com/fuffr/fuffr-ios/tree/master/FuffrHello) - This is a minimal example that shows how to control two circles using the left and right sensor arrays. This example uses a single touch interaction style for each side.
 
-**FuffrMap** - Example app that show how to navigate Apple maps with Fuffr. Use right side finger to pan (scroll) across the map, and the left side finger to zoom the map with up/down movements.
+[**FuffrDots**](https://github.com/fuffr/fuffr-ios/tree/master/FuffrDots) - A minimal example that illustrates how to access multi touch data. For each touch point, a circle is drawn.
 
-**FuffrJS** - This example demonstrates how to interface with JavaScript and pass touch events to an app written in HTML/JS.
+[**FuffrMap**](https://github.com/fuffr/fuffr-ios/tree/master/FuffrMap) - Example app that show how to navigate Apple maps with Fuffr. Use right side finger to pan (scroll) across the map, and the left side finger to zoom the map with up/down movements.
+
+[**FuffrBox**](https://github.com/fuffr/fuffr-ios/tree/master/FuffrBox) - This app is a Fuffr browser that enables you to write applications in JavaScript. The JavaScript part of the API, along with some examples, is found in the folder [**FuffrJS**](https://github.com/fuffr/fuffr-ios/tree/master/FuffrJS) and pass touch events to an app written in HTML/JS. The file [**fuffr.js**](https://github.com/fuffr/fuffr-ios/tree/master/FuffrJS/fuffr.js) contains the JavaScript API for the Fuffr.
 
 ## Add the FuffrLib to your own app
 
@@ -69,9 +71,9 @@ Under **Target Dependencies**, click **+** (plus) and add **FuffrLib**.
 
 For more information about using libraries, see the [iOS Developer Library Documentation](https://developer.apple.com/library/ios/technotes/iOSStaticLibraries/Articles/configuration.html#//apple_ref/doc/uid/TP40012554-CH3-SW1).
 
-## The Fuffr API
+## The Fuffr Touch API
 
-Here is an overview of classes and methods provided by the Fuffr API.
+An overview of classes and methods provided by the Fuffr API.
 
 ### Class overview
 
@@ -238,7 +240,7 @@ Disconnecting from the Fuffr means it will turn itself off after a while, and th
 
 Another way to save battery time is to set the number of touch points per side to zero, as discussed above. This puts the Fuffr into power saving mode, but does not turn off the device, so it still consumes some battery.
 
-## Gesture API
+## The Gesture API
 
 The FuffrLib library has a gesture API that facilitates using common gestures in your application.
 
