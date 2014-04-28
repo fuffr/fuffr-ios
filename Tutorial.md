@@ -170,6 +170,18 @@ The methods registered to receive touch events takes one parameter, an **NSSet**
         }
     }
 
+### Removing touch observers
+
+To remove a specific touch observer, use removeTouchObserver:
+
+    [manager removeTouchObserver: self];
+
+To remove all touch observers, use removeAllTouchObserversAndTouchBlocks:
+
+    [manager removeAllTouchObserversAndTouchBlocks];
+
+Note that this will also remove any registered touch blocks!
+
 ### Using blocks for touch events
 
 As an alternative to specifying a touch observer and selectors, you can use blocks to capture touches. Here is an example:
@@ -193,6 +205,20 @@ The methods available for adding touch blocks are:
 * addTouchEndedBlock:side:
 
 The side parameter can consist of side values bit-or:ed together (see example above).
+
+### Removing touch blocks
+
+To remove a specific touch block, use removeTouchBlock:
+
+    [manager removeTouchBlock: touchBlockId];
+
+The touchBlockId is a int value returned by the addTouch*Block: methods.
+
+To remove all touch blocks, use removeAllTouchObserversAndTouchBlocks:
+
+    [manager removeAllTouchObserversAndTouchBlocks];
+
+Note that this will also remove any registered touch observers!
 
 ### Power saving when going into background mode
 
@@ -240,19 +266,19 @@ All gestures use the principle of calling a selector on a target object when the
 
 Here is an example of how to setup the pan recognizer:
 
-	FFRPanGestureRecognizer* pan = [FFRPanGestureRecognizer new];
-	pan.side = FFRSideRight;
+    FFRPanGestureRecognizer* pan = [FFRPanGestureRecognizer new];
+    pan.side = FFRSideRight;
     [pan addTarget: self action: @selector(onPan:)];
-	[manager addGestureRecognizer: pan];
+    [manager addGestureRecognizer: pan];
 
 Method called when a panning gesture occurs:
 
     -(void) onPan: (FFRPanGestureRecognizer*)gesture
     {
         NSLog(@"onPan: %f %f",
-        	gesture.translation.width,
-        	gesture.translation.height);
-	}
+            gesture.translation.width,
+            gesture.translation.height);
+    }
 
 Possible values of **gesture.state**:
 
@@ -265,17 +291,17 @@ Note that the width and height of the translation is relative to the original to
 
 Here is how to setup the pinch recognizer:
 
-	FFRPinchGestureRecognizer* pinch = [FFRPinchGestureRecognizer new];
-	pinch.side = FFRSideRight;
+    FFRPinchGestureRecognizer* pinch = [FFRPinchGestureRecognizer new];
+    pinch.side = FFRSideRight;
     [pinch addTarget: self action: @selector(onPinch:)];
-	[manager addGestureRecognizer: pinch];
+    [manager addGestureRecognizer: pinch];
 
 This method is called when a gesture occurs:
 
     -(void) onPinch: (FFRPinchGestureRecognizer*)gesture
     {
         NSLog(@"onPinch: %f", gesture.scale);
-	}
+    }
 
 The scale value is based on the distance between the original touch points that started the gesture (it is not a delta value).
 
@@ -288,17 +314,17 @@ Possible values of **gesture.state**:
 
 Here is an example of how to setup the rotation recognizer:
 
-	FFRRotationGestureRecognizer* rotation = [FFRRotationGestureRecognizer new];
-	rotation.side = FFRSideRight;
+    FFRRotationGestureRecognizer* rotation = [FFRRotationGestureRecognizer new];
+    rotation.side = FFRSideRight;
     [rotation addTarget: self action: @selector(onRotation:)];
-	[manager addGestureRecognizer: rotation];
+    [manager addGestureRecognizer: rotation];
 
 Method called when a gesture occurs:
 
     -(void) onRotation: (FFRRotationGestureRecognizer*)gesture
     {
         NSLog(@"onRotation: %f", gesture.rotation);
-	}
+    }
 
 The rotation value is based on the angle between the original touch points that started the gesture (it is not a delta value). The angle is given in radians.
 
@@ -311,59 +337,59 @@ Possible values of **gesture.state**:
 
 Example of how to setup the tap recognizer:
 
-	FFRTapGestureRecognizer* tap = [FFRTapGestureRecognizer new];
-	tap.side = FFRSideTop | FFRSideBottom;
+    FFRTapGestureRecognizer* tap = [FFRTapGestureRecognizer new];
+    tap.side = FFRSideTop | FFRSideBottom;
     [tap addTarget: self action: @selector(onTap:)];
-	[manager addGestureRecognizer: tap];
+    [manager addGestureRecognizer: tap];
 
 Example of method called when a tap gesture occurs:
 
     -(void) onTap: (FFRTapGestureRecognizer*)gesture
     {
         NSLog(@"onTap");
-	}
+    }
 
 ### FFRDoubleTapGestureRecognizer
 
 Example of how to setup the double tap recognizer:
 
-	FFRDoubleTapGestureRecognizer* dtap = [FFRDoubleTapGestureRecognizer new];
-	dtap.side = FFRSideTop | FFRSideBottom;
+    FFRDoubleTapGestureRecognizer* dtap = [FFRDoubleTapGestureRecognizer new];
+    dtap.side = FFRSideTop | FFRSideBottom;
     [dtap addTarget: self action: @selector(onDoubleTap:)];
-	[manager addGestureRecognizer: dtap];
+    [manager addGestureRecognizer: dtap];
 
 Example of method called when a double tap occurs:
 
     -(void) onTap: (FFRDoubleTapGestureRecognizer*)gesture
     {
         NSLog(@"onDoubleTap");
-	}
+    }
 
 ### FFRLongPressGestureRecognizer
 
 Example of how to setup the long press recognizer:
 
-	FFRLongPressGestureRecognizer* longPress = [FFRLongPressGestureRecognizer new];
-	longPress.side = FFRSideTop | FFRSideBottom;
+    FFRLongPressGestureRecognizer* longPress = [FFRLongPressGestureRecognizer new];
+    longPress.side = FFRSideTop | FFRSideBottom;
     [longPress addTarget: self action: @selector(onLongPress:)];
-	[manager addGestureRecognizer: longPress];
+    [manager addGestureRecognizer: longPress];
 
 Example of method called when a long press occurs:
 
     -(void) onLongPress: (FFRLongPressGestureRecognizer*)gesture
     {
         NSLog(@"onLongPress");
-	}
+    }
 
 ### FFRSwipeGestureRecognizer
 
 This is an example of how to setup a swipe left gesture recognizer:
 
-	FFRSwipeGestureRecognizer* swipeLeft = [FFRSwipeGestureRecognizer new];
-	swipeLeft.side = FFRSideLeft | FFRSideRight;
-	swipeLeft.direction = FFRSwipeGestureRecognizerDirectionLeft;
+    FFRSwipeGestureRecognizer* swipeLeft = [FFRSwipeGestureRecognizer new];
+    swipeLeft.side = FFRSideLeft | FFRSideRight;
+    swipeLeft.direction = FFRSwipeGestureRecognizerDirectionLeft;
     [swipeLeft addTarget: self action: @selector(onSwipeLeft:)];
-	[manager addGestureRecognizer: swipeLeft];
+    [manager addGestureRecognizer: swipeLeft];
 
 Possible values for direction are:
 
@@ -377,10 +403,20 @@ Method called when swipe occurs:
     -(void) onSwipeLeft: (FFRSwipeGestureRecognizer*)gesture
     {
         NSLog(@"onSwipeLeft");
-	}
+    }
 
-## Let us know what you think!
+### Removing gesture recognizers
 
-We would love to hear about the Fuffr apps you create. Let us know about your work, what you think Fuffr, the API, and please report any bugs you might encounter.
+To remove a specific gesture recognizer, use removeGestureRecognizer:
+
+    [manager removeGestureRecognizer: swipeLeft];
+
+To remove all gesture recognizers, use removeAllGestureRecognizers:
+
+    [manager removeAllGestureRecognizers];
+
+## Provide feedback
+
+Let us know what you think! We would love to hear about the Fuffr apps you create. Let us know about your work, what you think Fuffr, the API, and please report any bugs you encounter.
 
 Contact: hello@fuffr.com
