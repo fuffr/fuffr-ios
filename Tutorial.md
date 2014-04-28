@@ -341,6 +341,8 @@ Example of how to setup the tap recognizer:
 
     FFRTapGestureRecognizer* tap = [FFRTapGestureRecognizer new];
     tap.side = FFRSideTop | FFRSideBottom;
+    tap.maximumDistance = 50.0;
+    tap.maximumDuration = 0.5; // 0.5 seconds.
     [tap addTarget: self action: @selector(onTap:)];
     [manager addGestureRecognizer: tap];
 
@@ -357,6 +359,8 @@ Example of how to setup the double tap recognizer:
 
     FFRDoubleTapGestureRecognizer* dtap = [FFRDoubleTapGestureRecognizer new];
     dtap.side = FFRSideTop | FFRSideBottom;
+    dtap.maximumDistance = 100.0;
+    dtap.maximumDuration = 1.5; // 1.5 seconds.
     [dtap addTarget: self action: @selector(onDoubleTap:)];
     [manager addGestureRecognizer: dtap];
 
@@ -373,6 +377,8 @@ Example of how to setup the long press recognizer:
 
     FFRLongPressGestureRecognizer* longPress = [FFRLongPressGestureRecognizer new];
     longPress.side = FFRSideTop | FFRSideBottom;
+    longPress.maximumDistance = 50.0;
+    longPress.minimumDuration = 1.0; // 1 second.
     [longPress addTarget: self action: @selector(onLongPress:)];
     [manager addGestureRecognizer: longPress];
 
@@ -390,6 +396,8 @@ This is an example of how to setup a swipe left gesture recognizer:
     FFRSwipeGestureRecognizer* swipeLeft = [FFRSwipeGestureRecognizer new];
     swipeLeft.side = FFRSideLeft | FFRSideRight;
     swipeLeft.direction = FFRSwipeGestureRecognizerDirectionLeft;
+    swipeLeft.minimumDistance = 200.0;
+    swipeLeft.maximumDuration = 1.0; // 1 second.
     [swipeLeft addTarget: self action: @selector(onSwipeLeft:)];
     [manager addGestureRecognizer: swipeLeft];
 
