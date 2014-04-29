@@ -86,11 +86,11 @@ function touchHandler(touches)
 	}
 }
 
-fuffr.onTouchesBegan = touchHandler
-fuffr.onTouchesMoved = touchHandler
-fuffr.onTouchesEnded = touchHandler
+fuffr.on.touchesBegan = touchHandler
+fuffr.on.touchesMoved = touchHandler
+fuffr.on.touchesEnded = touchHandler
 
-fuffr.onConnected = function()
+fuffr.on.connected = function()
 {
 	hyper.log('Fuffr Connected!')
 	fuffr.enableSides(

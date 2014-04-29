@@ -1,9 +1,8 @@
-/**
- * Global object that holds values and functions.
- */
+
+/** @namespace */
 var fuffr = {}
 
-/**
+/*
  * Values for sides of the Fuffr case.
  */
 fuffr.FFRSideTop = 1
@@ -11,7 +10,7 @@ fuffr.FFRSideBottom = 2
 fuffr.FFRSideLeft = 4
 fuffr.FFRSideRight = 8
 
-/**
+/*
  * Values for gesture types.
  */
 fuffr.FFRGesturePan = 1
@@ -25,7 +24,7 @@ fuffr.FFRGestureSwipeRight = 8
 fuffr.FFRGestureSwipeUp = 9
 fuffr.FFRGestureSwipeDown = 10
 
-/**
+/*
  * Values for gesture states.
  */
 fuffr.FFRGestureRecognizerStateUnknown = 0
@@ -33,108 +32,169 @@ fuffr.FFRGestureRecognizerStateBegan = 1
 fuffr.FFRGestureRecognizerStateChanged = 2
 fuffr.FFRGestureRecognizerStateEnded = 3
 
-/**
- * Counter for native callback ids.
- */
-fuffr.callbackIdCounter = 0
-
-/**
- * Table that holds native callback functions.
- */
-fuffr.callbackTable = {}
-
 // BEGIN Event functions.
 
-// Assign your own functions to these members.
+/**
+* This object contains funtions that are called by the FuffrBox when different events occur.
+* By default, the functions do nothing.
+* Replace them with your own functions to handle Fuffr events.
+* @namespace
+*/
+fuffr.on = {}
 
 /**
  * Called when connected to Fuffr.
+ * Also called on page load, if Fuffr is already connected.
  */
-fuffr.onFuffrConnected = function() {}
+fuffr.on.connected = function() {}
 
 /**
  * Called when disconnected from Fuffr.
  */
-fuffr.onFuffrDisconnected = function() {}
+fuffr.on.disconnected = function() {}
+
+/** Information about a touch.
+* @typedef {Object} Touch
+* @property {number} side - side of the touch, one of the FFRSide* values
+* @property {number} id - uniquely identifies the touch
+* @property {number} x - raw x coordinate
+* @property {number} y - raw y coordinate
+* @property {number} prevx - previous raw x coordinate
+* @property {number} prevy - previous raw y coordinate
+* @property {number} normx - normalized x coordinate (a real number between 0 and 1)
+* @property {number} normy - normalized y coordinate (a real number between 0 and 1)
+*/
 
 /**
- * Touch events handlers.
- * touches is an array of touch objects.
- * Touch objects have the following fields:
- * side - side of the touch, one of the FFRSide* values
- * id - touch id
- * x - x coordinate
- * y - y coordinate
- * prevx - previous x coordinate
- * prevy - previous y coordinate
- * normx - normalized x coordinate (decimal number between 0 and 1)
- * normy - normalized y coordinate (decimal number between 0 and 1)
- */
-fuffr.onTouchesBegan = function(touches) {}
-fuffr.onTouchesMoved = function(touches) {}
-fuffr.onTouchesEnded = function(touches) {}
+* Called when one or more new touches has been detected.
+* @param {Array} touches - Array of the new {@link Touch} objects.
+*/
+fuffr.on.touchesBegan = function(touches) {}
+
+/**
+* Called when one or more touches have moved.
+* @param {Array} touches - Array of {@link Touch} objects.
+*/
+fuffr.on.touchesMoved = function(touches) {}
+
+/**
+* Called when one or more touches have ended.
+* @param {Array} touches - Array of the ended {@link Touch} objects.
+*/
+fuffr.on.touchesEnded = function(touches) {}
 
 // END Event functions.
 
+// BEGIN hide local variables.
+(function() {
+// Counter for native callback ids.
+var callbackIdCounter = 0
+
+// Table that holds native callback functions.
+var callbackTable = {}
+
+// Holder object for internal functions. Do not use.
+fuffr.internal = {}
+
 /**
- * Set active sides and the number of touches per side.
- * @param sides - you can bit:or side values together, e.g.
- * FFRSideTop | FFRSideLeft | FFRSideRight | FFRSideBottom
- * @param touchesPerSide - the number of touches is the same for all sides
- * @param win - success callback function that takes no parameters
- * @param fail - error callback function that takes no parameters
- */
+* Set active sides and the number of touches per side.
+* @param {number} sides - you can bit:or side values together, e.g.
+* FFRSideTop | FFRSideLeft | FFRSideRight | FFRSideBottom
+* Can also be set to 0, to disable all sides.
+* @param touchesPerSide - the number of touches is the same for all sides
+* @param win - success callback function that takes no parameters
+* @param fail - error callback function that takes no parameters
+*/
 fuffr.enableSides = function(sides, touchesPerSide, win, fail)
 {
-	fuffr.callNative(
+	fuffr.internal.callNative(
 		'enableSides@' + sides + '@' + touchesPerSide + '@',
 		win,
 		fail)
 }
 
-fuffr.addGesture = function(gestureType, side, callbackFun)
+/** Add a gesture recognizer.
+* @param {number} gestureType - one of the FFRGesture constants.
+* @param {number} sides - one or more of the FFRSide constants.
+* @param {function} callback - a function that will be called when the gesture is recognized.
+* The parameters in the callback vary depending on gestureType.
+* The callback takes one of these forms: panCallback(), pinchCallback(), rotateCallback() or gestureCallback()
+* @returns {number} gestureId - identifies the gesture that was just added. Pass this value to removeGesture().
+*/
+fuffr.addGesture = function(gestureType, sides, callback)
 {
-	var gestureId = ++fuffr.callbackIdCounter
-	fuffr.callbackTable[gestureId] = callbackFun
-	fuffr.callNative(
-		'addGesture@' + gestureType + '@' + side + '@' + gestureId + '@')
+	var gestureId = ++callbackIdCounter
+	callbackTable[gestureId] = callback
+	fuffr.internal.callNative(
+		'addGesture@' + gestureType + '@' + sides + '@' + gestureId + '@')
 	return gestureId
 }
 
+/** This function is a parameter to addGesture() with FFRGesturePan and is called when the state of the gesture changes.
+* @callback panCallback
+* @param {number} state - one of the FFRGestureRecognizerState constants.
+* @param {number} x - relative to the start point.
+* @param {number} y - relative to the start point.
+*/
+
+/** This function is a parameter to addGesture() with FFRGesturePinch and is called when the state of the gesture changes.
+* @callback pinchCallback
+* @param {number} state - one of the FFRGestureRecognizerState constants.
+* @param {number} scale - distance between the pinching points. Starts at 1.0.
+*/
+
+/** This function is a parameter to addGesture() with FFRGestureRotate and is called when the state of the gesture changes.
+* @callback rotateCallback
+* @param {number} state - one of the FFRGestureRecognizerState constants.
+* @param {number} rotation - in radians, relative to the starting angle.
+*/
+
+/** This function is a parameter to addGesture() with
+* FFRGestureTap, FFRGestureDoubleTap, FFRGestureLongPress or FFRGestureSwipeLeft.
+* It is called when the state of the gesture changes.
+* @callback gestureCallback
+* @param {number} state - one of the FFRGestureRecognizerState constants.
+*/
+
+/** Remove a gesture recognizer.
+* @param {number} gestureId - identifies the gesture to be removed. It is the return value from a previous call to addGesture().
+*/
 fuffr.removeGesture = function(gestureId)
 {
-	fuffr.removeCallback(gestureId)
-	fuffr.callNative(
+	fuffr.internal.removeCallback(gestureId)
+	fuffr.internal.callNative(
 		'removeGesture@' + gestureId + '@')
 }
 
+/** Remove all gesture recognizers.
+*/
 fuffr.removeAllGestures = function()
 {
 	// TODO: Remove all gesture callbacks. Add list to hold ids.
-	fuffr.callNative('removeAllGestures@')
+	fuffr.internal.callNative('removeAllGestures@')
 }
 
-fuffr.addCallback = function(callbackFun)
+fuffr.internal.addCallback = function(callbackFun)
 {
-	var callbackId = ++fuffr.callbackIdCounter
-	fuffr.callbackTable[callbackId] = callbackFun
+	var callbackId = ++callbackIdCounter
+	callbackTable[callbackId] = callbackFun
 	return callbackId
 }
 
 /**
  * Called from JS and native to remove callback.
  */
-fuffr.removeCallback = function(callbackId)
+fuffr.internal.removeCallback = function(gestureId)
 {
-	delete fuffr.callbackTable[callbackId]
+	delete callbackTable[gestureId]
 }
 
 /**
  * Called from native to run callback.
  */
-fuffr.performCallback = function(callbackId)
+fuffr.internal.performCallback = function(gestureId)
 {
-	var callbackFun = fuffr.callbackTable[callbackId]
+	var callbackFun = callbackTable[gestureId]
 	if (callbackFun)
 	{
 		// Remove the first param, the callbackId.
@@ -146,7 +206,7 @@ fuffr.performCallback = function(callbackId)
 	}
 }
 
-fuffr.callNative = function(command, win, fail)
+fuffr.internal.callNative = function(command, win, fail)
 {
 	var request = new XMLHttpRequest()
 	request.open('get', 'fuffr-bridge@' + command);
@@ -168,7 +228,10 @@ fuffr.callNative = function(command, win, fail)
 	request.send()
 }
 
+// END hide local variables.
+})()
+
 document.addEventListener('DOMContentLoaded', function(event)
 {
-    //fuffr.callNative('domLoaded@')
+	fuffr.callNative('domLoaded@')
 })

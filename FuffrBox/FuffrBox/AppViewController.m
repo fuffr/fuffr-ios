@@ -208,7 +208,7 @@ static BOOL FuffrIsConnected = NO;
 - (void) onPan: (FFRPanGestureRecognizer*) recognizer
 {
 	NSString* code = [NSString stringWithFormat:
-		@"fuffr.performCallback(%i,%i,%f,%f)",
+		@"fuffr.internal.performCallback(%i,%i,%f,%f)",
 		self.gestureId,
 		recognizer.state,
 		recognizer.translation.width,
@@ -219,7 +219,7 @@ static BOOL FuffrIsConnected = NO;
 - (void) onPinch:(FFRPinchGestureRecognizer*) recognizer
 {
 	NSString* code = [NSString stringWithFormat:
-		@"fuffr.performCallback(%i,%i,%f)",
+		@"fuffr.internal.performCallback(%i,%i,%f)",
 		self.gestureId,
 		recognizer.state,
 		recognizer.scale];
@@ -229,7 +229,7 @@ static BOOL FuffrIsConnected = NO;
 - (void) onRotation:(FFRRotationGestureRecognizer*) recognizer
 {
 	NSString* code = [NSString stringWithFormat:
-		@"fuffr.performCallback(%i,%i,%f)",
+		@"fuffr.internal.performCallback(%i,%i,%f)",
 		self.gestureId,
 		recognizer.state,
 		recognizer.rotation];
@@ -239,7 +239,7 @@ static BOOL FuffrIsConnected = NO;
 - (void) onTap:(FFRTapGestureRecognizer*) recognizer
 {
 	NSString* code = [NSString stringWithFormat:
-		@"fuffr.performCallback(%i,%i)",
+		@"fuffr.internal.performCallback(%i,%i)",
 		self.gestureId,
 		recognizer.state];
 	[self.controller callJS: code];
@@ -248,7 +248,7 @@ static BOOL FuffrIsConnected = NO;
 - (void) onLongPress:(FFRLongPressGestureRecognizer*) recognizer
 {
 	NSString* code = [NSString stringWithFormat:
-		@"fuffr.performCallback(%i,%i)",
+		@"fuffr.internal.performCallback(%i,%i)",
 		self.gestureId,
 		recognizer.state];
 	[self.controller callJS: code];
@@ -257,7 +257,7 @@ static BOOL FuffrIsConnected = NO;
 - (void) onSwipe:(FFRSwipeGestureRecognizer*) recognizer
 {
 	NSString* code = [NSString stringWithFormat:
-		@"fuffr.performCallback(%i,%i)",
+		@"fuffr.internal.performCallback(%i,%i)",
 		self.gestureId,
 		recognizer.state];
 	[self.controller callJS: code];
@@ -430,12 +430,12 @@ static BOOL FuffrIsConnected = NO;
 				touchesPerSide: @1 // Update to @2 when using parameter case.
 				];
 			FuffrIsConnected = YES;
-			[self callJS: @"fuffr.onConnected()"];
+			[self callJS: @"fuffr.on.connected()"];
 		}
 		onFuffrDisconnected:
 		^{
 			FuffrIsConnected = NO;
-			[self callJS: @"fuffr.onDisconnected()"];
+			[self callJS: @"fuffr.on.disconnected()"];
 		}];
 }
 
@@ -489,7 +489,7 @@ static BOOL FuffrIsConnected = NO;
 {
 	if (FuffrIsConnected)
 	{
-		[self callJS: @"fuffr.onConnected()"];
+		[self callJS: @"fuffr.on.connected()"];
 	}
 }
 
@@ -512,6 +512,7 @@ static BOOL FuffrIsConnected = NO;
 	FFRSide side = [gestureSide intValue];
 	int gestId = [gestureId intValue];
 
+	// TODO: handle invalid values for type & side.
 	GestureListener* gesture = [GestureListener
 		withGestureId: gestId
 		type: type
@@ -584,22 +585,22 @@ static BOOL FuffrIsConnected = NO;
 - (void) touchesBegan: (NSNotification*)data
 {
     NSSet* touches = data.object;
-	[self callJS: @"fuffr.onTouchesBegan" withTouches: touches];
+	[self callJS: @"fuffr.on.touchesBegan" withTouches: touches];
 }
 
 - (void) touchesMoved: (NSNotification*)data
 {
     NSSet* touches = data.object;
-	[self callJS: @"fuffr.onTouchesMoved" withTouches: touches];
+	[self callJS: @"fuffr.on.touchesMoved" withTouches: touches];
 }
 
 - (void) touchesEnded: (NSNotification*)data
 {
     NSSet* touches = data.object;
-	[self callJS: @"fuffr.onTouchesEnded" withTouches: touches];
+	[self callJS: @"fuffr.on.touchesEnded" withTouches: touches];
 }
 
-// Example call: fuffr.onTouchesBegan([{...},{...},...])
+// Example call: fuffr.on.touchesBegan([{...},{...},...])
 - (void) callJS: (NSString*) functionName withTouches: (NSSet*) touches
 {
 	NSString* script = [NSString stringWithFormat:
