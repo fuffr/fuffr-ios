@@ -23,6 +23,27 @@ body {
 	background:rgb(255,255,255);
 }
 
+#score-right {
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	top: 0px;
+	right: 0px;
+	color: rgb(255,255,255);
+	font-family: courier, monospace;
+	text-align: right;
+}
+
+#score-left {
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	top: 0px;
+	left: 0px;
+	color: rgb(255,255,255);
+	font-family: courier, monospace;
+}
+
 #paddle-right {
 	position: absolute;
 	width: 20px;
@@ -45,6 +66,8 @@ body {
 <div>
 	<div id="paddle-left"></div>
 	<div id="paddle-right"></div>
+	<div id="score-left">0</div>
+	<div id="score-right">0</div>
 	<div id="ball"></div>
 </div>
 
@@ -208,12 +231,28 @@ paddleRight.setDOMElement(document.getElementById('paddle-right'))
 paddleRight.setRight(playfieldWidth)
 paddleRight.setCenterY(playfieldHeight / 2)
 
+var scoreLeft = makeSprite()
+scoreLeft.setDOMElement(document.getElementById('score-left'))
+scoreLeft.setLeft(10)
+scoreLeft.setTop(0)
+
+var scoreRight = makeSprite()
+scoreRight.setDOMElement(document.getElementById('score-right'))
+scoreRight.setRight(playfieldWidth - 10)
+scoreRight.setTop(0)
+
 var ball = makeSprite()
 ball.setDOMElement(document.getElementById('ball'))
 ball.setCenterX(playfieldWidth / 2)
 ball.setCenterY(playfieldHeight / 2)
 ball.setDeltaX(4)
 ball.setDeltaY(4)
+
+function addPoint(score) {
+	score.domElement.textContent = parseInt(score.domElement.textContent) + 1;
+	ball.setCenterX(playfieldWidth / 2)
+	ball.setCenterY(playfieldHeight / 2)
+}
 
 ball.checkWallCollision = function()
 {
@@ -224,11 +263,13 @@ ball.checkWallCollision = function()
 	if (nextX < 0 && ball.dx < 0)
 	{
 		ball.dx = - ball.dx
+		addPoint(scoreRight);
 	}
 	// Right wall.
 	else if (nextX > playfieldWidth && ball.dx > 0)
 	{
 		ball.dx = - ball.dx
+		addPoint(scoreLeft);
 	}
 	// Top wall.
 	else if (nextY < 0 && ball.dy < 0)
