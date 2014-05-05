@@ -51,7 +51,7 @@ fuffr.on.connected = function() {}
 /**
  * Called when disconnected from Fuffr.
  */
-fuffr.on.disconnected = function() {}
+fuffr.on.disconnected = function() { console.log("fuffr disconnected"); }
 
 /** Information about a touch.
 * @typedef {Object} Touch
@@ -229,9 +229,9 @@ fuffr.internal.callNative = function(command, win, fail)
 }
 
 // END hide local variables.
-})()
+}());
 
 document.addEventListener('DOMContentLoaded', function(event)
 {
-	fuffr.callNative('domLoaded@')
+	fuffr.internal.callNative('domLoaded@')
 })
