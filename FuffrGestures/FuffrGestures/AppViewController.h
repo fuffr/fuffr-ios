@@ -25,6 +25,9 @@ MyColor;
 /** View where gestures are drawn. */
 @property UIImageView* imageView;
 
+/** Message view. */
+@property UILabel* messageView;
+
 /** Translation. */
 @property CGPoint currentTranslation;
 @property CGPoint baseTranslation;
@@ -36,6 +39,7 @@ MyColor;
 /** Rotation. */
 @property CGFloat currentRotation;
 @property CGFloat baseRotation;
+@property BOOL rotateActivated;
 
 /** Color. */
 @property MyColor objectColor;

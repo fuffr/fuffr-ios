@@ -82,6 +82,17 @@ State 2 has the following gestures:
 		alpha: 1.0];
 
 	self.view.multipleTouchEnabled = YES;
+
+	// Create message view.
+	self.messageView = [[UILabel alloc] initWithFrame: CGRectMake(10, 25, 300, 300)];
+    self.messageView.textColor = [UIColor blackColor];
+    self.messageView.backgroundColor = [UIColor clearColor];
+    self.messageView.userInteractionEnabled = NO;
+	//self.messageView.autoresizingMask = UIViewAutoresizingNone;
+	self.messageView.lineBreakMode = NSLineBreakByWordWrapping;
+	self.messageView.numberOfLines = 0;
+    self.messageView.text = @"";
+    [self.view addSubview: self.messageView];
 }
 
 -(void) viewDidAppear:(BOOL)animated
@@ -96,6 +107,19 @@ State 2 has the following gestures:
 - (void)didReceiveMemoryWarning
 {
 	[super didReceiveMemoryWarning];
+}
+
+-(void) showMessage:(NSString*)message
+{
+	self.messageView.text = message;
+	self.messageView.frame = CGRectMake(10, 25, 300, 300);
+	[self.messageView sizeToFit];
+}
+
+-(void) showMessage1
+{
+	[self showMessage:
+		@"Right: Pan, pinch, rotate.\nLeft: Tap to change color, long press to restore.\nBottom: Double tap to make big."];
 }
 
 -(void) initializeRenderingParameters
@@ -139,6 +163,14 @@ State 2 has the following gestures:
 	self.objectColor = color;
 }
 
+-(void) makeFaceBig
+{
+	self.baseScale = 4.0;
+	self.currentScale = self.baseScale;
+	self.baseRotation = 0.0;
+	self.currentRotation = self.baseRotation;
+}
+
 - (void) setupFuffr
 {
 	[self connectToFuffr];
@@ -148,6 +180,8 @@ State 2 has the following gestures:
 
 - (void) connectToFuffr
 {
+	[self showMessage: @"Scanning for Fuffr..."];
+
 	// Get a reference to the touch manager.
 	FFRTouchManager* manager = [FFRTouchManager sharedManager];
 
@@ -156,19 +190,27 @@ State 2 has the following gestures:
 		onFuffrConnected:
 		^{
 			NSLog(@"Fuffr Connected");
+			[self showMessage: @"Fuffr Connected"];
+
 			[[FFRTouchManager sharedManager]
 				enableSides: FFRSideTop | FFRSideLeft | FFRSideRight | FFRSideBottom
 				touchesPerSide: @2 // Change to 2 touches when using the new parameter case.
 				];
+
+			[self
+				performSelector: @selector(showMessage1)
+				withObject: nil
+				afterDelay: 1.0];
 		}
 		onFuffrDisconnected:
 		^{
 			NSLog(@"Fuffr Disconnected");
+			[self showMessage: @"Fuffr Disconnected"];
 		}];
 }
 
-// Log touch events for debugging (not used).
-
+// Log touch events for debugging (NOT USED).
+/*
 - (void) setupTouches
 {
 	FFRTouchManager* manager = [FFRTouchManager sharedManager];
@@ -198,6 +240,7 @@ State 2 has the following gestures:
 {
 	NSLog(@"logTouchEnded: %i", (int)touches.count);
 }
+*/
 
 // Define gesture handlers.
 
@@ -214,7 +257,7 @@ State 2 has the following gestures:
 	// Add gestures.
 
 	FFRPanGestureRecognizer* pan = [FFRPanGestureRecognizer new];
-	pan.side = FFRSideLeft;
+	pan.side = FFRSideRight;
 	[pan addTarget: self action: @selector(onPan:)];
 	[manager addGestureRecognizer: pan];
 
@@ -230,22 +273,25 @@ State 2 has the following gestures:
 	// Uncomment this line to add rotation to right side.
 	[manager addGestureRecognizer: rotation];
 
+	self.rotateActivated = NO;
+
 	FFRTapGestureRecognizer* tap = [FFRTapGestureRecognizer new];
-	tap.side = FFRSideBottom;
+	tap.side = FFRSideLeft;
 	[tap addTarget: self action: @selector(onTapInState1:)];
 	[manager addGestureRecognizer: tap];
 	
-	FFRDoubleTapGestureRecognizer* dtap = [FFRDoubleTapGestureRecognizer new];
-	dtap.side = FFRSideRight | FFRSideLeft;
-	[dtap addTarget: self action: @selector(onDoubleTap:)];
-	[manager addGestureRecognizer: dtap];
-
 	FFRLongPressGestureRecognizer* longPress = [FFRLongPressGestureRecognizer new];
-	longPress.side = FFRSideLeft | FFRSideRight;
+	longPress.side = FFRSideLeft;
 	[longPress addTarget: self action: @selector(onLongPress:)];
 	[manager addGestureRecognizer: longPress];
+
+	FFRDoubleTapGestureRecognizer* dtap = [FFRDoubleTapGestureRecognizer new];
+	dtap.side = FFRSideBottom;
+	[dtap addTarget: self action: @selector(onDoubleTap:)];
+	[manager addGestureRecognizer: dtap];
 }
 
+/*
 - (void) setupGestures2
 {
 	// Get a reference to the touch manager.
@@ -255,11 +301,6 @@ State 2 has the following gestures:
 	[manager removeAllGestureRecognizers];
 
 	// Add gestures.
-
-	FFRPanGestureRecognizer* pan = [FFRPanGestureRecognizer new];
-	pan.side = FFRSideLeft;
-	[pan addTarget: self action: @selector(onPan:)];
-	[manager addGestureRecognizer: pan];
 
 	FFRTapGestureRecognizer* tap = [FFRTapGestureRecognizer new];
 	tap.side = FFRSideBottom;
@@ -300,6 +341,7 @@ State 2 has the following gestures:
 	[swipeDown addTarget: self action: @selector(onSwipeDown:)];
 	[manager addGestureRecognizer: swipeDown];
 }
+*/
 
 // Gesture handler methods.
 
@@ -356,13 +398,24 @@ State 2 has the following gestures:
 {
 	if (gesture.state == FFRGestureRecognizerStateChanged)
 	{
-		CGFloat rotation = self.baseRotation - (gesture.rotation * 1.5);
+		// Activate rotation when gesture is made that is bigger
+		// than 10 degrees. The purpose is to remove "jitter" caused
+		// by small rotations while pinching.
+		if (ABS(gesture.rotation * (180 / M_PI)) > 10)
+		{
+			self.rotateActivated = YES;
+		}
 
-		self.currentRotation = rotation;
+		if (self.rotateActivated)
+		{
+			CGFloat rotation = self.baseRotation - (gesture.rotation * 1.5);
+			self.currentRotation = rotation;
+		}
 	}
 	else if (gesture.state == FFRGestureRecognizerStateEnded)
 	{
 		self.baseRotation = self.currentRotation;
+		self.rotateActivated = NO;
 	}
 
 	[self redrawImageView];
@@ -378,8 +431,7 @@ State 2 has the following gestures:
 -(void) onDoubleTap: (FFRDoubleTapGestureRecognizer*)gesture
 {
 	NSLog(@"onDoubleTap");
-	
-	[self setRandomFaceColor];
+	[self makeFaceBig];
 	[self redrawImageView];
 }
 
@@ -387,8 +439,8 @@ State 2 has the following gestures:
 {
 	NSLog(@"onTap1");
 
-	[self setupGestures2];
-	[self setFaceColor2];
+	//[self setupGestures2];
+	[self setRandomFaceColor];
 	[self redrawImageView];
 }
 
