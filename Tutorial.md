@@ -152,7 +152,7 @@ To observe touch events, the application registers methods with the **FFRTouchMa
         touchBegan: @selector(touchRightBegan:)
         touchMoved: @selector(touchRightMoved:)
         touchEnded: @selector(touchRightEnded:)
-        side: FFRSideRight];
+        sides: FFRSideRight];
 
 Note that the side parameter can consist of side values bit-or:ed together. For example, to capture touch infomation on all sides, use:
 
@@ -198,13 +198,13 @@ As an alternative to specifying a touch observer and selectors, you can use bloc
                     touch.normalizedLocation.y);
             }
         }
-        side: FFRSideRight];
+        sides: FFRSideRight];
 
 The methods available for adding touch blocks are:
 
-* addTouchBeganBlock:side:
-* addTouchMovedBlock:side:
-* addTouchEndedBlock:side:
+* addTouchBeganBlock:sides:
+* addTouchMovedBlock:sides:
+* addTouchEndedBlock:sides:
 
 The side parameter can consist of side values bit-or:ed together (see example above).
 
