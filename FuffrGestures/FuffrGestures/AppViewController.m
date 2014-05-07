@@ -178,7 +178,7 @@ State 2 has the following gestures:
 		touchBegan: @selector(logTouchBegan:)
 		touchMoved: @selector(logTouchMoved:)
 		touchEnded: @selector(logTouchEnded:)
-		side: FFRSideRight];
+		sides: FFRSideRight];
 }
 
 - (void) logTouchBegan: (NSSet*)touches

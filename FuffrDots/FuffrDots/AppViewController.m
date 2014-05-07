@@ -120,8 +120,9 @@
 		^{
 			NSLog(@"Fuffr Connected");
 			[[FFRTouchManager sharedManager]
-				enableSides: FFRSideTop | FFRSideLeft | FFRSideRight | FFRSideBottom
-				touchesPerSide: @1 // Change to desired number of touches
+				//enableSides: FFRSideTop | FFRSideLeft | FFRSideRight | FFRSideBottom
+				enableSides: FFRSideRight | FFRSideLeft
+				touchesPerSide: @2 // Change to desired number of touches
 				                   // when using the new parameter case.
 				];
 		}
@@ -137,7 +138,7 @@
 		touchBegan: @selector(touchesBegan:)
 		touchMoved: @selector(touchesMoved:)
 		touchEnded: @selector(touchesEnded:)
-		side: FFRSideLeft | FFRSideRight | FFRSideTop | FFRSideBottom];
+		sides: FFRSideLeft | FFRSideRight | FFRSideTop | FFRSideBottom];
 }
 
 - (void) fuffrConnected

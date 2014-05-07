@@ -115,7 +115,7 @@
 		touchBegan: @selector(touchRightBegan:)
 		touchMoved: @selector(touchRightMoved:)
 		touchEnded: nil
-		side: FFRSideRight];
+		sides: FFRSideRight];
 
 	// Register methods for left side touches. The touchEnded
 	// method is not used in this example.
@@ -124,7 +124,7 @@
 		touchBegan: @selector(touchLeftBegan:)
 		touchMoved: @selector(touchLeftMoved:)
 		touchEnded: nil
-		side: FFRSideLeft];
+		sides: FFRSideLeft];
 }
 
 - (void) touchRightBegan: (NSSet*)touches

@@ -81,7 +81,7 @@
 		touchBegan: @selector(panningTouchBegan:)
 		touchMoved: @selector(panningTouchMoved:)
 		touchEnded: nil
-		side: FFRSideRight];
+		sides: FFRSideRight];
 
 	// Register zooming touch methods.
 	[manager
@@ -89,7 +89,7 @@
 		touchBegan: @selector(zoomingTouchBegan:)
 		touchMoved: @selector(zoomingTouchMoved:)
 		touchEnded: nil
-		side: FFRSideLeft];
+		sides: FFRSideLeft];
 }
 
 - (void) fuffrConnected

@@ -186,7 +186,7 @@ static int touchBlockIdCounter = 0;
 	touchBegan: (SEL)touchBeganSelector
 	touchMoved: (SEL)touchMovedSelector
 	touchEnded: (SEL)touchEndedSelector
-	side: (FFRSide)side
+	sides: (FFRSide)side
 {
 	FFRTouchEventObserver* observer = [FFRTouchEventObserver new];
 	observer.object = object;
@@ -205,31 +205,31 @@ static int touchBlockIdCounter = 0;
 }
 
 - (int) addTouchBeganBlock: (void(^)(NSSet* touches))block
-	side: (FFRSide)side
+	sides: (FFRSide)side
 {
 	FFRTouchEventObserver* observer = [self
 		addTouchBlockObserver: block
-		side: side];
+		sides: side];
 	observer.beganSelector = @selector(callBlockWithTouches:);
 	return observer.touchBlockId;
 }
 
 - (int) addTouchMovedBlock: (void(^)(NSSet* touches))block
-	side: (FFRSide)side
+	sides: (FFRSide)side
 {
 	FFRTouchEventObserver* observer = [self
 		addTouchBlockObserver: block
-		side: side];
+		sides: side];
 	observer.movedSelector = @selector(callBlockWithTouches:);
 	return observer.touchBlockId;
 }
 
 - (int) addTouchEndedBlock: (void(^)(NSSet* touches))block
-	side: (FFRSide)side
+	sides: (FFRSide)side
 {
 	FFRTouchEventObserver* observer = [self
 		addTouchBlockObserver: block
-		side: side];
+		sides: side];
 	observer.endedSelector = @selector(callBlockWithTouches:);
 	return observer.touchBlockId;
 }
@@ -292,7 +292,7 @@ static int touchBlockIdCounter = 0;
 
 // Internal helper method.
 - (FFRTouchEventObserver*) addTouchBlockObserver: (void(^)(NSSet* touches))block
-	side: (FFRSide)side
+	sides: (FFRSide)side
 {
 	FFRTouchEventObserver* observer = [FFRTouchEventObserver new];
 	observer.object = observer;

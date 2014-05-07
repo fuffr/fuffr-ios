@@ -84,7 +84,7 @@
  * @param touchBegan Selector for touch began events.
  * @param touchMoved Selector for touch moved events.
  * @param touchEnded Selector for touch ended events.
- * @param side The side(s) of Fuffr that will be observed.
+ * @param sides The side(s) of Fuffr that will be observed.
  *
  * The touchBegan, touchMoved and touchEnded methods
  * have the format:
@@ -106,7 +106,7 @@
 	touchBegan: (SEL)touchBeganSelector
 	touchMoved: (SEL)touchMovedSelector
 	touchEnded: (SEL)touchEndedSelector
-	side: (FFRSide)side;
+	sides: (FFRSide)side;
 
 /**
  * Remove an object as observer for touch events.
@@ -118,32 +118,32 @@
 /**
  * Add a touch began block at the specified side.
  * @param block Block that is called with the set of touches that began.
- * @param side The side(s) of Fuffr that will be observed. 
+ * @param sides The side(s) of Fuffr that will be observed.
  * See documentation of method addTouchObserver for details.
  * @return An identifier that can be used to remove the block.
  */
 - (int) addTouchBeganBlock: (void(^)(NSSet* touches))block
-	side: (FFRSide)side;
+	sides: (FFRSide)side;
 
 /**
  * Add a touch moved block at the specified side.
  * @param block Block that is called with the set of touches that moved.
- * @param side The side(s) of Fuffr that will be observed. 
+ * @param sides The side(s) of Fuffr that will be observed.
  * See documentation of method addTouchObserver for details.
  * @return An identifier that can be used to remove the block.
  */
 - (int) addTouchMovedBlock: (void(^)(NSSet* touches))block
-	side: (FFRSide)side;
+	sides: (FFRSide)side;
 
 /**
  * Add a touch ended block at the specified side.
  * @param block Block that is called with the set of touches that ended.
- * @param side The side(s) of Fuffr that will be observed. 
+ * @param sides The side(s) of Fuffr that will be observed.
  * See documentation of method addTouchObserver for details.
  * @return An identifier that can be used to remove the block.
  */
 - (int) addTouchEndedBlock: (void(^)(NSSet* touches))block
-	side: (FFRSide)side;
+	sides: (FFRSide)side;
 
 /**
  * Remove a touch block.
