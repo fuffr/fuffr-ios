@@ -284,6 +284,7 @@ Method called when a panning gesture occurs:
 
 Possible values of **gesture.state**:
 
+** FFRGestureRecognizerStateBegan - gesture started
 ** FFRGestureRecognizerStateChanged - gesture value has been updated
 ** FFRGestureRecognizerStateEnded - gesture has ended
 
@@ -309,6 +310,7 @@ The scale value is based on the distance between the original touch points that 
 
 Possible values of **gesture.state**:
 
+** FFRGestureRecognizerStateBegan - gesture started
 ** FFRGestureRecognizerStateChanged - gesture value has been updated
 ** FFRGestureRecognizerStateEnded - gesture has ended
 
@@ -332,6 +334,7 @@ The rotation value is based on the angle between the original touch points that 
 
 Possible values of **gesture.state**:
 
+** FFRGestureRecognizerStateBegan - gesture started
 ** FFRGestureRecognizerStateChanged - gesture value has been updated
 ** FFRGestureRecognizerStateEnded - gesture has ended
 

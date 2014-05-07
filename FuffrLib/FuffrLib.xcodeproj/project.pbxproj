@@ -45,6 +45,8 @@
 		2197196318D60B3F007B6E84 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2197195F18D60B25007B6E84 /* CoreBluetooth.framework */; };
 		2197196418D60B42007B6E84 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2197196118D60B32007B6E84 /* CoreGraphics.framework */; };
 		2197196718D60EA1007B6E84 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2197196618D60EA1007B6E84 /* UIKit.framework */; };
+		21AC5C11191A44E80018A1E3 /* UIView+Toast.h in Headers */ = {isa = PBXBuildFile; fileRef = 21AC5C0F191A44E80018A1E3 /* UIView+Toast.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		21AC5C12191A44E80018A1E3 /* UIView+Toast.m in Sources */ = {isa = PBXBuildFile; fileRef = 21AC5C10191A44E80018A1E3 /* UIView+Toast.m */; };
 		21BCD6C118EF21D900944ACC /* FFRLowPassFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 21BCD6BF18EF21D900944ACC /* FFRLowPassFilter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		21BCD6C218EF21D900944ACC /* FFRLowPassFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 21BCD6C018EF21D900944ACC /* FFRLowPassFilter.m */; };
 		21C8CCD918D6634000E70941 /* FFRoad.h in Headers */ = {isa = PBXBuildFile; fileRef = 2197196818D6138D007B6E84 /* FFRoad.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -139,6 +141,8 @@
 		2197196118D60B32007B6E84 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		2197196618D60EA1007B6E84 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		2197196818D6138D007B6E84 /* FFRoad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFRoad.h; sourceTree = "<group>"; };
+		21AC5C0F191A44E80018A1E3 /* UIView+Toast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Toast.h"; sourceTree = "<group>"; };
+		21AC5C10191A44E80018A1E3 /* UIView+Toast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Toast.m"; sourceTree = "<group>"; };
 		21BCD6BF18EF21D900944ACC /* FFRLowPassFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFRLowPassFilter.h; sourceTree = "<group>"; };
 		21BCD6C018EF21D900944ACC /* FFRLowPassFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFRLowPassFilter.m; sourceTree = "<group>"; };
 		29923FF61907BD7D00D945EB /* FFRDoubleTapGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFRDoubleTapGestureRecognizer.h; sourceTree = "<group>"; };
@@ -229,6 +233,7 @@
 		219718CA18D60662007B6E84 /* FuffrLib */ = {
 			isa = PBXGroup;
 			children = (
+				21AC5C0E191A44E80018A1E3 /* UI */,
 				215E0B1B18DC67CF00484E43 /* Gestures */,
 				219718EE18D60711007B6E84 /* Communication */,
 				2197190518D60711007B6E84 /* FFRDebug.h */,
@@ -336,6 +341,15 @@
 			path = Utilities;
 			sourceTree = "<group>";
 		};
+		21AC5C0E191A44E80018A1E3 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				21AC5C0F191A44E80018A1E3 /* UIView+Toast.h */,
+				21AC5C10191A44E80018A1E3 /* UIView+Toast.m */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -371,6 +385,7 @@
 				21C8CCEA18D6634000E70941 /* FFRFirmwareMetaData.h in Headers */,
 				21BCD6C118EF21D900944ACC /* FFRLowPassFilter.h in Headers */,
 				21C8CCEB18D6634000E70941 /* FFRFirmwareUtility.h in Headers */,
+				21AC5C11191A44E80018A1E3 /* UIView+Toast.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -461,6 +476,7 @@
 				2197195B18D60711007B6E84 /* FFRTouchManager.m in Sources */,
 				215E0B3318DC67CF00484E43 /* FFRGestureRecognizer.m in Sources */,
 				2197194118D60711007B6E84 /* FFROverlaySpaceMapper.m in Sources */,
+				21AC5C12191A44E80018A1E3 /* UIView+Toast.m in Sources */,
 				29923FF91907BD7D00D945EB /* FFRDoubleTapGestureRecognizer.m in Sources */,
 				2197194018D60711007B6E84 /* FFRLeftRightSpaceMapper.m in Sources */,
 				215E0B3718DC67CF00484E43 /* FFRPanGestureRecognizer.m in Sources */,

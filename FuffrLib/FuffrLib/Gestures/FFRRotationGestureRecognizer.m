@@ -80,13 +80,17 @@
 	if (self.touch1 == nil && self.touch2 == nil)
 	{
 		// Save references to touches.
-		self.lowPassFilter = [FFRLowPassFilter new];
 		NSArray* touchArray = [touches allObjects];
 		self.touch1 = [touchArray objectAtIndex: 0];
 		self.touch2 = [touchArray objectAtIndex: 1];
+
+		self.lowPassFilter = [FFRLowPassFilter new];
 		self.previousRotation = [self calculateRotation];
+
+		// Send gesture began notification.
 		self.rotation = 0.0;
 		self.state = FFRGestureRecognizerStateBegan;
+		[self performAction];
 	}
 	else
 	{
@@ -94,12 +98,12 @@
 		CGFloat deltaRotation = newRotation - self.previousRotation;
 		if (ABS(deltaRotation) > ((self.rotationThreshold / 180) * M_PI))
 		{
-			self.state = FFRGestureRecognizerStateChanged;
 			self.previousRotation = newRotation;
 			deltaRotation = MIN(deltaRotation, 0.05);
 			deltaRotation = MAX(deltaRotation, -0.05);
 			self.rotation += deltaRotation;
 			//NSLog(@"rotation %f", self.rotation);
+			self.state = FFRGestureRecognizerStateChanged;
 			[self performAction];
 		}
 	}

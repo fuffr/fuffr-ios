@@ -84,9 +84,13 @@
 		self.touch = [touchArray objectAtIndex: 0];
 		self.startPoint = self.touch.location;
 		self.translation = CGSizeMake(0,0);
-		self.state = FFRGestureRecognizerStateBegan;
 		self.lowPassFilterX = [FFRLowPassFilter new];
 		self.lowPassFilterY = [FFRLowPassFilter new];
+
+		// Send gesture began notification.
+		self.translation = CGSizeMake(0, 0);
+		self.state = FFRGestureRecognizerStateBegan;
+		[self performAction];
 	}
 
 	// Set backup touch.

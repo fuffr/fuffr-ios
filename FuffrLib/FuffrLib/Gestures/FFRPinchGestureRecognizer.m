@@ -86,8 +86,11 @@
 		self.touch2 = [touchArray objectAtIndex: 1];
 		self.startDistance = [self currentDistance];
 		self.previousDistance = self.startDistance;
+
+		// Send gesture began notification.
 		self.scale = 0.0;
 		self.state = FFRGestureRecognizerStateBegan;
+		[self performAction];
 	}
 
 	CGFloat newDistance = [self currentDistance];

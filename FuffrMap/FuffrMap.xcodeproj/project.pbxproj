@@ -21,7 +21,6 @@
 		219F1BDF18D8A58A00F2CF5A /* FuffrMapTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 219F1BDE18D8A58A00F2CF5A /* FuffrMapTests.m */; };
 		219F1BEA18D8A5C500F2CF5A /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 219F1BE918D8A5C500F2CF5A /* MapViewController.m */; };
 		219F1BF618D8A7F000F2CF5A /* libFuffrLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 219F1BF118D8A77900F2CF5A /* libFuffrLib.a */; };
-		219F1BF918D8A8BC00F2CF5A /* LowPassFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 219F1BF818D8A8BC00F2CF5A /* LowPassFilter.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,8 +74,6 @@
 		219F1BE818D8A5C500F2CF5A /* MapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapViewController.h; sourceTree = "<group>"; };
 		219F1BE918D8A5C500F2CF5A /* MapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapViewController.m; sourceTree = "<group>"; };
 		219F1BEB18D8A77800F2CF5A /* FuffrLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FuffrLib.xcodeproj; path = ../FuffrLib/FuffrLib.xcodeproj; sourceTree = "<group>"; };
-		219F1BF718D8A8BC00F2CF5A /* LowPassFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LowPassFilter.h; sourceTree = "<group>"; };
-		219F1BF818D8A8BC00F2CF5A /* LowPassFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LowPassFilter.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,8 +139,6 @@
 				219F1BC918D8A58A00F2CF5A /* AppDelegate.m */,
 				219F1BE818D8A5C500F2CF5A /* MapViewController.h */,
 				219F1BE918D8A5C500F2CF5A /* MapViewController.m */,
-				219F1BF718D8A8BC00F2CF5A /* LowPassFilter.h */,
-				219F1BF818D8A8BC00F2CF5A /* LowPassFilter.m */,
 				219F1BCB18D8A58A00F2CF5A /* Images.xcassets */,
 				219F1BC018D8A58A00F2CF5A /* Supporting Files */,
 			);
@@ -308,7 +303,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				219F1BEA18D8A5C500F2CF5A /* MapViewController.m in Sources */,
-				219F1BF918D8A8BC00F2CF5A /* LowPassFilter.m in Sources */,
 				219F1BCA18D8A58A00F2CF5A /* AppDelegate.m in Sources */,
 				219F1BC618D8A58A00F2CF5A /* main.m in Sources */,
 			);

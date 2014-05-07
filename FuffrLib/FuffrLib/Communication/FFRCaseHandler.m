@@ -272,15 +272,16 @@ currently 5 touches. Setting 0 will disable the touch detection.
 
 -(CGPoint) normalizePoint:(CGPoint)point onSide:(FFRSide)side {
 	// Old values (before 2014-04-28).
-    /*const float FFRLongXResolution = 3327.0;
+    const float FFRLongXResolution = 3327.0;
     const float FFRLongYResolution = 1878.0;
     const float FFRShortXResolution = 1279.0;
-    const float FFRShortYResolution = 876.0;*/
+    const float FFRShortYResolution = 876.0;
 	// New values (from 2014-04-28).
+	/*
     const float FFRLongXResolution = 32767.0;
     const float FFRLongYResolution = 32767.0;
     const float FFRShortXResolution = 32767.0;
-    const float FFRShortYResolution = 32767.0;
+    const float FFRShortYResolution = 32767.0;*/
 
     CGPoint p;
     switch (side) {
