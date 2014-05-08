@@ -444,20 +444,22 @@ static int touchBlockIdCounter = 0;
 		}*/
 	}
 
-	bleManager.sensorServiceUUID = FFRCaseSensorServiceUUID;
 	__weak FFRBLEManager* manager = bleManager;
 	__weak FFRTouchManager* me = self;
 
-	bleManager.onCharacteristicsDiscovered =
-		^(CBService* service, CBPeripheral* hostPeripheral)
+	NSLog(@"Adding monitored services");
+	[bleManager
+		addMonitoredService: FFRCaseSensorServiceUUID
+		onDiscovery: ^(CBService* service, CBPeripheral* hostPeripheral)
 		{
-			NSLog(@"initFuffr onCharacteristicsDiscovered");
+			NSLog(@"initFuffr onSensorCharacteristicsDiscovered");
 			[manager.handler loadPeripheral:hostPeripheral];
 			if (me.onConnectedBlock)
 			{
 				me.onConnectedBlock();
 			}
-		};
+		}
+	];
 
 	bleManager.onPeriperalDisconnected =
 		^(CBPeripheral* hostPeripheral)
@@ -468,17 +470,6 @@ static int touchBlockIdCounter = 0;
 				me.onDisconnectedBlock();
 			}
 		};
-
-	// OLD CODE
-	/*[bleManager
-		addMonitoredService: FFRCaseSensorServiceUUID
-		onDiscovery: ^(CBService* service, CBPeripheral* hostPeripheral)
-		{
-			NSLog(@"initFuffr loadPeripheral monitored service");
-			[manager.handler loadPeripheral:hostPeripheral];
-			me.onConnectedBlock();
-		}
-	];*/
 }
 
 - (void) enableSides:(FFRSide)sides touchesPerSide: (NSNumber*)numberOfTouches

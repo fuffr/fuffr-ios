@@ -48,25 +48,24 @@
 @property (nonatomic, strong) id<FFRPeripheralHandler> handler;
 
 /**
-	Device UUID, if a matching device is found, it will be autoconnected
+ * Device UUID, if a matching device is found, it will be autoconnected.
  */
 @property (nonatomic, copy) NSString* monitoredDeviceIdentifier;
 
 /**
-	List of discovered devices
+ * List of discovered devices.
  */
 @property (nonatomic, strong) NSMutableArray* discoveredDevices;
 
 /**
-	List of connected devices. Due to the handlers single peripheral awareness, this is in essence limited to 1
-	TODO: "is in essence limited" should be "is limited" !!
+ * List of connected devices. This is currently limited to one device.
  */
 @property (nonatomic, strong) NSMutableArray* connectedDevices;
 
 /**
- * Service UUID of the case.
+ * UUID stringss of monitored services.
  */
-@property (nonatomic, copy) NSString* sensorServiceUUID;
+@property (nonatomic, strong) NSMutableDictionary* monitoredServices;
 
 /**
  * Called when a device is discovered.
@@ -74,20 +73,18 @@
 @property (nonatomic, copy) void (^onPeripheralDiscovered)(CBPeripheral* peripheral);
 
 /**
- * Called when a characteristics of the Fuffr service are discovered.
- */
-@property (nonatomic, copy) void (^onCharacteristicsDiscovered)(CBService* service, CBPeripheral* peripheral);
-
-/**
  * Called when a device is disconnected.
  */
 @property (nonatomic, copy) void (^onPeriperalDisconnected)(CBPeripheral* peripheral);
 
 /**
- Adds a service UUID that corresponding characteristics will be auto discovered on, as well as callback for working with the discovered service
+ * Add a service UUID and a block that will be called when the characteristics
+ * of the given service are discovered. Add monitored services early on at
+ * program startup. If added after connecting to the device, the callback
+ * will not be called, decause services discovery is made in didConnectPeriperal.
  */
-//-(void) addMonitoredService:(NSString*) serviceIdentifier
-//	onDiscovery:(void(^)(CBService* service, CBPeripheral* hostPeripheral))callback;
+-(void) addMonitoredService: (NSString*)serviceUUID
+	onDiscovery:(void(^)(CBService* service, CBPeripheral* hostPeripheral))callback;
 
 /**
 	Connects a peripheral. Upon connection, the services of the device will be scanned, and any monitored services will also be explored

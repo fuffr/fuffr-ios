@@ -54,15 +54,20 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 
 -(id) init
 {
-	if (self = [super init]) {
+	if (self = [super init])
+	{
 		_receiveQueue = dispatch_queue_create("com.fuffr.receivequeue", nil);
 
 		_manager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
 		self.connectedDevices = [NSMutableArray array];
 		self.discoveredDevices = [NSMutableArray array];
-		//_monitoredServiceIdentifiers = [NSMutableDictionary dictionary];
+		self.monitoredServices = [NSMutableDictionary dictionary];
 
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reactivated:) name:UIApplicationDidBecomeActiveNotification object:nil];
+		[[NSNotificationCenter defaultCenter]
+			addObserver:self
+			selector:@selector(reactivated:)
+			name:UIApplicationDidBecomeActiveNotification
+			object:nil];
 	}
 
 	return self;
@@ -130,7 +135,7 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 	[_manager stopScan];
 }
 
-/*
+/* UNUSED CODE
 -(void) storeDiscoveredPeripheral:(CBPeripheral*) peripheral
 {
 	@synchronized(self.discoveredDevices)
@@ -187,17 +192,21 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 }
 */
 
-// Strange (duplicated) mechanism since services are discovered in didConnectPeriperal...
-/*-(void) addMonitoredService:(NSString *)serviceIdentifier
-	onDiscovery:(void (^)(CBService* service, CBPeripheral* hostPeripheral))callback
+-(void) addMonitoredService: (NSString*)serviceUUID
+	onDiscovery:(void(^)(CBService* service, CBPeripheral* hostPeripheral))callback
 {
-	[_monitoredServiceIdentifiers setObject:callback forKey:serviceIdentifier];
+	[self.monitoredServices setObject: callback forKey: serviceUUID];
 
+	// Old code not needed since since services are discovered in didConnectPeriperal.
+	// This would however be needed if we would want to discover services while the
+	// program is running, after startup.
+	/*
 	for (CBPeripheral* p in self.connectedDevices)
 	{
 		[p discoverServices:nil];
 	}
-}*/
+	*/
+}
 
 -(void) startScan:(BOOL) continuous
 {
@@ -244,6 +253,7 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 	// if on, start scan
 	if (central.state == CBCentralManagerStatePoweredOn)
 	{
+		// This is where scanning is started.
 		[central scanForPeripheralsWithServices:nil options:nil];
 		NSLog(@"*** Scan started in centralManagerDidUpdateState");
 		[_bluetoothAlertView dismissWithClickedButtonIndex:0 animated:TRUE];
@@ -305,6 +315,8 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 
 	_disconnectedPeripheral = nil;
 	[_discoveredDevices addObject:peripheral];
+
+	// Here service discovery is started.
 	dispatch_async(dispatch_get_main_queue(), ^{
 		[peripheral discoverServices:nil];
 	});
@@ -366,40 +378,27 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 	if (error)
 	{
 		NSLog(@"peripheral:didDiscoverServices: error %@", error);
+		return;
 	}
 
 	for (CBService *service in peripheral.services)
 	{
-		NSLog(@"Service found: %@", service.UUID);
+		NSLog(@"Service discovered: %@", service.UUID);
 
-		if ([service.UUID isEqualToString: self.sensorServiceUUID])
+		for (NSString* identifier in self.monitoredServices)
 		{
-			NSLog(@"Found Fuffr service!");
-
-			// Note: The dispatch was commented out in the original SensorCaseDemo code.
-			// discover characteristics for the service
-			//dispatch_async(_receiveQueue, ^{
-				[peripheral discoverCharacteristics:nil forService:service];
-			//});
-
-			break;
-		}
-
-		/* OLD CODE
-		for (NSString* identifier in _monitoredServiceIdentifiers) {
-			if ([service.UUID isEqualToString:identifier]) {
-				NSLog(@"is monitored service!");
+			if ([service.UUID isEqualToString: identifier])
+			{
+				NSLog(@"> reading characteristics for service");
 
 				// Note: The dispatch was commented out in the original SensorCaseDemo code.
 				// discover characteristics for the service
 				//dispatch_async(_receiveQueue, ^{
+					// Discover characteristics for the service.
 					[peripheral discoverCharacteristics:nil forService:service];
 				//});
-
-				break;
 			}
 		}
-		*/
 	}
 }
 
@@ -436,32 +435,18 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 	didDiscoverCharacteristicsForService:(CBService *)service
 	error:(NSError *)error
 {
-	//NSLog(@"didDiscoverCharacteristicsForService %@ %@ (%lu), error = %@", service.UUID, service, (unsigned long)[service.characteristics count], error);
+	for (NSString* identifier in self.monitoredServices)
+	{
+		if ([service.UUID isEqualToString: identifier]) {
 
-	//for (CBCharacteristic* c in service.characteristics) {
-	//	NSLog(@"characteristic: %@, %@, %@", c.UUID, c.value, c);
-	//}
+			NSLog(@"Monitored service characteristics discovered");
 
-	/*for (NSString* identifier in _monitoredServiceIdentifiers) {
-		if ([service.UUID isEqualToString:identifier]) {
-
-			NSLog(@"monitored service characteristics discovered!");
-
-			void(^callback)(CBService*, CBPeripheral*) = [_monitoredServiceIdentifiers objectForKey:identifier];
-			if (callback) {
+			void(^callback)(CBService*, CBPeripheral*) =
+				[self.monitoredServices objectForKey: identifier];
+			if (callback)
+			{
 				callback(service, peripheral);
 			}
-
-			break;
-		}
-	}*/
-
-	if ([service.UUID isEqualToString: self.sensorServiceUUID])
-	{
-		NSLog(@"Service characteristics discovered!");
-		if (self.onCharacteristicsDiscovered)
-		{
-			self.onCharacteristicsDiscovered(service, peripheral);
 		}
 	}
 }
