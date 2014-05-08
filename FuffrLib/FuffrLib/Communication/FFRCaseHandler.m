@@ -91,7 +91,7 @@ to read data from MSP430.
 	[self
 		performSelector: @selector(enablePeripheral:)
 		withObject: numberOfTouches
-		afterDelay: 0.4];
+		afterDelay: 0.0];
 
     // Enabling the sensor sides is spread out in time to prevent connection timeouts,
 	// probably because the case becomes busy processing the commands.
@@ -100,42 +100,42 @@ to read data from MSP430.
 	// Does the sensor case confirm updates?
     if (sides & FFRSideTop)
 	{
-        [self performSelector:@selector(enableTopSide:) withObject:@TRUE afterDelay:0.6];
+        [self performSelector:@selector(enableTopSide:) withObject:@TRUE afterDelay:0.0];
         //[_peripheral setNotificationForCharacteristicWithIdentifier:FFRSideTopUUID enabled:on];
     }
 	else
 	{
-        [self performSelector:@selector(enableTopSide:) withObject:@FALSE afterDelay:0.6];
+        [self performSelector:@selector(enableTopSide:) withObject:@FALSE afterDelay:0.0];
     }
 
     if (sides & FFRSideLeft)
 	{
-        [self performSelector:@selector(enableLeftSide:) withObject:@TRUE afterDelay:0.7];
+        [self performSelector:@selector(enableLeftSide:) withObject:@TRUE afterDelay:0.0];
         //[_peripheral setNotificationForCharacteristicWithIdentifier:FFRSideLeftUUID enabled:on];
     }
 	else
 	{
-        [self performSelector:@selector(enableLeftSide:) withObject:@FALSE afterDelay:0.7];
+        [self performSelector:@selector(enableLeftSide:) withObject:@FALSE afterDelay:0.0];
     }
 
     if (sides & FFRSideRight)
 	{
-        [self performSelector:@selector(enableRightSide:) withObject:@TRUE afterDelay:0.8];
+        [self performSelector:@selector(enableRightSide:) withObject:@TRUE afterDelay:0.0];
         //[_peripheral setNotificationForCharacteristicWithIdentifier:FFRSideRightUUID enabled:on];
     }
 	else
 	{
-        [self performSelector:@selector(enableRightSide:) withObject:@FALSE afterDelay:0.8];
+        [self performSelector:@selector(enableRightSide:) withObject:@FALSE afterDelay:0.0];
     }
 
     if (sides & FFRSideBottom)
 	{
-        [self performSelector:@selector(enableBottomSide:) withObject:@TRUE afterDelay:0.9];
+        [self performSelector:@selector(enableBottomSide:) withObject:@TRUE afterDelay:0.0];
         //[_peripheral setNotificationForCharacteristicWithIdentifier:FFRSideBottomUUID enabled:on];
     }
 	else
 	{
-        [self performSelector:@selector(enableBottomSide:) withObject:@FALSE afterDelay:0.9];
+        [self performSelector:@selector(enableBottomSide:) withObject:@FALSE afterDelay:0.0];
     }
 }
 
