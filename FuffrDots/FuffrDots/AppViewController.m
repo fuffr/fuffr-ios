@@ -120,8 +120,7 @@
 		^{
 			NSLog(@"Fuffr Connected");
 			[[FFRTouchManager sharedManager]
-				//enableSides: FFRSideTop | FFRSideLeft | FFRSideRight | FFRSideBottom
-				enableSides: FFRSideRight | FFRSideLeft
+				enableSides: FFRSideTop | FFRSideLeft | FFRSideRight | FFRSideBottom
 				touchesPerSide: @2 // Change to desired number of touches
 				                   // when using the new parameter case.
 				];
