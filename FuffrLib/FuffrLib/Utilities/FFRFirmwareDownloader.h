@@ -10,4 +10,7 @@
 
 @interface FFRFirmwareDownloader : NSObject
 
+- (void) downloadFirmwareDataFromURL: (NSString*) urlString
+	callback: (void(^)(NSData* data))callback;
+
 @end

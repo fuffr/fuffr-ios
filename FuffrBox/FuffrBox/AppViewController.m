@@ -14,6 +14,7 @@
 #import <FuffrLib/FFRPinchGestureRecognizer.h>
 #import <FuffrLib/FFRPanGestureRecognizer.h>
 #import <FuffrLib/FFRRotationGestureRecognizer.h>
+#import <FuffrLib/FFRFirmwareDownloader.h>
 
 /**
  * Reference to the AppViewController instance.
@@ -483,6 +484,10 @@ static BOOL FuffrIsConnected = NO;
 	{
 		[self jsCommandRemoveGesture: tokens];
 	}
+	else if ([commandName isEqualToString: @"updateFirmware"])
+	{
+		[self jsCommandUpdateFirmware: tokens];
+	}
 }
 
 - (void) jsCommandDomLoaded: (NSArray*) tokens
@@ -533,6 +538,23 @@ static BOOL FuffrIsConnected = NO;
 - (void) jsCommandRemoveAllGestures: (NSArray*) tokens
 {
 	[self.gestureListeners removeAllObjects];
+}
+
+// TODO: Implement.
+- (void) jsCommandUpdateFirmware: (NSArray*) tokens
+{
+	[[FFRFirmwareDownloader new]
+		downloadFirmwareDataFromURL: @"http://divineprog.com/"
+		callback: ^void(NSData* data)
+		{
+			if (data)
+			{
+				NSString* text = [[NSString alloc]
+					initWithData: data
+					encoding: NSUTF8StringEncoding];
+            	NSLog(@"Data: %@",text);
+        	}
+		}];
 }
 
 - (void) onButtonBack: (id)sender
