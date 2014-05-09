@@ -100,7 +100,8 @@
 
 -(void) readCharacteristicWithIdentifier:(NSString*)identifier {
     CBCharacteristic* characteristic = [self characteristicWithIdentifier:identifier];
-    if (characteristic) {
+    //if (characteristic)
+    {
         [self readValueForCharacteristic:characteristic];
     }
 }

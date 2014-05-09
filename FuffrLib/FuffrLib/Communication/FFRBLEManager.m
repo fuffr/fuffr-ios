@@ -10,6 +10,8 @@
 #import "FFRBLEExtensions.h"
 #import <objc/runtime.h>
 
+extern NSString* const BatteryServiceUUID;
+extern NSString* const BatteryCharacteristicUUID;
 
 @implementation CBPeripheral (discovery)
 
@@ -367,22 +369,23 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 	{
 		NSLog(@"peripheral:didDiscoverServices: error %@", error);
 	}
+    CBService* batteryService = nil;
 
 	for (CBService *service in peripheral.services)
 	{
 		NSLog(@"Service found: %@", service.UUID);
 
+        // save sensorService for later use.
 		if ([service.UUID isEqualToString: self.sensorServiceUUID])
+        {
+            self.sensorService = service;
+        }
+        
+        // start by discovering the battery characteristics.
+        if([service.UUID isEqualToString: BatteryServiceUUID])
 		{
-			NSLog(@"Found Fuffr service!");
-
-			// Note: The dispatch was commented out in the original SensorCaseDemo code.
-			// discover characteristics for the service
-			//dispatch_async(_receiveQueue, ^{
-				[peripheral discoverCharacteristics:nil forService:service];
-			//});
-
-			break;
+			NSLog(@"Found Fuffr service! %@", service.UUID);
+            batteryService = service;
 		}
 
 		/* OLD CODE
@@ -401,6 +404,8 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 		}
 		*/
 	}
+    
+    [peripheral discoverCharacteristics:nil forService:batteryService];
 }
 
 -(void) peripheral:(CBPeripheral *)peripheral
@@ -436,11 +441,11 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 	didDiscoverCharacteristicsForService:(CBService *)service
 	error:(NSError *)error
 {
-	//NSLog(@"didDiscoverCharacteristicsForService %@ %@ (%lu), error = %@", service.UUID, service, (unsigned long)[service.characteristics count], error);
+	NSLog(@"didDiscoverCharacteristicsForService %@ %@ (%lu), error = %@", service.UUID, service, (unsigned long)[service.characteristics count], error);
 
-	//for (CBCharacteristic* c in service.characteristics) {
-	//	NSLog(@"characteristic: %@, %@, %@", c.UUID, c.value, c);
-	//}
+	for (CBCharacteristic* c in service.characteristics) {
+		NSLog(@"characteristic: %@, %@, %@", c.UUID, c.value, c);
+	}
 
 	/*for (NSString* identifier in _monitoredServiceIdentifiers) {
 		if ([service.UUID isEqualToString:identifier]) {
@@ -456,6 +461,11 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 		}
 	}*/
 
+    // now that we've discovered the battery characteristics, take a look at the sensors.
+    if ([service.UUID isEqualToString: BatteryServiceUUID]) {
+        [peripheral discoverCharacteristics:nil forService:self.sensorService];
+    }
+
 	if ([service.UUID isEqualToString: self.sensorServiceUUID])
 	{
 		NSLog(@"Service characteristics discovered!");
@@ -464,6 +474,7 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 			self.onCharacteristicsDiscovered(service, peripheral);
 		}
 	}
+    //[peripheral readCharacteristicWithIdentifier:BatteryCharacteristicUUID];
 }
 
 @end

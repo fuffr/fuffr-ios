@@ -26,6 +26,8 @@
  */
 - (void) enableSides:(FFRSide)sides touchesPerSide: (NSNumber*)numberOfTouches;
 
+-(void) getBatteryLevel;
+
 /**
  Called when notifyable characteristics update their values
  */

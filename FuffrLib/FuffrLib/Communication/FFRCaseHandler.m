@@ -28,6 +28,8 @@ NSString* const FFRSideLeftUUID = @"fff4";
 NSString* const FFRSideBottomUUID = @"fff3";
 NSString* const FFRSideRightUUID = @"fff2";
 NSString* const FFRSideTopUUID = @"fff5";
+NSString* const BatteryServiceUUID = @"180f";
+NSString* const BatteryCharacteristicUUID = @"2a19";
 
 -(instancetype) init
 {
@@ -206,6 +208,15 @@ currently 5 touches. Setting 0 will disable the touch detection.
     NSLog(@"FFRCaseHandler: num sensor(s) activated per side: %d", touchesPerSide.intValue);
 }
 
+-(void) getBatteryLevel
+{
+    __weak CBPeripheral* p = _peripheral;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        //NSLog(@"reading battery...");
+        [p readCharacteristicWithIdentifier:BatteryCharacteristicUUID];
+    });
+}
+
 #pragma mark - Bluetooth
 
 -(void) didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic {
@@ -229,12 +240,17 @@ currently 5 touches. Setting 0 will disable the touch detection.
             //NSLog(@"reading bottom side data");
             side = FFRSideBottom;
         }
+        else {
+            NSLog(@"Unknown characteristic's value: UUID %@, len %u, val[0] %i",
+                  characteristic.UUID, characteristic.value.length, *(Byte*)characteristic.value.bytes);
+        }
 
         if (side != FFRSideNotSet) {
             touch = [self unpackData:characteristic.value fromSide:side];
             [_touches handleNewOrChangedTrackingObject:touch];
         }
     });
+    [self getBatteryLevel];
 }
 
 -(void) didWriteValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error {
@@ -243,6 +259,7 @@ currently 5 touches. Setting 0 will disable the touch detection.
     if (error) {
         _peripheral = nil;
     }
+    [self getBatteryLevel];
 }
 
 -(void) deviceDisconnected:(CBPeripheral *)peripheral {

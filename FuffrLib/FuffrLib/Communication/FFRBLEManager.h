@@ -64,6 +64,11 @@
 @property (nonatomic, strong) NSMutableArray* connectedDevices;
 
 /**
+ List of discovered devices
+ */
+@property (nonatomic, strong) CBService* sensorService;
+
+/**
  * Service UUID of the case.
  */
 @property (nonatomic, copy) NSString* sensorServiceUUID;
