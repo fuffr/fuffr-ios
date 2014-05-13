@@ -114,16 +114,17 @@
 	// Get a reference to the touch manager.
 	FFRTouchManager* manager = [FFRTouchManager sharedManager];
 
-	// Set active sides.
 	[manager
 		onFuffrConnected:
 		^{
 			NSLog(@"Fuffr Connected");
-			[[FFRTouchManager sharedManager]
-				enableSides: FFRSideTop | FFRSideLeft | FFRSideRight | FFRSideBottom
-				touchesPerSide: @2 // Change to desired number of touches
-				                   // when using the new parameter case.
-				];
+			[manager useSensorService:
+			^{
+				// Sensor is available, set active sides.
+				[[FFRTouchManager sharedManager]
+					enableSides: FFRSideTop | FFRSideLeft | FFRSideRight | FFRSideBottom
+					touchesPerSide: @2];
+			}];
 		}
 		onFuffrDisconnected:
 		^{
@@ -160,7 +161,7 @@
 		//[self.dotColors
 		//	setObject: color
 		//	forKey: [NSNumber numberWithInt: (int)touch.identifier]
-		//];
+	//];
 
 		[self.touches addObject: touch];
 	}
@@ -170,7 +171,7 @@
 
 - (void) touchesMoved: (NSSet*)touches
 {
-	//NSLog(@"moved %i", (int)touches.count);
+	//NSLog(@"touchesMoved %i", (int)touches.count);
 	for (FFRTouch* touch in touches)
 	{
 		//NSLog(@"  id %i", (int)touch.identifier);

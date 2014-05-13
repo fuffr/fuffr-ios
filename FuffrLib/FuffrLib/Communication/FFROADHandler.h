@@ -70,7 +70,7 @@ typedef enum {
 /**
  Class for handling OAD updates to the case, based on TI OAD examples
  */
-@interface FFROADHandler : NSObject<FFRPeripheralHandler> {
+@interface FFROADHandler : NSObject {
     CBPeripheral* _peripheral;
     BOOL _imageDetected;
 

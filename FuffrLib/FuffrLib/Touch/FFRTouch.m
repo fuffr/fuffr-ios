@@ -24,6 +24,7 @@
 		self.phase = FFRTouchPhaseBegan;
 
 		// for emulation
+		// TODO: remove
 		static unsigned int count = 0;
 		srand((unsigned int)time(NULL) + count++);
 		int side = rand() % 4;

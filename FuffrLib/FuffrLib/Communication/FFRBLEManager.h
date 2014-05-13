@@ -43,29 +43,9 @@
 +(instancetype) sharedManager;
 
 /**
-	Handler for working with the connected peripheral.
+ * Object that recieves BLE data from the connected device.
  */
-@property (nonatomic, strong) id<FFRPeripheralHandler> handler;
-
-/**
- * Device UUID, if a matching device is found, it will be autoconnected.
- */
-@property (nonatomic, copy) NSString* monitoredDeviceIdentifier;
-
-/**
- * List of discovered devices.
- */
-@property (nonatomic, strong) NSMutableArray* discoveredDevices;
-
-/**
- * List of connected devices. This is currently limited to one device.
- */
-@property (nonatomic, strong) NSMutableArray* connectedDevices;
-
-/**
- * UUID stringss of monitored services.
- */
-@property (nonatomic, strong) NSMutableDictionary* monitoredServices;
+@property (nonatomic, strong) id handler;
 
 /**
  * Called when a device is discovered.
@@ -73,18 +53,14 @@
 @property (nonatomic, copy) void (^onPeripheralDiscovered)(CBPeripheral* peripheral);
 
 /**
+ * Called when a device is connected.
+ */
+@property (nonatomic, copy) void (^onPeriperalConnected)(CBPeripheral* peripheral);
+
+/**
  * Called when a device is disconnected.
  */
 @property (nonatomic, copy) void (^onPeriperalDisconnected)(CBPeripheral* peripheral);
-
-/**
- * Add a service UUID and a block that will be called when the characteristics
- * of the given service are discovered. Add monitored services early on at
- * program startup. If added after connecting to the device, the callback
- * will not be called, decause services discovery is made in didConnectPeriperal.
- */
--(void) addMonitoredService: (NSString*)serviceUUID
-	onDiscovery:(void(^)(CBService* service, CBPeripheral* hostPeripheral))callback;
 
 /**
 	Connects a peripheral. Upon connection, the services of the device will be scanned, and any monitored services will also be explored
@@ -95,6 +71,19 @@
 	Disconnects the peripheral
  */
 -(void) disconnectPeripheral:(CBPeripheral*) peripheral;
+
+/**
+ * Get the currently connected device.
+ */
+- (CBPeripheral*) connectedDevice;
+
+/**
+ * This method makes sure that the characteristics for the given service
+ * are discovered and ready for use.
+ */
+-(void) useService: (NSString*)serviceUUID
+	whenAvailable:(void(^)())serviceAvailableBlock;
+	// Original form: whenAvailable:(void(^)(CBService* service, CBPeripheral* hostPeripheral))callback;
 
 /**
 	Starts a scan for peripherals, optionally with continuous scanning for RSSI updating e.g.

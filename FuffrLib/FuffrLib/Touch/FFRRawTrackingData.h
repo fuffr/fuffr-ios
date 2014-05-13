@@ -12,11 +12,23 @@
 /**
     Data struct as delivered from Fuffr
  */
-typedef struct {
+typedef struct
+{
     /**
-     which side the data comes from
+     * Touch id.
      */
-    Byte identifier;
+    Byte identifier : 5;
+
+	/**
+	 * Type of event:
+	 * 0 for touch_down_event;
+	 * 1 for touch_move_event;
+	 * 2 for touch_up_event;
+	 * 3 or higher are invalid values.
+	 */
+	Byte eventType : 3;
+
+    //Byte typeAndIdentifier;
 
     /**
      x-coordinate low bits

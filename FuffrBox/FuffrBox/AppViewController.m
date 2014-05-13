@@ -425,13 +425,18 @@ static BOOL FuffrIsConnected = NO;
 	[manager
 		onFuffrConnected:
 		^{
-			// Enable all sides as default.
-			[[FFRTouchManager sharedManager]
-				enableSides: FFRSideTop | FFRSideLeft | FFRSideRight | FFRSideBottom
-				touchesPerSide: @1 // Update to @2 when using parameter case.
-				];
-			FuffrIsConnected = YES;
-			[self callJS: @"fuffr.on.connected()"];
+			[manager useSensorService:
+			^{
+				NSLog(@"Fuffr Connected");
+				
+				// Enable all sides as default.
+				[[FFRTouchManager sharedManager]
+					enableSides: FFRSideTop | FFRSideLeft | FFRSideRight | FFRSideBottom
+					touchesPerSide: @2 // Touches per side.
+					];
+				FuffrIsConnected = YES;
+				[self callJS: @"fuffr.on.connected()"];
+			}];
 		}
 		onFuffrDisconnected:
 		^{

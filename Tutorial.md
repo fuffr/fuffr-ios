@@ -103,12 +103,14 @@ The following code snippet shows how to obtain a reference to the **FFRTouchMana
         onFuffrConnected:
         ^{
             NSLog(@"Fuffr Connected");
-
-            // Set active sides and number of touches per side.
-            [[FFRTouchManager sharedManager]
-                enableSides: FFRSideLeft | FFRSideRight
-                touchesPerSide: @1
-                ];
+            [manager useSensorService:
+            ^{
+                NSLog(@"Touch Sensors Ready");
+                // Set active sides and number of touches per side.
+                [[FFRTouchManager sharedManager]
+                    enableSides: FFRSideLeft | FFRSideRight
+                    touchesPerSide: @1];
+            }];
         }
         onFuffrDisconnected:
         ^{
@@ -128,13 +130,14 @@ It is also possible to call onFuffrConnected: and onFuffrDisconnected: separatel
     [manager
         onFuffrConnected:
         ^{
-            NSLog(@"Fuffr Connected");
-
-            // Set active sides and number of touches per side.
-            [[FFRTouchManager sharedManager]
-                enableSides: FFRSideLeft | FFRSideRight
-                touchesPerSide: @1
-                ];
+        	NSLog(@"Fuffr Connected");
+            [manager useSensorService:
+            ^{
+                // Set active sides and number of touches per side.
+                [[FFRTouchManager sharedManager]
+                    enableSides: FFRSideLeft | FFRSideRight
+                    touchesPerSide: @1];
+            }];
         }];
 
     [manager

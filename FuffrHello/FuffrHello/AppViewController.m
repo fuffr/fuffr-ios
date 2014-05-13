@@ -97,11 +97,14 @@
 	[manager
 		onFuffrConnected:
 		^{
-			NSLog(@"Fuffr Connected");
-			[[FFRTouchManager sharedManager]
-				enableSides: FFRSideLeft | FFRSideRight
-				touchesPerSide: @1
-				];
+			[manager useSensorService:
+			^{
+				NSLog(@"Fuffr Connected");
+				[[FFRTouchManager sharedManager]
+					enableSides: FFRSideLeft | FFRSideRight
+					touchesPerSide: @1
+					];
+			}];
 		}
 		onFuffrDisconnected:
 		^{

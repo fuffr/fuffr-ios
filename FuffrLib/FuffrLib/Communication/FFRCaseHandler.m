@@ -9,6 +9,7 @@
 #import "FFRCaseHandler.h"
 #import "FFROverlaySpaceMapper.h"
 #import "FFRBLEExtensions.h"
+#import "FFRBLEManager.h"
 
 
 @interface FFRCaseHandler ()
@@ -29,6 +30,9 @@ NSString* const FFRSideBottomUUID = @"fff3";
 NSString* const FFRSideRightUUID = @"fff2";
 NSString* const FFRSideTopUUID = @"fff5";
 
+NSString* const FFRBatteryServiceUUID = @"180f";
+NSString* const FFRBatteryCharacteristicUUID = @"2a19";
+
 -(instancetype) init
 {
     if (self = [super init]) {
@@ -40,16 +44,7 @@ NSString* const FFRSideTopUUID = @"fff5";
     return self;
 }
 
-// TODO: Seems to never be called?
--(instancetype) initWithPeripheral:(CBPeripheral*)peripheral {
-    if (self = [self init]) {
-        [self loadPeripheral:peripheral];
-    }
-
-    return self;
-}
-
--(void) loadPeripheral:(CBPeripheral*) peripheral
+-(void) setPeripheral:(CBPeripheral*) peripheral
 {
     _peripheral = peripheral;
 }
@@ -66,6 +61,20 @@ NSString* const FFRSideTopUUID = @"fff5";
     }
     @finally {
     }
+}
+
+- (void) useSensorService: (void(^)())serviceAvailableBlock
+{
+	[[FFRBLEManager sharedManager]
+		useService: FFRCaseSensorServiceUUID
+		whenAvailable: serviceAvailableBlock];
+}
+
+- (void) useBatteryService: (void(^)())serviceAvailableBlock
+{
+	[[FFRBLEManager sharedManager]
+		useService: FFRBatteryServiceUUID
+		whenAvailable: serviceAvailableBlock];
 }
 
 #pragma mark - enable/disable sensors
@@ -251,21 +260,34 @@ currently 5 touches. Setting 0 will disable the touch detection.
 
 #pragma mark - touch data handling
 
--(FFRTouch*) unpackData:(NSData*)data fromSide:(FFRSide)side {
+-(FFRTouch*) unpackData:(NSData*)data fromSide:(FFRSide)side
+{
     FFRRawTrackingData raw;
     [data getBytes:&raw length:sizeof(FFRRawTrackingData)];
 
     CGPoint rawPoint = CGPointMake((raw.highX << 8) | raw.lowX, (raw.highY << 8) | raw.lowY);
     CGPoint normalizedPoint = [self normalizePoint:rawPoint onSide:side];
 
-    //NSLog(@"id: %d, raw: %@, side: %d, normalized: %@", raw.identifier, NSStringFromCGPoint(rawPoint), side, NSStringFromCGPoint(normalizedPoint));
+	Byte eventType = raw.eventType;
+	Byte identifier = raw.identifier;
+
+    //NSLog(@"Touch id: %d, event: %d, side: %d", identifier, eventType, side);
+	
+    //NSLog(@"Touch id: %d, event: %d, side: %d, rawPoint: %@, normalized: %@", identifier, eventType, side, NSStringFromCGPoint(rawPoint), NSStringFromCGPoint(normalizedPoint));
 
     FFRTouch* touch = [[FFRTouch alloc] init];
-    touch.identifier = raw.identifier;
+    touch.identifier = identifier;
     touch.rawPoint = rawPoint;
+	touch.phase = eventType + 1; // Map event type to FFRTouchPhase
     touch.side = side;
     touch.normalizedLocation = normalizedPoint;
     touch.location = [self.spaceMapper locationOnScreen:normalizedPoint fromSide:side];
+
+	// Log down/up events (but not moved).
+	if (eventType != 1)
+	{
+		NSLog(@"Touch id: %d, event: %d, side: %d", identifier, eventType, side);
+	}
 
     return touch;
 }
@@ -305,6 +327,5 @@ currently 5 touches. Setting 0 will disable the touch detection.
 
     return p;
 }
-
 
 @end

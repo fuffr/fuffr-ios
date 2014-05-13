@@ -10,6 +10,14 @@
 #import "FFRBLEExtensions.h"
 #import <objc/runtime.h>
 
+@interface FFRServiceRequestCommand : NSObject
+@property (weak, nonatomic) CBService* service;
+@property (strong, nonatomic) void (^block)();
+@end
+
+@implementation FFRServiceRequestCommand
+@end
+
 
 @implementation CBPeripheral (discovery)
 
@@ -36,10 +44,31 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 
 @interface FFRBLEManager ()
 
+/**
+ * Device UUID, if a matching device is found, it will be autoconnected.
+ */
+@property (nonatomic, copy) NSString* monitoredDeviceIdentifier;
+
+/**
+ * List of discovered devices.
+ */
+@property (nonatomic, strong) NSMutableArray* discoveredDevices;
+
+/**
+ * List of connected devices. This is currently limited to one device.
+ */
+@property (nonatomic, strong) NSMutableArray* connectedDevices;
+
+/**
+ * UUID stringss of monitored services.
+ */
+@property (nonatomic, strong) NSMutableArray* serviceRequestQueue;
+
 // Removed discovery KVO mechanism.
 //-(void) storeDiscoveredPeripheral:(CBPeripheral*) peripheral;
 
 @end
+
 
 @implementation FFRBLEManager
 
@@ -61,7 +90,7 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 		_manager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
 		self.connectedDevices = [NSMutableArray array];
 		self.discoveredDevices = [NSMutableArray array];
-		self.monitoredServices = [NSMutableDictionary dictionary];
+		self.serviceRequestQueue = [NSMutableArray array];
 
 		[[NSNotificationCenter defaultCenter]
 			addObserver:self
@@ -107,8 +136,11 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 
 #pragma mark -
 
--(void) disconnectPeripheral:(CBPeripheral *)peripheral
+-(void) disconnectPeripheral:(CBPeripheral*)peripheral
 {
+	NSLog(@"FFRBLEManager: App should not call disconnectPeripheral:");
+	//assert(NO);
+
 	[_connectedDevices removeObject:peripheral];
 	
 	// TODO: Called by didDisconnectPeripheral, remove this call.
@@ -118,6 +150,11 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 	[_manager cancelPeripheralConnection:peripheral];
 }
 
+- (CBPeripheral*) connectedDevice
+{
+	return [self.connectedDevices firstObject];
+}
+
 -(void) connectPeripheral:(CBPeripheral*) peripheral
 {
 	LOGMETHOD
@@ -125,6 +162,7 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 	// store peripheral object to keep reference during connect
 	_disconnectedPeripheral = nil;
 	peripheral.delegate = self;
+
 	[self.connectedDevices addObject:peripheral];
 
 	//dispatch_async(_receiveQueue, ^{
@@ -134,6 +172,23 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 	[_discoveredDevices removeObject:peripheral];
 	[_manager stopScan];
 }
+
+// TODO: Is this method ever called?
+-(void)discoverServices: (CBPeripheral *)peripheral
+{
+	LOGMETHOD
+
+	NSLog(@"didConnectPeripheral: %@", peripheral);
+
+	_disconnectedPeripheral = nil;
+	[_discoveredDevices addObject:peripheral];
+
+	// Here service discovery is started.
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[peripheral discoverServices:nil];
+	});
+}
+
 
 /* UNUSED CODE
 -(void) storeDiscoveredPeripheral:(CBPeripheral*) peripheral
@@ -192,20 +247,76 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 }
 */
 
--(void) addMonitoredService: (NSString*)serviceUUID
-	onDiscovery:(void(^)(CBService* service, CBPeripheral* hostPeripheral))callback
+-(void) useService: (NSString*)serviceUUID
+	whenAvailable:(void(^)())serviceAvailableBlock
 {
-	[self.monitoredServices setObject: callback forKey: serviceUUID];
+	// Below, we check if we already have discovered characteristics
+	// for the service. If so we directly call the callback block,
+	// if not discovery is initiated.
 
-	// Old code not needed since since services are discovered in didConnectPeriperal.
-	// This would however be needed if we would want to discover services while the
-	// program is running, after startup.
-	/*
-	for (CBPeripheral* p in self.connectedDevices)
+	// Are we connected to a device?
+	if ([self.connectedDevices count] > 0)
 	{
-		[p discoverServices:nil];
+		// Are services discovered?
+		CBPeripheral* device = [self.connectedDevices firstObject];
+		if (device.services)
+		{
+			// Find service.
+			for (CBService* service in device.services)
+			{
+				if ([service.UUID isEqualToString: serviceUUID])
+				{
+					// Do we have the characteristics for the service?
+					if (service.characteristics)
+					{
+						NSLog(@"Service already availabe");
+						
+						// Characteristics are already discovered, call callback.
+						serviceAvailableBlock();
+
+						break;
+					}
+					else
+					{
+						NSLog(@"Service characteristics need to be discovered");
+
+						// Add to queue.
+						// Discover characteristics if queue length is 1.
+						// Do queue manipulation on main thread.
+						// In didDiscoverCharacteristics, check queue, call callback,
+						// call discoverCharacteristics again for next service
+						// if queue is not empty.
+						
+						// Create command object.
+						FFRServiceRequestCommand* command = [FFRServiceRequestCommand new];
+						command.service = service;
+						command.block = serviceAvailableBlock;
+						[self.serviceRequestQueue addObject: command];
+
+						// Discover characteristics now if queue length is 1.
+						if (1 == [self.serviceRequestQueue count])
+						{
+							[[self connectedDevice]
+								discoverCharacteristics: nil
+								forService: service];
+						}
+
+						break;
+					}
+				}
+			}
+		}
+		else
+		{
+			// Not valid state, services must have been discovered.
+			assert(NO);
+		}
 	}
-	*/
+	else
+	{
+		// Not valid state, device must have been connected.
+		assert(NO);
+	}
 }
 
 -(void) startScan:(BOOL) continuous
@@ -378,9 +489,20 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 	if (error)
 	{
 		NSLog(@"peripheral:didDiscoverServices: error %@", error);
+
+		// TODO: Disconnect the device and call onPeriperalDiconnected callback?
+
 		return;
 	}
 
+	// Once services are read, we notify the connected callback.
+	// The app can now request to read characteristics for services.
+	if (self.onPeriperalConnected)
+	{
+		self.onPeriperalConnected(peripheral);
+	}
+	
+/* TODO: Remove old code.
 	for (CBService *service in peripheral.services)
 	{
 		NSLog(@"Service discovered: %@", service.UUID);
@@ -400,6 +522,7 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 			}
 		}
 	}
+*/
 }
 
 -(void) peripheral:(CBPeripheral *)peripheral
@@ -435,19 +558,29 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 	didDiscoverCharacteristicsForService:(CBService *)service
 	error:(NSError *)error
 {
-	for (NSString* identifier in self.monitoredServices)
+	FFRServiceRequestCommand* command;
+
+	// There must be an item in the queue when we get here.
+	assert([self.serviceRequestQueue count] > 0);
+
+	// Get service request from the queue.
+	if ([self.serviceRequestQueue count] > 0)
 	{
-		if ([service.UUID isEqualToString: identifier]) {
+		command = [self.serviceRequestQueue objectAtIndex: 0];
+		[self.serviceRequestQueue removeObjectAtIndex: 0];
 
-			NSLog(@"Monitored service characteristics discovered");
+		// Call callback block.
+		command.block();
 
-			void(^callback)(CBService*, CBPeripheral*) =
-				[self.monitoredServices objectForKey: identifier];
-			if (callback)
-			{
-				callback(service, peripheral);
-			}
+		// If there is another item in the queue, discover next service.
+		if ([self.serviceRequestQueue count] > 0)
+		{
+			command = [self.serviceRequestQueue objectAtIndex: 0];
+			[[self connectedDevice]
+				discoverCharacteristics: nil
+				forService: command.service];
 		}
+
 	}
 }
 

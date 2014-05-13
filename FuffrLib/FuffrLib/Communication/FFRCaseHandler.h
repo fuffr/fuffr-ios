@@ -43,10 +43,14 @@ extern NSString* const FFRSideRightUUID;
  */
 extern NSString* const FFRSideTopUUID;
 
+extern NSString* const FFRBatteryServiceUUID;
+
+extern NSString* const FFRBatteryCharacteristicUUID;
+
 /**
     Main class for handling BLE communication with Fuffr
  */
-@interface FFRCaseHandler : NSObject<FFRPeripheralHandler> {
+@interface FFRCaseHandler : NSObject {
     // The peripheral
     CBPeripheral* _peripheral;
 
@@ -60,9 +64,10 @@ extern NSString* const FFRSideTopUUID;
  */
 @property (nonatomic, strong) id<FFRExternalSpaceMapper> spaceMapper;
 
-/**
-    Initializes the handler for the device, tries to enable the sensors and subscribe to the characteristics
- */
--(instancetype) initWithPeripheral:(CBPeripheral*)peripheral;
+-(void) setPeripheral:(CBPeripheral*) peripheral;
+
+- (void) useSensorService: (void(^)())serviceAvailableBlock;
+
+- (void) useBatteryService: (void(^)())serviceAvailableBlock;
 
 @end

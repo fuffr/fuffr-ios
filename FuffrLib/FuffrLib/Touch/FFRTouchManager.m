@@ -151,6 +151,12 @@ static int touchBlockIdCounter = 0;
 	// Scan is started automatically by FFRBLEManager.
 	// No need to do this here.
 	//[self startScan];
+
+	// TODO: Call connectedBlock if already connected?
+	// And do the same in onFuffrConnected?
+	// There could be a situation where this method is
+	// called "too late" and you will never call the
+	// connected block.
 }
 
 - (void) onFuffrConnected: (void(^)())connectedBlock
@@ -165,8 +171,10 @@ static int touchBlockIdCounter = 0;
 
 - (void) disconnectFuffr
 {
+	NSLog(@"FFRTouchManager: App called disconnectFuffr");
+
 	FFRBLEManager* bleManager = [FFRBLEManager sharedManager];
-	self.activeDevice = [bleManager.connectedDevices firstObject];
+	self.activeDevice = [bleManager connectedDevice];
 	if (self.activeDevice != nil)
 	{
 		[bleManager disconnectPeripheral: self.activeDevice];
@@ -180,6 +188,18 @@ static int touchBlockIdCounter = 0;
 	{
 		[bleManager connectPeripheral: self.activeDevice];
 	}
+}
+
+- (void) useSensorService: (void(^)())serviceAvailableBlock
+{
+	[[FFRBLEManager sharedManager].handler
+		useSensorService: serviceAvailableBlock];
+}
+
+- (void) enableSides:(FFRSide)sides touchesPerSide: (NSNumber*)numberOfTouches
+{
+	FFRBLEManager* bleManager = [FFRBLEManager sharedManager];
+	[bleManager.handler enableSides: sides touchesPerSide: numberOfTouches];
 }
 
 - (void) addTouchObserver: (id)object
@@ -287,6 +307,7 @@ static int touchBlockIdCounter = 0;
 	self.activeDevice = nil;
 	[self registerTouchMethods];
 	[self registerPeripheralDiscoverer];
+	[self registerConnectionCallbacks];
 	return self;
 }
 
@@ -339,8 +360,9 @@ static int touchBlockIdCounter = 0;
 -(void) connectToDeviceWithMaxRSSI
 {
 	NSLog(@"connectToDeviceWithMaxRSSI: %@", self.deviceWithMaxRSSI.name);
+
+	// This is where we connect.
 	[[FFRBLEManager sharedManager] connectPeripheral: self.deviceWithMaxRSSI];
-	[self initFuffr];
 }
 
 - (void) registerPeripheralDiscoverer
@@ -351,7 +373,7 @@ static int touchBlockIdCounter = 0;
 	FFRBLEManager* bleManager = [FFRBLEManager sharedManager];
 	bleManager.onPeripheralDiscovered = ^(CBPeripheral* p)
 	{
-		NSLog(@"Found peripheral: %@", p.name);
+		NSLog(@"Found device: %@", p.name);
 
 		if (stringContains(p.name, @"Fuffr") ||
 			stringContains(p.name, @"Neonode"))
@@ -382,7 +404,7 @@ static int touchBlockIdCounter = 0;
 	};
 }
 
-// Callback used instead of KVO.
+// TODO: Remove old code. Callback used instead of KVO.
 /*
 - (void) observeValueForKeyPath: (NSString*)keyPath
 	ofObject: (id)object
@@ -416,51 +438,27 @@ static int touchBlockIdCounter = 0;
 }
 */
 
-// Create BLE manager handler object and add a callback
-// that enables Fuffr when characteristics for the service
-// are discovered.
-// TODO: Why not rather do this in a more encapsulated way?
-// Perhaps belongs well here since objects are created and
-// connected, but the approach feels ad hoc, the two tasks
-// are not really related? Or?
-- (void) initFuffr
+- (void) registerConnectionCallbacks
 {
 	FFRBLEManager* bleManager = [FFRBLEManager sharedManager];
 
-	if (![bleManager.handler isKindOfClass: [FFRCaseHandler class]])
-	{
-		bleManager.handler = [FFRCaseHandler new];
-		
-		// OLD CODE
-		/*if ([bleManager.connectedDevices count] > 0)
-		{
-			NSLog(@"initFuffr loadPeripheral");
-			[bleManager.handler loadPeripheral:
-				[bleManager.connectedDevices firstObject]];
-			[self notifyConnected: YES];
-
-			// We hace connected, return at this point.
-			return;
-		}*/
-	}
+	// Create BLE manager handler object.
+	bleManager.handler = [FFRCaseHandler new];
 
 	__weak FFRBLEManager* manager = bleManager;
 	__weak FFRTouchManager* me = self;
 
-	NSLog(@"Adding monitored services");
-	[bleManager
-		addMonitoredService: FFRCaseSensorServiceUUID
-		onDiscovery: ^(CBService* service, CBPeripheral* hostPeripheral)
+	bleManager.onPeriperalConnected =
+		^(CBPeripheral* hostPeripheral)
 		{
-			NSLog(@"initFuffr onSensorCharacteristicsDiscovered");
-			[manager.handler loadPeripheral:hostPeripheral];
+			NSLog(@"initFuffr onPeriperalConnected");
+			[manager.handler setPeripheral: hostPeripheral];
 			if (me.onConnectedBlock)
 			{
 				me.onConnectedBlock();
 			}
-		}
-	];
-
+		};
+		
 	bleManager.onPeriperalDisconnected =
 		^(CBPeripheral* hostPeripheral)
 		{
@@ -470,12 +468,6 @@ static int touchBlockIdCounter = 0;
 				me.onDisconnectedBlock();
 			}
 		};
-}
-
-- (void) enableSides:(FFRSide)sides touchesPerSide: (NSNumber*)numberOfTouches
-{
-	FFRBLEManager* bleManager = [FFRBLEManager sharedManager];
-	[bleManager.handler enableSides: sides touchesPerSide: numberOfTouches];
 }
 
 - (void) registerTouchMethods

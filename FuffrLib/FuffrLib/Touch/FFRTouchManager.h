@@ -50,21 +50,6 @@
 - (void) onFuffrDisconnected: (void(^)())disconnectedBlock;
 
 /**
-	Callback when a device is discovered
- */
-// TODO: remove
-//@property (nonatomic, copy) void(^onPeripheralDiscovery)(CBPeripheral* p);
-
-/**
- * Enable sides of Fuffr.
- * @param sides Sides to enable, bitwise or:ed values 
- * (FFRSideTop, FFRSideLeft, FFRSideRight, FFRSideBottom).
- * @param numberOfTouches Number of touches per side, max 5.
- * 0 means off and puts Fuffr into sleep mode.
- */
-- (void) enableSides:(FFRSide)sides touchesPerSide: (NSNumber*)numberOfTouches;
-
-/**
  * Disconnect from Fuffr. This saves Fuffr battery.
  * Do this when the app goes to background.
  */
@@ -75,6 +60,21 @@
  * Do this when the app goes to foreground.
  */
 - (void) reconnectFuffr;
+
+/**
+ * Read characteristics for sensor service.
+ * @param serviceAvailableBlock Called when characteristics are available.
+ */
+- (void) useSensorService: (void(^)())serviceAvailableBlock;
+
+/**
+ * Enable sides of Fuffr.
+ * @param sides Sides to enable, bitwise or:ed values 
+ * (FFRSideTop, FFRSideLeft, FFRSideRight, FFRSideBottom).
+ * @param numberOfTouches Number of touches per side, max 5.
+ * 0 means off and puts Fuffr into sleep mode.
+ */
+- (void) enableSides:(FFRSide)sides touchesPerSide: (NSNumber*)numberOfTouches;
 
 /**
  * Add an object as observer for touch events.

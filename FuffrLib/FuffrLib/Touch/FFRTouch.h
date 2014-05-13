@@ -48,6 +48,11 @@ FFRSide;
 @interface FFRTouch : NSObject
 
 /** 
+ * The touch id. 
+ */
+@property (nonatomic, assign) NSUInteger identifier;
+
+/** 
  * The side/edge of the touch.
  */
 @property (nonatomic, assign) FFRSide side;
@@ -63,18 +68,13 @@ FFRSide;
  */
 @property (nonatomic, assign) CGPoint normalizedLocation;
 
-/** 
- * The touch id. 
- */
-@property (nonatomic, assign) NSUInteger identifier;
-
-/** 
+/**
  * Touch time stamp. 
  */
 @property (nonatomic, assign) NSTimeInterval timestamp;
 
 /** 
- * The phase of the touch: began, moved, ended. 
+ * The event type of the touch.
  */
 @property (nonatomic, assign) FFRTouchPhase phase;
 

@@ -7,38 +7,7 @@
 //
 
 /*
-How to use
-----------
-
-The app has two states. You swithing between states by 
-long pressing the bottom side of Fuffr. The Face will
-change color to indicate the current state.
-
-State 1 has the following gestures:
-
-  Right side:
-    Pinch and Rotate
-	Double tap to set random face color
-	Long-press to reset face
-  Left side: 
-    Pan
-	Double tap to set random face color
-	Long-press to reset face
-  Bottom side: 
-    Tap to switch state
-
-State 2 has the following gestures:
-
-  Right side:
-    Swipe left/right/up/down to move face to the sides
-	Double tap to set random face color
-	Long-press to reset face
-  Left side: 
-    Pan
-	Double tap to set random face color
-	Long-press to reset face
-  Bottom side: 
-    Tap to switch state
+How to use: See instructions displayed on the screen.
 */
 
 #import "AppViewController.h"
@@ -189,18 +158,21 @@ State 2 has the following gestures:
 	[manager
 		onFuffrConnected:
 		^{
-			NSLog(@"Fuffr Connected");
-			[self showMessage: @"Fuffr Connected"];
+			[manager useSensorService:
+			^{
+				NSLog(@"Fuffr Connected");
+				[self showMessage: @"Fuffr Connected"];
 
-			[[FFRTouchManager sharedManager]
-				enableSides: FFRSideTop | FFRSideLeft | FFRSideRight | FFRSideBottom
-				touchesPerSide: @2 // Change to 2 touches when using the new parameter case.
+				[[FFRTouchManager sharedManager]
+					enableSides: FFRSideTop | FFRSideLeft | FFRSideRight | FFRSideBottom
+					touchesPerSide: @2 // Touches per side.
 				];
 
-			[self
-				performSelector: @selector(showMessage1)
-				withObject: nil
-				afterDelay: 1.0];
+				[self
+					performSelector: @selector(showMessage1)
+					withObject: nil
+					afterDelay: 1.0];
+			}];
 		}
 		onFuffrDisconnected:
 		^{

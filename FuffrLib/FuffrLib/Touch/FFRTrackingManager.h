@@ -36,9 +36,9 @@ extern const float FFRTrackingManagerUpdateSpeed;
     in order to trigger events for added/removed touches,
     as well as enabling KVO of location in existing touches.
  */
-@interface FFRTrackingManager : NSObject {
+@interface FFRTrackingManager : NSObject
+{
     NSMutableArray* _trackedObjects;
-    NSTimer* _timer;
 }
 
 /**
@@ -49,6 +49,6 @@ extern const float FFRTrackingManagerUpdateSpeed;
 /**
     Method for processing the reported touches from the sensors
  */
--(void) handleNewOrChangedTrackingObject:(FFRTouch*) data;
+-(void) handleNewOrChangedTrackingObject:(FFRTouch*) touch;
 
 @end
