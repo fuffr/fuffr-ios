@@ -286,7 +286,8 @@ currently 5 touches. Setting 0 will disable the touch detection.
 	// Log down/up events (but not moved).
 	if (eventType != 1)
 	{
-		NSLog(@"Touch id: %d, event: %d, side: %d", identifier, eventType, side);
+		NSLog(@"Touch id: %d, event: %d, side: %d, rawcoord: %@",
+			identifier, eventType, side, NSStringFromCGPoint(rawPoint));
 	}
 
     return touch;
