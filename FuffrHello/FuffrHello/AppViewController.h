@@ -18,6 +18,9 @@
 /** View where circles are drawn. */
 @property UIImageView* imageView;
 
+/** Message view. */
+@property UILabel* messageView;
+
 /** Coordinates and size of the circles. */
 @property CGFloat circleRightX;
 @property CGFloat circleRightY;

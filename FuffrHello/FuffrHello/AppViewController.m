@@ -34,6 +34,9 @@
 	// Set background color.
     self.imageView.backgroundColor = UIColor.whiteColor;
 
+	// Create view that displays messages.
+	[self createMessageView];
+
 	// Set circle size and initial coordinates.
 	CGFloat width = self.imageView.bounds.size.width;
 	CGFloat height = self.imageView.bounds.size.height;
@@ -42,14 +45,14 @@
 	self.circleRightY = height / 4 * 1;
 	self.circleLeftX = width / 2;
 	self.circleLeftY = height / 4 * 3;
-
-	// Draw the initial view.
-	[self drawImageView];
 }
 
 -(void) viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear: animated];
+
+	// Draw the initial view.
+	[self drawImageView];
 
 	// Connect to Fuffr and setup touch events.
 	[self setupFuffr];
@@ -58,6 +61,26 @@
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
+}
+
+-(void) createMessageView
+{
+	self.messageView = [[UILabel alloc] initWithFrame: CGRectMake(10, 25, 300, 300)];
+    self.messageView.textColor = [UIColor blackColor];
+    self.messageView.backgroundColor = [UIColor clearColor];
+    self.messageView.userInteractionEnabled = NO;
+	//self.messageView.autoresizingMask = UIViewAutoresizingNone;
+	self.messageView.lineBreakMode = NSLineBreakByWordWrapping;
+	self.messageView.numberOfLines = 0;
+    self.messageView.text = @"";
+    [self.view addSubview: self.messageView];
+}
+
+-(void) showMessage:(NSString*)message
+{
+	self.messageView.text = message;
+	self.messageView.frame = CGRectMake(10, 25, 300, 300);
+	[self.messageView sizeToFit];
 }
 
 - (void)drawImageView
@@ -89,7 +112,10 @@
     UIGraphicsEndImageContext();
 }
 
-- (void) setupFuffr{
+- (void) setupFuffr
+{
+	[self showMessage: @"Scanning for Fuffr..."];
+
 	// Get a reference to the touch manager.
 	FFRTouchManager* manager = [FFRTouchManager sharedManager];
 
@@ -100,6 +126,7 @@
 			[manager useSensorService:
 			^{
 				NSLog(@"Fuffr Connected");
+				[self showMessage: @"Fuffr Connected"];
 				[[FFRTouchManager sharedManager]
 					enableSides: FFRSideLeft | FFRSideRight
 					touchesPerSide: @1
@@ -109,6 +136,7 @@
 		onFuffrDisconnected:
 		^{
 			NSLog(@"Fuffr Disconnected");
+			[self showMessage: @"Fuffr Disconnected"];
 		}];
 
 	// Register methods for right side touches. The touchEnded

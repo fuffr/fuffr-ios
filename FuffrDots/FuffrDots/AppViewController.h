@@ -17,6 +17,9 @@
 /** View where touches are drawn. */
 @property UIImageView* imageView;
 
+/** Message view. */
+@property UILabel* messageView;
+
 @property NSMutableDictionary* dotColors;
 
 @property NSMutableSet* touches;

@@ -165,9 +165,12 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 
 	[self.connectedDevices addObject:peripheral];
 
-	//dispatch_async(_receiveQueue, ^{
+	// Here main queue should be used if async is needed.
+	//dispatch_async(_receiveQueue,
+	dispatch_async(dispatch_get_main_queue(),
+	^{
 		[_manager connectPeripheral:peripheral options:nil];
-	//});
+	});
 
 	[_discoveredDevices removeObject:peripheral];
 	[_manager stopScan];

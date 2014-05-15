@@ -15,6 +15,7 @@
 #import <FuffrLib/FFRPanGestureRecognizer.h>
 #import <FuffrLib/FFRRotationGestureRecognizer.h>
 #import <FuffrLib/FFRFirmwareDownloader.h>
+#import <FuffrLib/UIView+Toast.h>
 
 /**
  * Reference to the AppViewController instance.
@@ -418,6 +419,8 @@ static BOOL FuffrIsConnected = NO;
 
 - (void) connectToFuffr
 {
+	[self.view makeToast: @"Scanning for Fuffr"];
+
 	// Get a reference to the touch manager.
 	FFRTouchManager* manager = [FFRTouchManager sharedManager];
 
@@ -428,11 +431,10 @@ static BOOL FuffrIsConnected = NO;
 			[manager useSensorService:
 			^{
 				NSLog(@"Fuffr Connected");
-				
-				// Enable all sides as default.
+				[self.view makeToast: @"Fuffr Connected"];
 				[[FFRTouchManager sharedManager]
 					enableSides: FFRSideTop | FFRSideLeft | FFRSideRight | FFRSideBottom
-					touchesPerSide: @2 // Touches per side.
+					touchesPerSide: @2 // Default number of touches per side.
 					];
 				FuffrIsConnected = YES;
 				[self callJS: @"fuffr.on.connected()"];
@@ -440,6 +442,8 @@ static BOOL FuffrIsConnected = NO;
 		}
 		onFuffrDisconnected:
 		^{
+			NSLog(@"Fuffr Disconnected");
+			[self.view makeToast: @"Fuffr Disconnected"];
 			FuffrIsConnected = NO;
 			[self callJS: @"fuffr.on.disconnected()"];
 		}];

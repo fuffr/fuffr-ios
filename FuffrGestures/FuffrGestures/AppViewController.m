@@ -52,16 +52,7 @@ How to use: See instructions displayed on the screen.
 
 	self.view.multipleTouchEnabled = YES;
 
-	// Create message view.
-	self.messageView = [[UILabel alloc] initWithFrame: CGRectMake(10, 25, 300, 300)];
-    self.messageView.textColor = [UIColor blackColor];
-    self.messageView.backgroundColor = [UIColor clearColor];
-    self.messageView.userInteractionEnabled = NO;
-	//self.messageView.autoresizingMask = UIViewAutoresizingNone;
-	self.messageView.lineBreakMode = NSLineBreakByWordWrapping;
-	self.messageView.numberOfLines = 0;
-    self.messageView.text = @"";
-    [self.view addSubview: self.messageView];
+	[self createMessageView];
 }
 
 -(void) viewDidAppear:(BOOL)animated
@@ -76,6 +67,19 @@ How to use: See instructions displayed on the screen.
 - (void)didReceiveMemoryWarning
 {
 	[super didReceiveMemoryWarning];
+}
+
+-(void) createMessageView
+{
+	self.messageView = [[UILabel alloc] initWithFrame: CGRectMake(10, 25, 300, 300)];
+    self.messageView.textColor = [UIColor blackColor];
+    self.messageView.backgroundColor = [UIColor clearColor];
+    self.messageView.userInteractionEnabled = NO;
+	//self.messageView.autoresizingMask = UIViewAutoresizingNone;
+	self.messageView.lineBreakMode = NSLineBreakByWordWrapping;
+	self.messageView.numberOfLines = 0;
+    self.messageView.text = @"";
+    [self.view addSubview: self.messageView];
 }
 
 -(void) showMessage:(NSString*)message

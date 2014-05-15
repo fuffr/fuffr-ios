@@ -39,12 +39,26 @@ extern const float FFRTrackingManagerUpdateSpeed;
 @interface FFRTrackingManager : NSObject
 {
     NSMutableArray* _trackedObjects;
+	NSTimer* _timer;
 }
 
 /**
     The current list of tracked touches.
  */
 @property (nonatomic, strong) NSArray* trackedObjects;
+
+/**
+ * The timeout value or removing touches that are no longer
+ * received from the case. Afterthis timeout, a touch ended
+ * event is generated.
+ */
+@property NSTimeInterval touchRemoveTimeout;
+
+/**
+ * Remove all tracked touch objects.
+ * This method is useful when resetting Fuffr.
+ */
+-(void) clearAllTouches;
 
 /**
     Method for processing the reported touches from the sensors

@@ -42,6 +42,9 @@
 
     self.imageView.backgroundColor = UIColor.whiteColor;
 
+	// Create view that displays messages.
+	[self createMessageView];
+
 	// Active touches.
 	self.touches = [NSMutableSet new];
 
@@ -96,6 +99,26 @@
 	];
 }
 
+-(void) createMessageView
+{
+	self.messageView = [[UILabel alloc] initWithFrame: CGRectMake(10, 25, 300, 300)];
+    self.messageView.textColor = [UIColor blackColor];
+    self.messageView.backgroundColor = [UIColor clearColor];
+    self.messageView.userInteractionEnabled = NO;
+	//self.messageView.autoresizingMask = UIViewAutoresizingNone;
+	self.messageView.lineBreakMode = NSLineBreakByWordWrapping;
+	self.messageView.numberOfLines = 0;
+    self.messageView.text = @"";
+    [self.view addSubview: self.messageView];
+}
+
+-(void) showMessage:(NSString*)message
+{
+	self.messageView.text = message;
+	self.messageView.frame = CGRectMake(10, 25, 300, 300);
+	[self.messageView sizeToFit];
+}
+
 -(void) viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear: animated];
@@ -111,6 +134,8 @@
 
 - (void) setupFuffr
 {
+	[self showMessage: @"Scanning for Fuffr..."];
+
 	// Get a reference to the touch manager.
 	FFRTouchManager* manager = [FFRTouchManager sharedManager];
 
@@ -118,17 +143,19 @@
 		onFuffrConnected:
 		^{
 			NSLog(@"Fuffr Connected");
+			[self showMessage: @"Fuffr Connected"];
 			[manager useSensorService:
 			^{
 				// Sensor is available, set active sides.
 				[[FFRTouchManager sharedManager]
 					enableSides: FFRSideTop | FFRSideLeft | FFRSideRight | FFRSideBottom
-					touchesPerSide: @2];
+					touchesPerSide: @5];
 			}];
 		}
 		onFuffrDisconnected:
 		^{
 			NSLog(@"Fuffr Disconnected");
+			[self showMessage: @"Fuffr Disconnected"];
 		}];
 
 	// Register methods for touch events. Here the side constants are
