@@ -8,48 +8,78 @@
 <body>
 
 <style>
+html,body {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
 body {
-	margin: 0px;
-	padding: 0px;
 	background:rgb(0,200,100);
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	-webkit-tap-highlight-color:rgba(0,0,0,0);
+}
+
+/*  The block element #score-top-margin-aspect is used for providing a top
+	margin for the left and right score numbers that is same as their
+	respective left and right margin.
+
+	The height of the #score-top-margin-aspect element will become the same as
+	its width. Therefore its width should be set to the same value as the
+	margin-left and margin-right properties of the left and right score number
+	containers respectively. */
+#score-top-margin-aspect {
+	display: block;
+	clear: both;
+	width: 4%;
+}
+#score-top-margin-aspect:after {
+	display: block;
+	padding-top: 100%;
+	content: '';
+}
+
+#score-right {
+	display: inline-block;
+	float: right;
+	margin-right: 4%;
+	font-family: courier, monospace;
+	font-size: 25px;
+	font-size: 8vmin;
+	text-align: right;
+	color: rgb(255,255,255);
+}
+
+#score-left {
+	display: inline-block;
+	float: left;
+	margin-left: 4%;
+	font-family: courier, monospace;
+	font-size: 25px;
+	font-size: 8vmin;
+	color: rgb(255,255,255);
 }
 
 #paddle-left {
 	position: absolute;
 	width: 20px;
 	height: 150px;
-	top: 0px;
-	left: 0px;
+	top: 0;
+	left: 0;
 	background:rgb(255,255,255);
-}
-
-#score-right {
-	position: absolute;
-	width: 100px;
-	height: 20px;
-	top: 0px;
-	right: 0px;
-	color: rgb(255,255,255);
-	font-family: courier, monospace;
-	text-align: right;
-}
-
-#score-left {
-	position: absolute;
-	width: 100px;
-	height: 20px;
-	top: 0px;
-	left: 0px;
-	color: rgb(255,255,255);
-	font-family: courier, monospace;
 }
 
 #paddle-right {
 	position: absolute;
 	width: 20px;
 	height: 150px;
-	top: 0px;
-	right: 0px;
+	top: 0;
+	right: 0;
 	background:rgb(255,255,255);
 }
 
@@ -63,13 +93,13 @@ body {
 }
 </style>
 
-<div>
-	<div id="paddle-left"></div>
-	<div id="paddle-right"></div>
-	<div id="score-left">0</div>
-	<div id="score-right">0</div>
-	<div id="ball"></div>
-</div>
+<div id="score-top-margin-aspect"></div>
+<div id="score-right">0</div>
+<div id="score-left">0</div>
+
+<div id="paddle-left"></div>
+<div id="paddle-right"></div>
+<div id="ball"></div>
 
 <script src="jquery/jquery.js"></script>
 <script src="fuffr.js"></script>
