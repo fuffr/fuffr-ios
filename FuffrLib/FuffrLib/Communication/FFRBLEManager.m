@@ -138,13 +138,9 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 
 -(void) disconnectPeripheral:(CBPeripheral*)peripheral
 {
-	NSLog(@"FFRBLEManager: App should not call disconnectPeripheral:");
-	//assert(NO);
+	NSLog(@"FFRBLEManager: App called disconnectPeripheral:");
 
 	[_connectedDevices removeObject:peripheral];
-	
-	// TODO: Called by didDisconnectPeripheral, remove this call.
-	//[self.handler deviceDisconnected:peripheral];
 
 	_disconnectedPeripheral = peripheral;
 	[_manager cancelPeripheralConnection:peripheral];
@@ -446,7 +442,10 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 	NSLog(@"didDisconnectPeripheral: %@, error: %@", peripheral, error);
 
 	[_connectedDevices removeObject:peripheral];
-	[self.handler deviceDisconnected:peripheral];
+
+	dispatch_async(_receiveQueue, ^{
+		[self.handler deviceDisconnected:peripheral];
+	});
 
 	if (self.onPeriperalDisconnected)
 	{
@@ -457,7 +456,7 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 	{
 		// In case of shutdown, this seem to work.
 		NSLog(@"didDisconnectPeripheral: attempting to reconnect");
-		[self performSelector:@selector(connectPeripheral:) withObject:peripheral afterDelay:0.3];
+		[self performSelector:@selector(connectPeripheral:) withObject:peripheral afterDelay:0.5];
 	}
 	else
 	{
@@ -554,7 +553,11 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 {
 	NSLog(@"didWriteValueForCharacteristic %@ %@, writable: %d, error = %@", characteristic.UUID, characteristic, (characteristic.properties & CBCharacteristicPropertyWrite) > 0, error);
 
-	[self.handler didWriteValueForCharacteristic:characteristic error:error];
+	dispatch_async(_receiveQueue, ^{
+		if (!error) {
+			[self.handler didWriteValueForCharacteristic:characteristic error:error];
+		}
+	});
 }
 
 -(void) peripheral:(CBPeripheral *)peripheral

@@ -56,6 +56,7 @@ extern NSString* const FFRBatteryCharacteristicUUID;
 
     // tracks touch data to be able to supply began/ended events
     FFRTrackingManager* _touches;
+	
     dispatch_queue_t _backgroundQueue;
 }
 
@@ -69,5 +70,25 @@ extern NSString* const FFRBatteryCharacteristicUUID;
 - (void) useSensorService: (void(^)())serviceAvailableBlock;
 
 - (void) useBatteryService: (void(^)())serviceAvailableBlock;
+
+/**
+ * Called when notifyable characteristics update their values.
+ */
+-(void) didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic;
+
+/**
+ * Callback when writing to characteristics (if not requesting write with no response).
+ */
+-(void) didWriteValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error;
+
+/**
+ * The device was disconnected.
+ */
+-(void) deviceDisconnected:(CBPeripheral *)peripheral;
+
+/**
+ * Tell the tracking manager to remove all touches.
+ */
+-(void) clearAllTouches;
 
 @end

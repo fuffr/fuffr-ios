@@ -166,7 +166,6 @@ static int touchBlockIdCounter = 0;
 
 - (void) onFuffrDisconnected: (void(^)())disconnectedBlock
 {
-	[[FFRBLEManager sharedManager].handler clearAllTouches];
 	self.onDisconnectedBlock = disconnectedBlock;
 }
 
@@ -175,7 +174,6 @@ static int touchBlockIdCounter = 0;
 	NSLog(@"FFRTouchManager: App called disconnectFuffr");
 
 	FFRBLEManager* bleManager = [FFRBLEManager sharedManager];
-	[bleManager.handler clearAllTouches];
 	self.activeDevice = [bleManager connectedDevice];
 	if (self.activeDevice != nil)
 	{

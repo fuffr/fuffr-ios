@@ -77,6 +77,14 @@ NSString* const FFRBatteryCharacteristicUUID = @"2a19";
 		whenAvailable: serviceAvailableBlock];
 }
 
+/**
+ * Tell the tracking manager to remove all touches.
+ */
+-(void) clearAllTouches
+{
+	[_touches clearAllTouches];
+}
+
 #pragma mark - enable/disable sensors
 
 /*
@@ -254,8 +262,12 @@ currently 5 touches. Setting 0 will disable the touch detection.
     }
 }
 
--(void) deviceDisconnected:(CBPeripheral *)peripheral {
+-(void) deviceDisconnected:(CBPeripheral *)peripheral
+{
     NSLog(@"FFRCaseHandler: deviceDisconnected");
+
+	// Tell tracking manager to remove all touch objects.
+	[_touches clearAllTouches];
 }
 
 #pragma mark - touch data handling
