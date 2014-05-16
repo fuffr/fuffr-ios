@@ -208,14 +208,22 @@ NSString* const FFRTrackingEndedNotification = @"FFRTrackingEndedNotification";
 
 -(FFRTouch*) objectInTrackedObjectsWithIdentifier: (NSUInteger)identifier
 {
-	NSUInteger index = [self indexForTouch: identifier];
-	if (index == INT_MAX)
+	@try
 	{
-		return nil;
+		NSUInteger index = [self indexForTouch: identifier];
+		if (index == INT_MAX)
+		{
+			return nil;
+		}
+		else
+		{
+			return [_trackedObjects objectAtIndex: index];
+		}
 	}
-	else
+	@catch (NSException* e)
 	{
-		return [_trackedObjects objectAtIndex: index];
+		NSLog(@"Exception in FFRTrackingManager objectInTrackedObjectsWithIdentifier");
+		return nil;
 	}
 }
 
