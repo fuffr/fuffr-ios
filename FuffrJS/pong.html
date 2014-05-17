@@ -221,7 +221,7 @@ simulator.enable = function()
 	Hammer(element).on("touch", function(event) {
 		simulator.handleHammerTouchEvent(event, fuffr.on.touchesBegan);
 	});
-	Hammer(element).on("drag", function(event) {
+	Hammer(element).on("gesture", function(event) {
 		simulator.handleHammerTouchEvent(event, fuffr.on.touchesMoved);
 	});
 	Hammer(element).on("release", function(event) {
@@ -232,7 +232,7 @@ simulator.enable = function()
 	Hammer(element).on("touch", function(event) {
 		simulator.handleHammerTouchEvent(event, fuffr.on.touchesBegan);
 	});
-	Hammer(element).on("drag", function(event) {
+	Hammer(element).on("gesture", function(event) {
 		simulator.handleHammerTouchEvent(event, fuffr.on.touchesMoved);
 	});
 	Hammer(element).on("release", function(event) {
