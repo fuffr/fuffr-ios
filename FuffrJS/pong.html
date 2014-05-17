@@ -469,7 +469,7 @@ ball.checkLeftPaddleCollision = function()
 	{
 		console.log('collide left paddle')
 		ball.dx = - ball.dx
-		ball.dy -= (ball.dy/ball.dy) * 0.8;
+		ball.dy += ((nextY - paddle.getCenterY()) / paddle.domElement.offsetHeight) * 1.5;
 		if (paddle.speedYMax != 0)
 			ball.dy += (paddle.speedY / paddle.speedYMax) * 1.5;
 	}
@@ -491,7 +491,7 @@ ball.checkRightPaddleCollision = function()
 	{
 		console.log('collide right paddle')
 		ball.dx = - ball.dx
-		ball.dy -= (ball.dy/ball.dy) * 0.8;
+		ball.dy += ((nextY - paddle.getCenterY()) / paddle.domElement.offsetHeight) * 1.5;
 		if (paddle.speedYMax != 0)
 			ball.dy += (paddle.speedY / paddle.speedYMax) * 1.5;
 	}
