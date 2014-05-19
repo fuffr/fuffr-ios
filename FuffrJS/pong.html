@@ -23,6 +23,8 @@ body {
 	-ms-user-select: none;
 	user-select: none;
 	-webkit-tap-highlight-color:rgba(0,0,0,0);
+	font-family: courier, monospace;
+	font-size: 10em;
 }
 
 #playfield {
@@ -65,6 +67,7 @@ body {
 	margin-left and margin-right properties of the left and right score number
 	containers respectively. */
 #score-top-margin-aspect {
+	position: relative;
 	display: block;
 	clear: both;
 	width: 4%;
@@ -75,25 +78,39 @@ body {
 	content: '';
 }
 
-#score-right {
-	display: inline-block;
-	float: right;
+#top-info-bar {
+	display: table;
+	width: 92%;
 	margin-right: 4%;
-	font-family: courier, monospace;
-	font-size: 25px;
-	font-size: 8vmin;
+	margin-left: 4%;
+	border-collapse: collapse;
+}
+#top-info-bar > div {
+	display: table-cell;
+	vertical-align: top;
+}
+
+#score-right {
+	font-size: 25%;
+	font-size: 6vmax;
 	text-align: right;
 	color: rgb(255,255,255);
 }
 
 #score-left {
-	display: inline-block;
-	float: left;
-	margin-left: 4%;
-	font-family: courier, monospace;
-	font-size: 25px;
-	font-size: 8vmin;
+	font-size: 25%;
+	font-size: 6vmax;
 	color: rgb(255,255,255);
+}
+
+#level-text {
+	text-align: center;
+	font-size: 18.75%;
+	font-size: 4vmax;
+	line-height: 18.75%;
+	line-height: 4vmax;
+	vertical-align: middle !important;
+	color: #fff;
 }
 
 #paddle-left {
@@ -132,8 +149,11 @@ body {
 <div id="playfield">
 
 	<div id="score-top-margin-aspect"></div>
-	<div id="score-right">0</div>
-	<div id="score-left">0</div>
+	<div id="top-info-bar">
+		<div id="score-left">0</div>
+		<div id="level-text">Level <span id="level">1</span></div>
+		<div id="score-right">0</div>
+	</div>
 
 	<div id="paddle-left"></div>
 	<div id="paddle-right"></div>
@@ -196,8 +216,6 @@ fuffr.on.connected = function()
 	fuffrWasConnected = true;
 }
 
-var simulator = {};
-
 var checkFuffrConnection = function()
 {
 	if (false === fuffrWasConnected) {
@@ -210,6 +228,33 @@ var checkFuffrConnection = function()
 $(function() {
 	setTimeout(checkFuffrConnection, 3000);
 });
+
+var lang = {};
+lang.missing_init = 'Couldn\'t start the game.';
+
+var game = {};
+
+game.playfieldWidth = $('#playfield').width();
+game.playfieldHeight = $('#playfield').height();
+
+game.level = 1;
+game.levelNumberElm = document.getElementById('level');
+game.levels = 10;
+game.scorePointsPerLevel = 5;
+game.secondsPerLevel = 30;
+game.speed = 1;
+game.speedIncreasePerLevel = 2;
+
+game.player1 = {
+	score: 0,
+	scoreElement : document.getElementById('score-left'),
+};
+game.player2 = {
+	score: 0,
+	scoreElement : document.getElementById('score-right'),
+};
+
+var simulator = {};
 
 simulator.enable = function()
 {
@@ -279,8 +324,92 @@ simulator.handleHammerTouchEvent = function(event, handler)
 	handler(touches);
 };
 
-var playfieldWidth = $('#playfield').width()
-var playfieldHeight = $('#playfield').height()
+game.start = function()
+{
+	if (ball == void(0) || paddleLeft == void(0) || paddleRight == void(0))
+	{
+		alert(lang.missing_init);
+	}
+
+	this.startLevel();
+};
+
+game.startLevel = function()
+{
+	if (this.mainLoop)
+		window.clearInterval(this.mainLoop);
+
+	var that = this;
+	this.mainLoop = window.setInterval(function()
+	{
+		that.checkTimePerLevel();
+		ball.move()
+		paddleLeft.measureSpeed()
+		paddleRight.measureSpeed()
+		ball.checkLeftPaddleCollision()
+		ball.checkRightPaddleCollision()
+		ball.checkWallCollision()
+	},
+	21-game.speed);
+
+	this.levelStartTime = (new Date().getTime());
+
+	if (!this.startTime)
+		this.startTime = this.levelStartTime;
+};
+
+game.end = function()
+{
+	window.clearInterval(this.mainLoop);
+};
+
+game.increaseScore = function(player) {
+	player.score += 1;
+
+	player.scoreElement.textContent = player.score;
+
+	if ((game.player1.score + game.player2.score) % game.scorePointsPerLevel == 0)
+	{
+		game.nextLevel();
+	}
+	
+	ball.setCenterX(this.playfieldWidth / 2);
+	ball.setCenterY(this.playfieldHeight / 2);
+}
+
+game.nextLevel = function()
+{
+	this.level += 1;
+
+	if (this.level > this.levels)
+	{
+		this.end();
+	}
+	else
+	{
+		game.levelNumberElm.textContent = this.level;
+		game.speed += game.speedIncreasePerLevel;
+		this.startLevel();
+	}
+};
+
+game.getPlaytimeSeconds = function()
+{
+	var time = (new Date().getTime());
+	return Math.round((time - game.startTime) / 1000);
+};
+
+game.getLevelPlaytimeSeconds = function()
+{
+	var time = (new Date().getTime());
+	return Math.round((time - game.levelStartTime) / 1000);
+};
+
+game.checkTimePerLevel = function()
+{
+	if (this.getLevelPlaytimeSeconds() >= game.secondsPerLevel)
+		this.nextLevel()
+};
 
 var makeSprite = function()
 {
@@ -295,6 +424,8 @@ var makeSprite = function()
 	sprite.setDOMElement = function(element)
 	{
 		sprite.domElement = element
+		sprite.width = sprite.domElement.offsetWidth;
+		sprite.height = sprite.domElement.offsetHeight;
 	}
 
 	sprite.setLeft = function(x)
@@ -383,7 +514,7 @@ var makeSprite = function()
 var paddleLeft = makeSprite()
 paddleLeft.setDOMElement(document.getElementById('paddle-left'))
 paddleLeft.setLeft(0)
-paddleLeft.setCenterY(playfieldHeight / 2)
+paddleLeft.setCenterY(game.playfieldHeight / 2)
 paddleLeft.lastX = null
 paddleLeft.lastY = null
 paddleLeft.speedX = 0
@@ -393,8 +524,8 @@ paddleLeft.speedYMax = 50
 
 var paddleRight = makeSprite()
 paddleRight.setDOMElement(document.getElementById('paddle-right'))
-paddleRight.setRight(playfieldWidth)
-paddleRight.setCenterY(playfieldHeight / 2)
+paddleRight.setRight(game.playfieldWidth)
+paddleRight.setCenterY(game.playfieldHeight / 2)
 paddleRight.lastX = null
 paddleRight.lastY = null
 paddleRight.speedX = 0
@@ -402,28 +533,13 @@ paddleRight.speedY = 0
 paddleRight.speedXMax = 0
 paddleRight.speedYMax = 50
 
-var scoreLeft = makeSprite()
-scoreLeft.setDOMElement(document.getElementById('score-left'))
-scoreLeft.setLeft(10)
-scoreLeft.setTop(0)
-
-var scoreRight = makeSprite()
-scoreRight.setDOMElement(document.getElementById('score-right'))
-scoreRight.setRight(playfieldWidth - 10)
-scoreRight.setTop(0)
-
 var ball = makeSprite()
 ball.setDOMElement(document.getElementById('ball'))
-ball.setCenterX(playfieldWidth / 2)
-ball.setCenterY(playfieldHeight / 2)
+ball.setCenterX(game.playfieldWidth / 2)
+ball.setCenterY(game.playfieldHeight / 2)
 ball.setDeltaX(4)
 ball.setDeltaY(4)
-
-function addPoint(score) {
-	score.domElement.textContent = parseInt(score.domElement.textContent) + 1;
-	ball.setCenterX(playfieldWidth / 2)
-	ball.setCenterY(playfieldHeight / 2)
-}
+ball.maxDeltaY = 5;
 
 ball.checkWallCollision = function()
 {
@@ -434,13 +550,13 @@ ball.checkWallCollision = function()
 	if (nextX < 0 && ball.dx < 0)
 	{
 		ball.dx = - ball.dx
-		addPoint(scoreRight);
+		game.increaseScore(game.player1);
 	}
 	// Right wall.
-	else if (nextX > playfieldWidth && ball.dx > 0)
+	else if (nextX > game.playfieldWidth && ball.dx > 0)
 	{
 		ball.dx = - ball.dx
-		addPoint(scoreLeft);
+		game.increaseScore(game.player2);
 	}
 	// Top wall.
 	else if (nextY < 0 && ball.dy < 0)
@@ -448,7 +564,7 @@ ball.checkWallCollision = function()
 		ball.dy = - ball.dy
 	}
 	// Bottom wall.
-	else if (nextY > playfieldHeight && ball.dy > 0)
+	else if (nextY > game.playfieldHeight && ball.dy > 0)
 	{
 		ball.dy = - ball.dy
 	}
@@ -469,9 +585,19 @@ ball.checkLeftPaddleCollision = function()
 	{
 		console.log('collide left paddle')
 		ball.dx = - ball.dx
-		ball.dy += ((nextY - paddle.getCenterY()) / paddle.domElement.offsetHeight) * 4;
-		if (paddle.speedYMax != 0)
-			ball.dy += (paddle.speedY / paddle.speedYMax) * 2;
+
+		var paddleSpeed = (paddle.speedY / paddle.speedYMax),
+			collPos = ((nextY - paddle.getCenterY()) / paddle.domElement.offsetHeight),
+			speedTerm = paddleSpeed * 5,
+			posTerm = paddleSpeed * 0.5 * collPos,
+			ballDeltaYChange = speedTerm + posTerm;
+
+		if (ball.dy + ballDeltaYChange > ball.maxDeltaY)
+			ballDeltaYChange = 2 * ballDeltaYChange - ball.maxDeltaY;
+
+		ball.dy += ballDeltaYChange;
+
+		//console.log('speed term=' + speedTerm + ', pos term=' + posTerm);
 	}
 }
 
@@ -491,9 +617,19 @@ ball.checkRightPaddleCollision = function()
 	{
 		console.log('collide right paddle')
 		ball.dx = - ball.dx
-		ball.dy += ((nextY - paddle.getCenterY()) / paddle.domElement.offsetHeight) * 4;
-		if (paddle.speedYMax != 0)
-			ball.dy += (paddle.speedY / paddle.speedYMax) * 2;
+
+		var paddleSpeed = (paddle.speedY / paddle.speedYMax),
+			collPos = ((nextY - paddle.getCenterY()) / paddle.domElement.offsetHeight),
+			speedTerm = paddleSpeed * 5,
+			posTerm = paddleSpeed * 0.5 * collPos,
+			ballDeltaYChange = speedTerm + posTerm;
+
+		if (ball.dy + ballDeltaYChange > ball.maxDeltaY)
+			ballDeltaYChange = 2 * ballDeltaYChange - ball.maxDeltaY;
+
+		ball.dy += ballDeltaYChange;
+
+		//console.log('speed term=' + speedTerm + ', pos term=' + posTerm);
 	}
 }
 
@@ -514,34 +650,25 @@ paddleRight.measureSpeed = function()
 
 var resetPlayfield = function()
 {
-	playfieldWidth = $('#playfield').width()
-	playfieldHeight = $('#playfield').height()
+	game.playfieldWidth = $('#playfield').width()
+	game.playfieldHeight = $('#playfield').height()
 	paddleLeft.setLeft(0)
-	paddleRight.setRight(playfieldWidth)
+	paddleRight.setRight(game.playfieldWidth)
 };
 
 resetPlayfield();
 
-setInterval(function()
-{
-	ball.move()
-	paddleLeft.measureSpeed()
-	paddleRight.measureSpeed()
-	ball.checkLeftPaddleCollision()
-	ball.checkRightPaddleCollision()
-	ball.checkWallCollision()
-},
-20)
+game.start();
 
 function OnRightTouch(touchId, touchX, touchY, previousX, previousY, normalizedX, normalizedY)
 {
-	var y = (normalizedY * playfieldHeight)
+	var y = (normalizedY * game.playfieldHeight)
 	paddleRight.setCenterY(y)
 }
 
 function OnLeftTouch(touchId, touchX, touchY, previousX, previousY, normalizedX, normalizedY)
 {
-	var y = (normalizedY * playfieldHeight)
+	var y = (normalizedY * game.playfieldHeight)
 	paddleLeft.setCenterY(y)
 }
 </script>
