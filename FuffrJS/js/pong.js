@@ -7,6 +7,10 @@ var gfx = {};
 $(function() {
 	setTimeout(fuffrHandler.checkConnection, fuffrHandler.connTimeoutMs);
 
+	$('#restart-button').bind('click', function(event) {
+		game.restart();
+	});
+
 	game.initialize();
 	gfx.initialize();
 
@@ -17,12 +21,14 @@ $(function() {
 
 game.mainLoopBaseIntervalMs = 21;
 game.levels = 10;
-game.speedIncreasePerLevel = 2;
+game.speedIncreasePerLevel = 1;
 game.scorePointsPerLevel = 5;
 game.secondsPerLevel = 30;
 
 lang.missing_init = 'Couldn\'t start the game.';
 lang.fuffr_not_connected = 'Fuffr wasn\'t connected. Do you want to use the simulator?';
+lang.game_finished_text = 'Player %1 wins the game!';
+lang.game_finished_draw_text = 'We have a draw!';
 
 game.initialize = function()
 {
@@ -41,6 +47,13 @@ game.initialize = function()
 		score: 0,
 		scoreElement : document.getElementById('score-right'),
 	};
+
+	this.levelNumberElm.textContent = this.level;
+	this.player1.scoreElement.textContent = 0;
+	this.player2.scoreElement.textContent = 0;
+
+	$('#game-finished-overlay').hide();
+	$('#playfield').removeClass('dimmed');
 };
 
 game.start = function()
@@ -80,6 +93,27 @@ game.startLevel = function()
 game.end = function()
 {
 	window.clearInterval(this.mainLoop);
+
+	var winning_player = null;
+	if (game.player1.score > game.player2.score) winning_player = 1;
+	if (game.player2.score > game.player1.score) winning_player = 2;
+
+	$('#playfield').addClass('dimmed');
+	if (winning_player != null)
+	{
+		$('#game-finished-overlay-header').text(lang.game_finished_text.replace('%1', winning_player));
+	}
+	else
+	{
+		$('#game-finished-overlay-header').text(lang.game_finished_draw_text);
+	}
+	$('#game-finished-overlay').show();
+};
+
+game.restart = function()
+{
+	game.initialize();
+	game.start();
 };
 
 game.increaseScore = function(player) {
@@ -319,9 +353,9 @@ gfx.ball.checkLeftPaddleCollision = function()
 			ballDeltaYChange = speedTerm + posTerm;
 
 		if (gfx.ball.dy + ballDeltaYChange > gfx.ball.maxDeltaY)
-			ballDeltaYChange = 2 * ballDeltaYChange - gfx.ball.maxDeltaY;
-
-		gfx.ball.dy += ballDeltaYChange;
+			gfx.ball.dy = gfx.ball.maxDeltaY;
+		else
+			gfx.ball.dy += ballDeltaYChange;
 
 		//console.log('speed term=' + speedTerm + ', pos term=' + posTerm);
 	}
@@ -351,9 +385,9 @@ gfx.ball.checkRightPaddleCollision = function()
 			ballDeltaYChange = speedTerm + posTerm;
 
 		if (gfx.ball.dy + ballDeltaYChange > gfx.ball.maxDeltaY)
-			ballDeltaYChange = 2 * ballDeltaYChange - gfx.ball.maxDeltaY;
-
-		gfx.ball.dy += ballDeltaYChange;
+			gfx.ball.dy = gfx.ball.maxDeltaY;
+		else
+			gfx.ball.dy += ballDeltaYChange;
 
 		//console.log('speed term=' + speedTerm + ', pos term=' + posTerm);
 	}
