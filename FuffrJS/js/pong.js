@@ -1,3 +1,21 @@
+
+var lang = {};
+var game = {};
+var gfx = {};
+var fuffrHandler = {};
+var simulator = {};
+
+$(function() {
+	setTimeout(fuffrHandler.checkConnection, fuffrHandler.connTimeoutMs);
+
+	game.initialize();
+	gfx.initialize();
+
+	resetPlayfield();
+
+	game.start();
+});
+
 function touchHandler(touches)
 {
 	var foundLeftTouch = false;
@@ -37,11 +55,8 @@ fuffr.on.touchesBegan = touchHandler
 fuffr.on.touchesMoved = touchHandler
 fuffr.on.touchesEnded = touchHandler
 
-var lang = {};
 lang.missing_init = 'Couldn\'t start the game.';
 lang.fuffr_not_connected = 'Fuffr wasn\'t connected. Do you want to use the simulator?';
-
-var game = {};
 
 game.mainLoopBaseIntervalMs = 21;
 game.levels = 10;
@@ -68,8 +83,6 @@ game.initialize = function()
 	};
 };
 
-var fuffrHandler = {};
-
 fuffrHandler.wasConnected = false;
 fuffrHandler.connTimeoutMs = 3000;
 
@@ -89,8 +102,6 @@ fuffr.on.connected = function()
 		1)
 	fuffrHandler.wasConnected = true;
 }
-
-var simulator = {};
 
 simulator.enable = function()
 {
@@ -162,7 +173,7 @@ simulator.handleHammerTouchEvent = function(event, handler)
 
 game.start = function()
 {
-	if (ball == void(0) || paddleLeft == void(0) || paddleRight == void(0))
+	if (ball == void(0) || gfx.paddleLeft == void(0) || gfx.paddleRight == void(0))
 	{
 		alert(lang.missing_init);
 	}
@@ -175,23 +186,23 @@ game.startLevel = function()
 	if (this.mainLoop)
 		window.clearInterval(this.mainLoop);
 
-	var that = this;
-	this.mainLoop = window.setInterval(function()
-	{
-		that.checkTimePerLevel();
-		ball.move()
-		paddleLeft.measureSpeed()
-		paddleRight.measureSpeed()
-		ball.checkLeftPaddleCollision()
-		ball.checkRightPaddleCollision()
-		ball.checkWallCollision()
-	},
-	game.mainLoopBaseIntervalMs - game.speed);
-
 	this.levelStartTime = (new Date().getTime());
 
 	if (!this.startTime)
 		this.startTime = this.levelStartTime;
+
+	var that = this;
+	this.mainLoop = window.setInterval(function()
+	{
+		that.checkTimePerLevel();
+		gfx.ball.move()
+		gfx.paddleLeft.measureSpeed()
+		gfx.paddleRight.measureSpeed()
+		gfx.ball.checkLeftPaddleCollision()
+		gfx.ball.checkRightPaddleCollision()
+		gfx.ball.checkWallCollision()
+	},
+	game.mainLoopBaseIntervalMs - game.speed);
 };
 
 game.end = function()
@@ -209,8 +220,8 @@ game.increaseScore = function(player) {
 		game.nextLevel();
 	}
 	
-	ball.setCenterX(this.playfieldWidth / 2);
-	ball.setCenterY(this.playfieldHeight / 2);
+	gfx.ball.setCenterX(this.playfieldWidth / 2);
+	gfx.ball.setCenterY(this.playfieldHeight / 2);
 }
 
 game.nextLevel = function()
@@ -232,13 +243,13 @@ game.nextLevel = function()
 game.getPlaytimeSeconds = function()
 {
 	var time = (new Date().getTime());
-	return Math.round((time - game.startTime) / 1000);
+	return Math.round((time - this.startTime) / 1000);
 };
 
 game.getLevelPlaytimeSeconds = function()
 {
 	var time = (new Date().getTime());
-	return Math.round((time - game.levelStartTime) / 1000);
+	return Math.round((time - this.levelStartTime) / 1000);
 };
 
 game.checkTimePerLevel = function()
@@ -246,6 +257,39 @@ game.checkTimePerLevel = function()
 	if (this.getLevelPlaytimeSeconds() >= game.secondsPerLevel)
 		this.nextLevel()
 };
+
+gfx.initialize = function()
+{
+	if (game.playfieldWidth == void(0) || game.playfieldHeight == void(0))
+		gfx.failedToInitialize();
+
+	gfx.paddleLeft.setDOMElement(document.getElementById('paddle-left'))
+	gfx.paddleLeft.setLeft(0)
+	gfx.paddleLeft.setCenterY(game.playfieldHeight / 2)
+	gfx.paddleLeft.lastX = null
+	gfx.paddleLeft.lastY = null
+	gfx.paddleLeft.speedX = 0
+	gfx.paddleLeft.speedY = 0
+	gfx.paddleLeft.speedXMax = 0
+	gfx.paddleLeft.speedYMax = 50
+
+	gfx.paddleRight.setDOMElement(document.getElementById('paddle-right'))
+	gfx.paddleRight.setRight(game.playfieldWidth)
+	gfx.paddleRight.setCenterY(game.playfieldHeight / 2)
+	gfx.paddleRight.lastX = null
+	gfx.paddleRight.lastY = null
+	gfx.paddleRight.speedX = 0
+	gfx.paddleRight.speedY = 0
+	gfx.paddleRight.speedXMax = 0
+	gfx.paddleRight.speedYMax = 50
+
+	gfx.ball.setDOMElement(document.getElementById('ball'))
+	gfx.ball.setCenterX(game.playfieldWidth / 2)
+	gfx.ball.setCenterY(game.playfieldHeight / 2)
+	gfx.ball.setDeltaX(4)
+	gfx.ball.setDeltaY(4)
+	gfx.ball.maxDeltaY = 5;
+}
 
 var makeSprite = function()
 {
@@ -347,54 +391,54 @@ var makeSprite = function()
 	return sprite
 }
 
-var paddleLeft = makeSprite()
-var paddleRight = makeSprite()
-var ball = makeSprite()
+gfx.paddleLeft = makeSprite();
+gfx.paddleRight = makeSprite();
+gfx.ball = makeSprite();
 
-ball.checkWallCollision = function()
+gfx.ball.checkWallCollision = function()
 {
-	var nextX = ball.getCenterX() + ball.dx
-	var nextY = ball.getCenterY() + ball.dy
+	var nextX = gfx.ball.getCenterX() + gfx.ball.dx
+	var nextY = gfx.ball.getCenterY() + gfx.ball.dy
 
 	// Left wall.
-	if (nextX < 0 && ball.dx < 0)
+	if (nextX < 0 && gfx.ball.dx < 0)
 	{
-		ball.dx = - ball.dx
+		gfx.ball.dx = - gfx.ball.dx
 		game.increaseScore(game.player1);
 	}
 	// Right wall.
-	else if (nextX > game.playfieldWidth && ball.dx > 0)
+	else if (nextX > game.playfieldWidth && gfx.ball.dx > 0)
 	{
-		ball.dx = - ball.dx
+		gfx.ball.dx = - gfx.ball.dx
 		game.increaseScore(game.player2);
 	}
 	// Top wall.
-	else if (nextY < 0 && ball.dy < 0)
+	else if (nextY < 0 && gfx.ball.dy < 0)
 	{
-		ball.dy = - ball.dy
+		gfx.ball.dy = - gfx.ball.dy
 	}
 	// Bottom wall.
-	else if (nextY > game.playfieldHeight && ball.dy > 0)
+	else if (nextY > game.playfieldHeight && gfx.ball.dy > 0)
 	{
-		ball.dy = - ball.dy
+		gfx.ball.dy = - gfx.ball.dy
 	}
 }
 
-ball.checkLeftPaddleCollision = function()
+gfx.ball.checkLeftPaddleCollision = function()
 {
-	var nextX = ball.getCenterX() + ball.dx
-	var nextY = ball.getCenterY() + ball.dy
+	var nextX = gfx.ball.getCenterX() + gfx.ball.dx
+	var nextY = gfx.ball.getCenterY() + gfx.ball.dy
 
-	var paddle = paddleLeft
+	var paddle = gfx.paddleLeft
 
 	// Bounce if ball is within paddle bounds.
 	if (nextX < paddle.getRight() &&
 		nextY > paddle.getTop() &&
 		nextY < paddle.getBottom() &&
-		ball.dx < 0)
+		gfx.ball.dx < 0)
 	{
 		console.log('collide left paddle')
-		ball.dx = - ball.dx
+		gfx.ball.dx = - gfx.ball.dx
 
 		var paddleSpeed = (paddle.speedY / paddle.speedYMax),
 			collPos = ((nextY - paddle.getCenterY()) / paddle.domElement.offsetHeight),
@@ -402,31 +446,31 @@ ball.checkLeftPaddleCollision = function()
 			posTerm = paddleSpeed * 0.5 * collPos,
 			ballDeltaYChange = speedTerm + posTerm;
 
-		if (ball.dy + ballDeltaYChange > ball.maxDeltaY)
-			ballDeltaYChange = 2 * ballDeltaYChange - ball.maxDeltaY;
+		if (gfx.ball.dy + ballDeltaYChange > gfx.ball.maxDeltaY)
+			ballDeltaYChange = 2 * ballDeltaYChange - gfx.ball.maxDeltaY;
 
-		ball.dy += ballDeltaYChange;
+		gfx.ball.dy += ballDeltaYChange;
 
 		//console.log('speed term=' + speedTerm + ', pos term=' + posTerm);
 	}
 }
 
-ball.checkRightPaddleCollision = function()
+gfx.ball.checkRightPaddleCollision = function()
 {
-	var nextX = ball.getCenterX() + ball.dx
-	var nextY = ball.getCenterY() + ball.dy
-	// console.log(nextY + '(' + ball.dy + ')');
+	var nextX = gfx.ball.getCenterX() + gfx.ball.dx
+	var nextY = gfx.ball.getCenterY() + gfx.ball.dy
+	// console.log(nextY + '(' + gfx.ball.dy + ')');
 
-	var paddle = paddleRight
+	var paddle = gfx.paddleRight
 
 	// Bounce if ball is within paddle bounds.
 	if (nextX > paddle.getLeft() &&
 		nextY > paddle.getTop() &&
 		nextY < paddle.getBottom() &&
-		ball.dx > 0)
+		gfx.ball.dx > 0)
 	{
 		console.log('collide right paddle')
-		ball.dx = - ball.dx
+		gfx.ball.dx = - gfx.ball.dx
 
 		var paddleSpeed = (paddle.speedY / paddle.speedYMax),
 			collPos = ((nextY - paddle.getCenterY()) / paddle.domElement.offsetHeight),
@@ -434,17 +478,17 @@ ball.checkRightPaddleCollision = function()
 			posTerm = paddleSpeed * 0.5 * collPos,
 			ballDeltaYChange = speedTerm + posTerm;
 
-		if (ball.dy + ballDeltaYChange > ball.maxDeltaY)
-			ballDeltaYChange = 2 * ballDeltaYChange - ball.maxDeltaY;
+		if (gfx.ball.dy + ballDeltaYChange > gfx.ball.maxDeltaY)
+			ballDeltaYChange = 2 * ballDeltaYChange - gfx.ball.maxDeltaY;
 
-		ball.dy += ballDeltaYChange;
+		gfx.ball.dy += ballDeltaYChange;
 
 		//console.log('speed term=' + speedTerm + ', pos term=' + posTerm);
 	}
 }
 
-paddleLeft.measureSpeed =
-paddleRight.measureSpeed = function()
+gfx.paddleLeft.measureSpeed =
+gfx.paddleRight.measureSpeed = function()
 {
 	this.dt += game.mainLoopBaseIntervalMs / 1000;
 	if (this.dt >= 0.1)
@@ -458,59 +502,28 @@ paddleRight.measureSpeed = function()
 		this.speedYMax = this.speedY;
 };
 
+gfx.failedToInitialize = function()
+{
+	alert(lang.missing_init);
+	return true;
+};
+
 var resetPlayfield = function()
 {
 	game.playfieldWidth = $('#playfield').width()
 	game.playfieldHeight = $('#playfield').height()
-	paddleLeft.setLeft(0)
-	paddleRight.setRight(game.playfieldWidth)
+	gfx.paddleLeft.setLeft(0)
+	gfx.paddleRight.setRight(game.playfieldWidth)
 };
 
 function OnRightTouch(touchId, touchX, touchY, previousX, previousY, normalizedX, normalizedY)
 {
 	var y = (normalizedY * game.playfieldHeight)
-	paddleRight.setCenterY(y)
+	gfx.paddleRight.setCenterY(y)
 }
 
 function OnLeftTouch(touchId, touchX, touchY, previousX, previousY, normalizedX, normalizedY)
 {
 	var y = (normalizedY * game.playfieldHeight)
-	paddleLeft.setCenterY(y)
+	gfx.paddleLeft.setCenterY(y)
 }
-
-$(function() {
-	setTimeout(fuffrHandler.checkConnection, fuffrHandler.connTimeoutMs);
-
-	game.initialize();
-
-	paddleLeft.setDOMElement(document.getElementById('paddle-left'))
-	paddleLeft.setLeft(0)
-	paddleLeft.setCenterY(game.playfieldHeight / 2)
-	paddleLeft.lastX = null
-	paddleLeft.lastY = null
-	paddleLeft.speedX = 0
-	paddleLeft.speedY = 0
-	paddleLeft.speedXMax = 0
-	paddleLeft.speedYMax = 50
-
-	paddleRight.setDOMElement(document.getElementById('paddle-right'))
-	paddleRight.setRight(game.playfieldWidth)
-	paddleRight.setCenterY(game.playfieldHeight / 2)
-	paddleRight.lastX = null
-	paddleRight.lastY = null
-	paddleRight.speedX = 0
-	paddleRight.speedY = 0
-	paddleRight.speedXMax = 0
-	paddleRight.speedYMax = 50
-
-	ball.setDOMElement(document.getElementById('ball'))
-	ball.setCenterX(game.playfieldWidth / 2)
-	ball.setCenterY(game.playfieldHeight / 2)
-	ball.setDeltaX(4)
-	ball.setDeltaY(4)
-	ball.maxDeltaY = 5;
-
-	resetPlayfield();
-
-	game.start();
-});
