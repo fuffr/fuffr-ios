@@ -48,6 +48,11 @@ extern const float FFRTrackingManagerUpdateSpeed;
 @property (nonatomic, strong) NSArray* trackedObjects;
 
 /**
+ * Queue used for manipulation of trackedObjects.
+ */
+@property (nonatomic, weak) dispatch_queue_t backgroundQueue;
+
+/**
  * The timeout value or removing touches that are no longer
  * received from the case. Afterthis timeout, a touch ended
  * event is generated.

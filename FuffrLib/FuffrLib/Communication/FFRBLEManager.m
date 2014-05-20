@@ -443,9 +443,7 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 
 	[_connectedDevices removeObject:peripheral];
 
-	dispatch_async(_receiveQueue, ^{
-		[self.handler deviceDisconnected:peripheral];
-	});
+	[self.handler deviceDisconnected:peripheral];
 
 	if (self.onPeriperalDisconnected)
 	{
@@ -540,6 +538,8 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 {
 	//NSLog(@"didUpdateValueForCharacteristic %@ %@, error = %@", characteristic.UUID, characteristic, error);
 
+	// The purpose of the receive queue could be to read notifications
+	// as quickly as possible.
 	dispatch_async(_receiveQueue, ^{
 		if (!error) {
 			[self.handler didUpdateValueForCharacteristic:characteristic];
@@ -553,11 +553,7 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 {
 	NSLog(@"didWriteValueForCharacteristic %@ %@, writable: %d, error = %@", characteristic.UUID, characteristic, (characteristic.properties & CBCharacteristicPropertyWrite) > 0, error);
 
-	dispatch_async(_receiveQueue, ^{
-		if (!error) {
-			[self.handler didWriteValueForCharacteristic:characteristic error:error];
-		}
-	});
+	[self.handler didWriteValueForCharacteristic:characteristic error:error];
 }
 
 -(void) peripheral:(CBPeripheral *)peripheral

@@ -175,7 +175,7 @@
 
 - (void) touchesBegan: (NSSet*)touches
 {
-	//NSLog(@"FuffrDots touchesBegan: %i", (int)touches.count);
+	NSLog(@"FuffrDots touchesBegan: %i", (int)touches.count);
 
 	for (FFRTouch* touch in touches)
 	{
@@ -198,8 +198,6 @@
 
 - (void) touchesMoved: (NSSet*)touches
 {
-	//NSLog(@"FuffrDots touchesMoved: %i", (int)touches.count);
-	//NSLog(@"FuffrDots touchesCount: %i", (int)self.touches.count);
 	/*
 	// Debug log.
 	NSLog(@"touchesMoved %i", (int)touches.count);
@@ -214,7 +212,7 @@
 
 - (void) touchesEnded: (NSSet*)touches
 {
-	//NSLog(@"FuffrDots touchesEnded: %i", (int)touches.count);
+	NSLog(@"FuffrDots touchesEnded: %i", (int)touches.count);
 
 	for (FFRTouch* touch in touches)
 	{
@@ -241,7 +239,7 @@
 
     UIGraphicsBeginImageContext(self.view.frame.size);
     CGContextRef context = UIGraphicsGetCurrentContext();
-
+NSLog(@"UITouchPhaseEnded: %i FFRTouchPhaseEnded: %i", UITouchPhaseEnded, FFRTouchPhaseEnded);
 	for (FFRTouch* touch in self.touches)
 	{
 		if (touch.phase != FFRTouchPhaseEnded)

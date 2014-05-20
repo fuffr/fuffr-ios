@@ -36,9 +36,10 @@ NSString* const FFRBatteryCharacteristicUUID = @"2a19";
 -(instancetype) init
 {
     if (self = [super init]) {
+        _backgroundQueue = dispatch_queue_create("com.fuffr.background", nil);
         self.spaceMapper = [[FFROverlaySpaceMapper alloc] init];
         _touches = [[FFRTrackingManager alloc] init];
-        _backgroundQueue = dispatch_queue_create("com.fuffr.background", NULL);
+		_touches.backgroundQueue = _backgroundQueue;
     }
 
     return self;
@@ -105,9 +106,12 @@ to read data from MSP430.
         return;
     }
 
+	// Turn off touch handling by setting number of touches to zero.
+	// This is to fix a bug that crashes the case when there are touch
+	// events coming while enabling sides.
 	[self
 		performSelector: @selector(enablePeripheral:)
-		withObject: numberOfTouches
+		withObject: @0
 		afterDelay: 0.0];
 
     // Enabling the sensor sides is spread out in time to prevent connection timeouts,
@@ -154,6 +158,12 @@ to read data from MSP430.
 	{
         [self performSelector:@selector(enableBottomSide:) withObject:@FALSE afterDelay:0.0];
     }
+
+	// Set number of touches per side (this is a global value for all sides).
+	[self
+		performSelector: @selector(enablePeripheral:)
+		withObject: numberOfTouches
+		afterDelay: 0.0];
 }
 
 -(void) enableTopSide:(NSNumber*)on {
@@ -251,13 +261,23 @@ currently 5 touches. Setting 0 will disable the touch detection.
             touch = [self unpackData:characteristic.value fromSide:side];
             [_touches handleNewOrChangedTrackingObject:touch];
         }
+        else {
+			NSLog(@"FFRSideNotSet - this should not happen, aborting");
+            assert(false);
+        }
     });
 }
 
--(void) didWriteValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error {
-    NSLog(@"FFRCaseHandler: didWriteValueForCharacteristic: %@, error: %@", characteristic, error);
+-(void) didWriteValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error
+{
+	// TODO: Improve error handling.
+    if (error)
+	{
+		// Trap error for debugging.
+		NSLog(@"didWriteValueForCharacteristic error: %@", error);
+		assert(false);
 
-    if (error) {
+		// What effect will this have exactly? (This is the original code.)
         _peripheral = nil;
     }
 }
@@ -271,6 +291,9 @@ currently 5 touches. Setting 0 will disable the touch detection.
 }
 
 #pragma mark - touch data handling
+
+// For debugging.
+//static int NumberOfActiveTouches = 0;
 
 -(FFRTouch*) unpackData:(NSData*)data fromSide:(FFRSide)side
 {
@@ -298,8 +321,9 @@ currently 5 touches. Setting 0 will disable the touch detection.
 	// Log down/up events (but not moved).
 	if (eventType != 1)
 	{
-		NSLog(@"Touch id: %d, event: %d, side: %d, rawcoord: %@",
-			identifier, eventType, side, NSStringFromCGPoint(rawPoint));
+		//if (0 == eventType) { ++NumberOfActiveTouches; }
+		//if (2 == eventType) { --NumberOfActiveTouches; }
+		//NSLog(@"Touch id: %d, event: %d, side: %d, rawcoord: %@, activeTouches: %i", identifier, eventType, side, NSStringFromCGPoint(rawPoint), NumberOfActiveTouches);
 	}
 
     return touch;
@@ -307,18 +331,18 @@ currently 5 touches. Setting 0 will disable the touch detection.
 
 -(CGPoint) normalizePoint:(CGPoint)point onSide:(FFRSide)side {
 	// Old values (before 2014-04-28).
-#ifdef USE_OLD_CASE_RESOLUTION
+	/*
     const float FFRLongXResolution = 3327.0;
     const float FFRLongYResolution = 1878.0;
     const float FFRShortXResolution = 1279.0;
     const float FFRShortYResolution = 876.0;
-#else
+	*/
+
 	// New values (from 2014-04-28).
     const float FFRLongXResolution = 32767.0;
     const float FFRLongYResolution = 32767.0;
     const float FFRShortXResolution = 32767.0;
     const float FFRShortYResolution = 32767.0;
-#endif
 
     CGPoint p;
     switch (side) {

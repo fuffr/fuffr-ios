@@ -493,7 +493,7 @@ static int touchBlockIdCounter = 0;
 {
 	NSSet* touches = data.object;
 
-	//NSLog(@"touchBegan count: %i", touches.count);
+	//NSLog(@"FFRTouchManager touchBegan count: %i", (int)touches.count);
 
 	// Notify touch observers.
 	NSArray* observers = [self.touchObservers copy];
@@ -533,7 +533,7 @@ static int touchBlockIdCounter = 0;
 {
 	NSSet* touches = data.object;
 
-	//NSLog(@"touchMoved count: %i", (int)touches.count);
+	//NSLog(@"FFRTouchManager touchMoved count: %i", (int)touches.count);
 
 	// Notify touch observers.
 	NSArray* observers = [self.touchObservers copy];
@@ -573,7 +573,7 @@ static int touchBlockIdCounter = 0;
 {
 	NSSet* touches = data.object;
 
-	//NSLog(@"touchEnded count: %i", touches.count);
+	//NSLog(@"FFRTouchManager touchEnded count: %i", (int)touches.count);
 
 	// Notify touch observers.
 	NSArray* observers = [self.touchObservers copy];
