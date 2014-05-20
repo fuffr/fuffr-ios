@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
+	<meta charset="utf-8" />
 	<meta name="viewport" content="user-scalable=no, initial-scale=1"/>
-    <title>Pong</title>
+	<title>Pong</title>
 </head>
 <body>
 
@@ -23,6 +23,37 @@ body {
 	-ms-user-select: none;
 	user-select: none;
 	-webkit-tap-highlight-color:rgba(0,0,0,0);
+}
+
+#playfield {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+	overflow: hidden;
+}
+#playfield.with-simulator {
+	left: 10%;
+	width: 80%;
+}
+
+#left-touch-area, #right-touch-area {
+	display: none;
+	position: absolute;
+	top: 0;
+	width: 10%;
+	height: 100%;
+	z-index: 2;
+}
+#left-touch-area {
+	left: 0;
+	border-right: 1px dashed #000;
+}
+#right-touch-area {
+	right: 0;
+	border-left: 1px dashed #000;
 }
 
 /*  The block element #score-top-margin-aspect is used for providing a top
@@ -93,16 +124,27 @@ body {
 }
 </style>
 
-<div id="score-top-margin-aspect"></div>
-<div id="score-right">0</div>
-<div id="score-left">0</div>
+<!-- Touch areas for simulating missing Fuffr case. -->
 
-<div id="paddle-left"></div>
-<div id="paddle-right"></div>
-<div id="ball"></div>
+<div id="right-touch-area"></div>
+<div id="left-touch-area"></div>
 
-<script src="jquery/jquery.js"></script>
-<script src="fuffr.js"></script>
+<div id="playfield">
+
+	<div id="score-top-margin-aspect"></div>
+	<div id="score-right">0</div>
+	<div id="score-left">0</div>
+
+	<div id="paddle-left"></div>
+	<div id="paddle-right"></div>
+	<div id="ball"></div>
+
+</div>
+
+<script src="lib/jquery.js"></script>
+<!--<script src="lib/jquery.mobile.vtouch.js"></script>-->
+<script src="lib/hammer.js"></script>
+<script src="lib/fuffr.js"></script>
 <script>
 function touchHandler(touches)
 {
@@ -143,16 +185,102 @@ fuffr.on.touchesBegan = touchHandler
 fuffr.on.touchesMoved = touchHandler
 fuffr.on.touchesEnded = touchHandler
 
+var fuffrWasConnected = false;
+
 fuffr.on.connected = function()
 {
 	hyper.log('Fuffr Connected!')
 	fuffr.enableSides(
 		fuffr.FFRSideRight | fuffr.FFRSideLeft,
 		1)
+	fuffrWasConnected = true;
 }
 
-var playfieldWidth = $(window).width()
-var playfieldHeight = $(window).height()
+var simulator = {};
+
+var checkFuffrConnection = function()
+{
+	if (false === fuffrWasConnected) {
+		if (confirm('Fuffr wasn\'t connected. Do you want to use the simulator?')) {
+			simulator.enable()
+		}
+	}
+};
+
+$(function() {
+	setTimeout(checkFuffrConnection, 3000);
+});
+
+simulator.enable = function()
+{
+	$('#playfield').addClass('with-simulator');
+	$('#left-touch-area, #right-touch-area').show();
+	resetPlayfield();
+
+	var element = document.getElementById('left-touch-area');
+	Hammer(element).on("touch", function(event) {
+		simulator.handleHammerTouchEvent(event, fuffr.on.touchesBegan);
+	});
+	Hammer(element).on("gesture", function(event) {
+		simulator.handleHammerTouchEvent(event, fuffr.on.touchesMoved);
+	});
+	Hammer(element).on("release", function(event) {
+		simulator.handleHammerTouchEvent(event, fuffr.on.touchesEnded);
+	});
+
+	var element = document.getElementById('right-touch-area');
+	Hammer(element).on("touch", function(event) {
+		simulator.handleHammerTouchEvent(event, fuffr.on.touchesBegan);
+	});
+	Hammer(element).on("gesture", function(event) {
+		simulator.handleHammerTouchEvent(event, fuffr.on.touchesMoved);
+	});
+	Hammer(element).on("release", function(event) {
+		simulator.handleHammerTouchEvent(event, fuffr.on.touchesEnded);
+	});
+};
+
+simulator.disable = function()
+{
+	$('#left-touch-area, #right-touch-area').hide();
+	$('#playfield').removeClass('with-simulator');
+	resetPlayfield();
+};
+
+simulator.handleHammerTouchEvent = function(event, handler)
+{
+	var touches = [];
+
+	for (var t in event.gesture.touches) {
+		var touch = event.gesture.touches[t];
+		if ('object' != typeof touch) continue;
+
+		var side = null;
+		if (touch.target.id == 'left-touch-area')
+			side = fuffr.FFRSideLeft;
+		if (touch.target.id == 'right-touch-area')
+			side = fuffr.FFRSideRight;
+
+		var touchX = touch.x || touch.clientX;
+		var touchY = touch.y || touch.clientY;
+
+		touches.push({
+			id	  : touch.identifier,
+			x	  : touchX,
+			y	  : touchY,
+			prevx : touchX,
+			prevy : touchY,
+			normx : touchX / touch.target.clientWidth,
+			normy : touchY / touch.target.clientHeight,
+			side  : side
+		});
+	}
+
+	handler(touches);
+};
+
+var playfieldWidth = $('#playfield').width()
+var playfieldHeight = $('#playfield').height()
 
 var makeSprite = function()
 {
@@ -348,6 +476,16 @@ ball.checkRightPaddleCollision = function()
 		ball.dx = - ball.dx
 	}
 }
+
+var resetPlayfield = function()
+{
+	playfieldWidth = $('#playfield').width()
+	playfieldHeight = $('#playfield').height()
+	paddleLeft.setLeft(0)
+	paddleRight.setRight(playfieldWidth)
+};
+
+resetPlayfield();
 
 setInterval(function()
 {
