@@ -263,7 +263,7 @@ currently 5 touches. Setting 0 will disable the touch detection.
         }
         else {
 			NSLog(@"FFRSideNotSet - this should not happen, aborting");
-            assert(false);
+            assert(NO);
         }
     });
 }
@@ -312,10 +312,12 @@ currently 5 touches. Setting 0 will disable the touch detection.
 
     FFRTouch* touch = [[FFRTouch alloc] init];
     touch.identifier = identifier;
-    touch.rawPoint = rawPoint;
-	touch.phase = eventType + 1; // Map event type to FFRTouchPhase
+	if (0 == eventType) { touch.phase = FFRTouchPhaseBegan; }
+	else if (1 == eventType) { touch.phase = FFRTouchPhaseMoved; }
+	else if (2 == eventType) { touch.phase = FFRTouchPhaseEnded; }
     touch.side = side;
-    touch.normalizedLocation = normalizedPoint;
+    touch.rawPoint = rawPoint;
+	touch.normalizedLocation = normalizedPoint;
     touch.location = [self.spaceMapper locationOnScreen:normalizedPoint fromSide:side];
 
 	// Log down/up events (but not moved).
@@ -324,6 +326,8 @@ currently 5 touches. Setting 0 will disable the touch detection.
 		//if (0 == eventType) { ++NumberOfActiveTouches; }
 		//if (2 == eventType) { --NumberOfActiveTouches; }
 		//NSLog(@"Touch id: %d, event: %d, side: %d, rawcoord: %@, activeTouches: %i", identifier, eventType, side, NSStringFromCGPoint(rawPoint), NumberOfActiveTouches);
+		
+		//NSLog(@"Touch id: %d, event: %d, side: %d, rawcoord: %@", identifier, eventType, side, NSStringFromCGPoint(rawPoint));
 	}
 
     return touch;

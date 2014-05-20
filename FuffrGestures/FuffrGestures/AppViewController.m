@@ -232,10 +232,10 @@ How to use: See instructions displayed on the screen.
 
 	// Add gestures.
 
-	FFRPanGestureRecognizer* pan = [FFRPanGestureRecognizer new];
-	pan.side = FFRSideRight;
-	[pan addTarget: self action: @selector(onPan:)];
-	[manager addGestureRecognizer: pan];
+	self.panRecognizer = [FFRPanGestureRecognizer new];
+	self.panRecognizer.side = FFRSideRight;
+	[self.panRecognizer addTarget: self action: @selector(onPan:)];
+	[manager addGestureRecognizer: self.panRecognizer];
 
 	FFRPinchGestureRecognizer* pinch = [FFRPinchGestureRecognizer new];
 	pinch.side = FFRSideRight;
@@ -377,9 +377,12 @@ How to use: See instructions displayed on the screen.
 		// Activate rotation when gesture is made that is bigger
 		// than 10 degrees. The purpose is to remove "jitter" caused
 		// by small rotations while pinching.
-		if (ABS(gesture.rotation * (180 / M_PI)) > 10)
+		if (ABS(gesture.rotation * (180 / M_PI)) > 9)
 		{
 			self.rotateActivated = YES;
+
+			// Remove pan recognizer.
+			[[FFRTouchManager sharedManager] removeGestureRecognizer: self.panRecognizer];
 		}
 
 		if (self.rotateActivated)
@@ -392,6 +395,11 @@ How to use: See instructions displayed on the screen.
 	{
 		self.baseRotation = self.currentRotation;
 		self.rotateActivated = NO;
+
+		// Reset and add back pan recognizer.
+		self.panRecognizer.touch = nil;
+		self.panRecognizer.touch2 = nil;
+		[[FFRTouchManager sharedManager] addGestureRecognizer: self.panRecognizer];
 	}
 
 	[self redrawImageView];

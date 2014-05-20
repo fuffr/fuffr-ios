@@ -106,7 +106,7 @@
 	touchBegan: (SEL)touchBeganSelector
 	touchMoved: (SEL)touchMovedSelector
 	touchEnded: (SEL)touchEndedSelector
-	sides: (FFRSide)side;
+	sides: (FFRSide)sides;
 
 /**
  * Remove an object as observer for touch events.
@@ -123,7 +123,7 @@
  * @return An identifier that can be used to remove the block.
  */
 - (int) addTouchBeganBlock: (void(^)(NSSet* touches))block
-	sides: (FFRSide)side;
+	sides: (FFRSide)sides;
 
 /**
  * Add a touch moved block at the specified side.
@@ -133,7 +133,7 @@
  * @return An identifier that can be used to remove the block.
  */
 - (int) addTouchMovedBlock: (void(^)(NSSet* touches))block
-	sides: (FFRSide)side;
+	sides: (FFRSide)sides;
 
 /**
  * Add a touch ended block at the specified side.
@@ -143,7 +143,7 @@
  * @return An identifier that can be used to remove the block.
  */
 - (int) addTouchEndedBlock: (void(^)(NSSet* touches))block
-	sides: (FFRSide)side;
+	sides: (FFRSide)sides;
 
 /**
  * Remove a touch block.

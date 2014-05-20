@@ -37,7 +37,7 @@
 @property SEL endedSelector;
 
 // Sides (can be combined with bitwise-or).
-@property FFRSide side;
+@property FFRSide sides;
 
 // Touch block (used by the block touch listener mechanism).
 @property (nonatomic, copy) void(^touchBlock)(NSSet* touches);
@@ -113,13 +113,27 @@ static NSSet* filterTouchesBySide(NSSet* touches, FFRSide side)
 */
 
 // Helper function.
-static NSSet* filterTouchesBySideAndPhase(NSSet* touches, FFRSide side, FFRTouchPhase phase)
+static NSSet* filterTouchesBySideAndPhase(NSSet* touches, FFRSide sides, FFRTouchPhase phase)
 {
 	return [touches objectsPassingTest:
 		^BOOL(id obj, BOOL* stop)
 		{
-			return (side & ((FFRTouch*)obj).side) && (phase == ((FFRTouch*)obj).phase);
+			//return (sides & ((FFRTouch*)obj).side) && (phase == ((FFRTouch*)obj).phase);
+			return (sides & ((FFRTouch*)obj).side);
 		}];
+}
+
+static void logTouches(NSString* label, NSSet* touches)
+{
+	int down = 0, up = 0, moved = 0, total = 0;
+	for (FFRTouch* t in touches)
+	{
+		if (t.phase == FFRTouchPhaseBegan) down++;
+		if (t.phase == FFRTouchPhaseEnded) up++;
+		if (t.phase == FFRTouchPhaseMoved) moved++;
+		total++;
+	}
+	NSLog(@"%@ DOWN: %i UP: %i MOVED: %i TOTAL: %i", label, down, up, moved, total);
 }
 
 // Singleton instance.
@@ -206,14 +220,14 @@ static int touchBlockIdCounter = 0;
 	touchBegan: (SEL)touchBeganSelector
 	touchMoved: (SEL)touchMovedSelector
 	touchEnded: (SEL)touchEndedSelector
-	sides: (FFRSide)side
+	sides: (FFRSide)sides
 {
 	FFRTouchEventObserver* observer = [FFRTouchEventObserver new];
 	observer.object = object;
 	observer.beganSelector = touchBeganSelector;
 	observer.movedSelector = touchMovedSelector;
 	observer.endedSelector = touchEndedSelector;
-	observer.side = side;
+	observer.sides = sides;
 	observer.touchBlock = nil;
 	observer.touchBlockId = 0;
 	[self.touchObservers addObject: observer];
@@ -225,31 +239,31 @@ static int touchBlockIdCounter = 0;
 }
 
 - (int) addTouchBeganBlock: (void(^)(NSSet* touches))block
-	sides: (FFRSide)side
+	sides: (FFRSide)sides
 {
 	FFRTouchEventObserver* observer = [self
 		addTouchBlockObserver: block
-		sides: side];
+		sides: sides];
 	observer.beganSelector = @selector(callBlockWithTouches:);
 	return observer.touchBlockId;
 }
 
 - (int) addTouchMovedBlock: (void(^)(NSSet* touches))block
-	sides: (FFRSide)side
+	sides: (FFRSide)sides
 {
 	FFRTouchEventObserver* observer = [self
 		addTouchBlockObserver: block
-		sides: side];
+		sides: sides];
 	observer.movedSelector = @selector(callBlockWithTouches:);
 	return observer.touchBlockId;
 }
 
 - (int) addTouchEndedBlock: (void(^)(NSSet* touches))block
-	sides: (FFRSide)side
+	sides: (FFRSide)sides
 {
 	FFRTouchEventObserver* observer = [self
 		addTouchBlockObserver: block
-		sides: side];
+		sides: sides];
 	observer.endedSelector = @selector(callBlockWithTouches:);
 	return observer.touchBlockId;
 }
@@ -313,14 +327,14 @@ static int touchBlockIdCounter = 0;
 
 // Internal helper method.
 - (FFRTouchEventObserver*) addTouchBlockObserver: (void(^)(NSSet* touches))block
-	sides: (FFRSide)side
+	sides: (FFRSide)sides
 {
 	FFRTouchEventObserver* observer = [FFRTouchEventObserver new];
 	observer.object = observer;
 	observer.beganSelector = nil;
 	observer.movedSelector = nil;
 	observer.endedSelector = nil;
-	observer.side = side;
+	observer.sides = sides;
 	observer.touchBlock = block;
 	observer.touchBlockId = ++touchBlockIdCounter;
 	[self.touchObservers addObject: observer];
@@ -494,6 +508,7 @@ static int touchBlockIdCounter = 0;
 	NSSet* touches = data.object;
 
 	//NSLog(@"FFRTouchManager touchBegan count: %i", (int)touches.count);
+	//logTouches(@"FFRTouchMan began", touches);
 
 	// Notify touch observers.
 	NSArray* observers = [self.touchObservers copy];
@@ -503,8 +518,9 @@ static int touchBlockIdCounter = 0;
 		{
 			NSSet* observedTouches = filterTouchesBySideAndPhase(
 				touches,
-				observer.side,
+				observer.sides,
 				FFRTouchPhaseBegan);
+			//NSLog(@"observedTouches began: %i", (int)observedTouches.count);
 			if ([observedTouches count] > 0)
 			{
 				[observer.object
@@ -535,6 +551,8 @@ static int touchBlockIdCounter = 0;
 
 	//NSLog(@"FFRTouchManager touchMoved count: %i", (int)touches.count);
 
+	//logTouches(@"FFRTouchMan moved", touches);
+
 	// Notify touch observers.
 	NSArray* observers = [self.touchObservers copy];
 	for (FFRTouchEventObserver* observer in observers)
@@ -543,7 +561,7 @@ static int touchBlockIdCounter = 0;
 		{
 			NSSet* observedTouches = filterTouchesBySideAndPhase(
 				touches,
-				observer.side,
+				observer.sides,
 				FFRTouchPhaseMoved);
 			if ([observedTouches count] > 0)
 			{
@@ -574,6 +592,8 @@ static int touchBlockIdCounter = 0;
 	NSSet* touches = data.object;
 
 	//NSLog(@"FFRTouchManager touchEnded count: %i", (int)touches.count);
+	
+	//logTouches(@"FFRTouchMan ended", touches);
 
 	// Notify touch observers.
 	NSArray* observers = [self.touchObservers copy];
@@ -583,8 +603,9 @@ static int touchBlockIdCounter = 0;
 		{
 			NSSet* observedTouches = filterTouchesBySideAndPhase(
 				touches,
-				observer.side,
+				observer.sides,
 				FFRTouchPhaseEnded);
+			//NSLog(@"observedTouches ended: %i", (int)observedTouches.count);
 			if ([observedTouches count] > 0)
 			{
 				[observer.object

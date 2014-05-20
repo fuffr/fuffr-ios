@@ -31,6 +31,7 @@ MyColor;
 /** Translation. */
 @property CGPoint currentTranslation;
 @property CGPoint baseTranslation;
+@property FFRPanGestureRecognizer* panRecognizer;
 
 /** Scale. */
 @property CGFloat currentScale;

@@ -173,6 +173,8 @@
 	NSLog(@"fuffrConnected");
 }
 
+static int TouchConter = 0;
+
 - (void) touchesBegan: (NSSet*)touches
 {
 	//NSLog(@"FuffrDots touchesBegan: %i", (int)touches.count);
@@ -189,17 +191,26 @@
 		//	setObject: color
 		//	forKey: [NSNumber numberWithInt: (int)touch.identifier]
 	//];
-
-		[self.touches addObject: touch];
+		if (touch.phase == FFRTouchPhaseBegan)
+		{
+			[self.touches addObject: touch];
+			++TouchConter;
+			//NSLog(@"FuffrDots added touch: %i", (int)touches.count);
+		}
 	}
+
+	//NSLog(@"FuffrDots touchesCount3: %i", (int)self.touches.count);
 
 	[self redrawView];
 }
 
 - (void) touchesMoved: (NSSet*)touches
 {
-	//NSLog(@"FuffrDots touchesMoved: %i", (int)touches.count);
-	//NSLog(@"FuffrDots touchesCount: %i", (int)self.touches.count);
+	if (touches.count != self.touches.count)
+	{
+		//NSLog(@"FuffrDots touchesMoved: %i touchesCount: %i touchCounter: %i", (int)touches.count, (int)self.touches.count, TouchConter);
+	}
+
 	/*
 	// Debug log.
 	NSLog(@"touchesMoved %i", (int)touches.count);
@@ -218,8 +229,15 @@
 
 	for (FFRTouch* touch in touches)
 	{
-		[self.touches removeObject: touch];
+		if (touch.phase == FFRTouchPhaseEnded)
+		{
+			[self.touches removeObject: touch];
+			--TouchConter;
+			//NSLog(@"FuffrDots removed touch: %i", (int)touches.count);
+		}
 	}
+
+	//NSLog(@"FuffrDots touchesCount: %i", (int)self.touches.count);
 
 	[self redrawView];
 }

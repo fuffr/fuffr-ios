@@ -16,7 +16,7 @@ typedef enum
 {
 	FFRTouchPhaseBegan = 1,
 	FFRTouchPhaseMoved = 2,
-	FFRTouchPhaseEnded = 3
+	FFRTouchPhaseEnded = 4
 }
 FFRTouchPhase;
 

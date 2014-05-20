@@ -14,6 +14,20 @@ NSString* const FFRTrackingMovedNotification = @"FFRTrackingMovedNotification";
 NSString* const FFRTrackingPulsedNotification = @"FFRTrackingPulsedNotification";
 NSString* const FFRTrackingEndedNotification = @"FFRTrackingEndedNotification";
 
+
+static void logTouches(NSString* label, NSSet* touches)
+{
+	int down = 0, up = 0, moved = 0, total = 0;
+	for (FFRTouch* t in touches)
+	{
+		if (t.phase == FFRTouchPhaseBegan) down++;
+		if (t.phase == FFRTouchPhaseEnded) up++;
+		if (t.phase == FFRTouchPhaseMoved) moved++;
+		total++;
+	}
+	NSLog(@"%@ DOWN: %i UP: %i MOVED: %i TOTAL: %i", label, down, up, moved, total);
+}
+
 @interface FFRTrackingManager ()
 
 -(void) addTrackingObject: (FFRTouch*) touch;
@@ -60,10 +74,9 @@ NSString* const FFRTrackingEndedNotification = @"FFRTrackingEndedNotification";
 
 -(void) timerPruneTouches:(id) sender
 {
+	//NSLog(@"timerPruneTouches queue: %s", dispatch_queue_get_label(dispatch_get_current_queue()));
 	dispatch_async(self.backgroundQueue,
 	^{
-		//NSLog(@"timerPruneTouches queue: %s", dispatch_queue_get_label(dispatch_get_current_queue()));
-
 		NSMutableArray* removedTouches = [NSMutableArray array];
 		NSTimeInterval now = [[NSProcessInfo processInfo] systemUptime];
 
@@ -78,8 +91,10 @@ NSString* const FFRTrackingEndedNotification = @"FFRTrackingEndedNotification";
 
 		for (FFRTouch* t in removedTouches)
 		{
+			if (t.phase != FFRTouchPhaseEnded) {
+			//NSLog(@"***Pruning id: %d, side: %d, ntouches: %d, rawcoord: %@", (int)t.identifier, t.side, (int)[_trackedObjects count], NSStringFromCGPoint(t.rawPoint));
 			[self removeTrackingObject: t];
-			// NSLog(@"***Pruned id: %d, side: %d, ntouches: %d, rawcoord: %@", (int)t.identifier, t.side, (int)[_trackedObjects count], NSStringFromCGPoint(t.rawPoint));
+			}
 		}
 	});
 }
@@ -91,27 +106,46 @@ NSString* const FFRTrackingEndedNotification = @"FFRTrackingEndedNotification";
 	if (existing)
 	{
 		existing.timestamp = touch.timestamp;
-		existing.phase = touch.phase;
+		// DO NOT SET YET. existing.phase = touch.phase;
 
-		if (FFRTouchPhaseEnded == existing.phase)
+		if (FFRTouchPhaseEnded == touch.phase)
 		{
+			//NSLog(@"***Removing touch by FLAG: %i", (int)touch.identifier);
 			[self removeTrackingObject: existing];
 		}
 		else if (existing.location.x != touch.location.x || existing.location.y != touch.location.y)
 		{
-			existing.phase = FFRTouchPhaseMoved;
 			existing.rawPoint = touch.rawPoint;
 			existing.normalizedLocation = touch.normalizedLocation;
 			// Updating location triggers observers.
 			existing.location = touch.location;
+
+			NSSet* touches = [NSSet setWithArray: _trackedObjects];
+
+			//logTouches(@"FFRTracking moved", touches);
+
+			dispatch_async(dispatch_get_main_queue(),
+			^{
+				//NSLog(@"Touches moved dispatch on main");
+				existing.phase = FFRTouchPhaseMoved;
+				[[NSNotificationCenter defaultCenter]
+					postNotificationName: FFRTrackingMovedNotification
+					object: touches
+					userInfo: nil];
+			});
 		}
 		else
 		{
 			//NSLog(@"! touch unchanged side: %i id: %i", (int)touch.side, (int)touch.identifier);
-			[[NSNotificationCenter defaultCenter]
-				postNotificationName: FFRTrackingPulsedNotification
-				object: [NSSet setWithArray:_trackedObjects]
-				userInfo: nil];
+			
+			NSSet* touches = [NSSet setWithArray: _trackedObjects];
+			dispatch_async(dispatch_get_main_queue(),
+			^{
+				[[NSNotificationCenter defaultCenter]
+					postNotificationName: FFRTrackingPulsedNotification
+					object: touches
+					userInfo: nil];
+			});
 		}
 	}
 	else
@@ -138,7 +172,7 @@ NSString* const FFRTrackingEndedNotification = @"FFRTrackingEndedNotification";
 //		valuesAtIndexes: [NSIndexSet indexSetWithIndex:[_trackedObjects count]]
 //		forKey: @"trackedObjects"];
 
-	// Set touch phace to began explicitly, in case the touch down event
+	// Set touch phase to began explicitly, in case the touch down event
 	// never was recieved (this this case the phase will be moved for a
 	// touch that is not in the list).
 	touch.phase = FFRTouchPhaseBegan;
@@ -150,18 +184,25 @@ NSString* const FFRTrackingEndedNotification = @"FFRTrackingEndedNotification";
 //		valuesAtIndexes: [NSIndexSet indexSetWithIndex:[_trackedObjects count]]
 //		forKey: @"trackedObjects"];
 
-	[touch
-		addObserver: self
-		forKeyPath:@"location"
-		options: NSKeyValueObservingOptionNew
-		context:nil];
+//	[touch
+//		addObserver: self
+//		forKeyPath:@"location"
+//		options: NSKeyValueObservingOptionNew
+//		context:nil];
+
+	NSSet* touches = [NSSet setWithObject: touch];
+
+	logTouches(@"FFRTracking began", touches);
 
 	// Notify tracking observers.
 	dispatch_async(dispatch_get_main_queue(),
 	^{
+		// Set touch phase to began again on the main queue, to prevent
+		// overwrite by moved events (moved also set on main queue).
+		touch.phase = FFRTouchPhaseBegan;
 		[[NSNotificationCenter defaultCenter]
 			postNotificationName: FFRTrackingBeganNotification
-			object: [NSSet setWithArray:_trackedObjects]
+			object: touches
 			userInfo:nil];
 	});
 
@@ -176,12 +217,11 @@ NSString* const FFRTrackingEndedNotification = @"FFRTrackingEndedNotification";
 	NSUInteger index = [self indexForTouch: touch.identifier];
 	if (index == INT_MAX)
 	{
+		NSLog(@"Did not find touch to remove");
 		return;
 	}
 
 	//NSLog(@"Found touch to remove id: %d ntouches: %d", (int)touch.identifier, (int)[_trackedObjects count]);
-
-	touch.phase = FFRTouchPhaseEnded;
 
 // Unused key
 //	[self
@@ -201,19 +241,23 @@ NSString* const FFRTrackingEndedNotification = @"FFRTrackingEndedNotification";
 //		forKey: @"trackedObjects"];
 
 	// Remove the location observer for me.
-	[touch removeObserver: self forKeyPath: @"location"];
+//	[touch removeObserver: self forKeyPath: @"location"];
 
 	// Create a new set that includes the removed touch, so that
 	// observers get the removed touch in the notified set.
-	NSMutableSet* set = [NSMutableSet setWithArray:_trackedObjects];
-	[set addObject: touch];
+	//NSMutableSet* set = [NSMutableSet setWithArray:_trackedObjects];
+	//[set addObject: touch];
+
+	NSSet* touches = [NSSet setWithObject: touch];
 
 	// Notify tracking observers.
 	dispatch_async(dispatch_get_main_queue(),
 	^{
+		touch.phase = FFRTouchPhaseEnded;
+		//logTouches(@"FFRTracking ended", touches);
 		[[NSNotificationCenter defaultCenter]
 			postNotificationName: FFRTrackingEndedNotification
-			object: set
+			object: touches
 			userInfo: nil];
 	});
 
@@ -260,8 +304,7 @@ NSString* const FFRTrackingEndedNotification = @"FFRTrackingEndedNotification";
 	return index;
 }
 
-#pragma mark - 
-
+/*
 // The "location" key is updated when a touch moves.
 -(void) observeValueForKeyPath:(NSString *)keyPath
 	ofObject:(id)object
@@ -270,6 +313,9 @@ NSString* const FFRTrackingEndedNotification = @"FFRTrackingEndedNotification";
 {
 	if ([keyPath compare:@"location"] == NSOrderedSame)
 	{
+	
+		logTouches(@"FFRTracking moved", [NSSet setWithArray:_trackedObjects]);
+
 		NSValue* value = [change objectForKey: NSKeyValueChangeNewKey];
 		// Unsed variable: FFRTouch* t = object;
 		// Already set from touch raw data: t.phase = FFRTouchPhaseMoved;
@@ -282,5 +328,6 @@ NSString* const FFRTrackingEndedNotification = @"FFRTrackingEndedNotification";
 		});
 	}
 }
+*/
 
 @end
