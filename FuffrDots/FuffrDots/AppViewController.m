@@ -45,43 +45,18 @@
 	// Create view that displays messages.
 	[self createMessageView];
 
+	// Create button and popup menu for settings.
+	[self createSettingsButtonAndPopUp];
+
 	// Active touches.
 	self.touches = [NSMutableSet new];
 
-	// Set up colors for touches. Max touch id should
-	// be 20 in the current case implementation (5 touches,
-	// 4 sides, touch ids starting at 1).
-	self.dotColors = [NSMutableDictionary new];
+	// When paintmode is on touches are painted on the screen.
+	// When off dots are displayed.
+	self.paintModeOn = NO;
 
-	[self addColorAtIndex: 1  red: 0.5 green: 0.0 blue: 0.0];
-	[self addColorAtIndex: 2  red: 1.0 green: 0.0 blue: 0.0];
-
-	[self addColorAtIndex: 3  red: 0.0 green: 0.5 blue: 0.0];
-	[self addColorAtIndex: 4  red: 0.0 green: 1.0 blue: 0.0];
-
-	[self addColorAtIndex: 5  red: 0.0 green: 0.0 blue: 0.5];
-	[self addColorAtIndex: 6  red: 0.0 green: 0.0 blue: 1.0];
-
-	[self addColorAtIndex: 7  red: 0.5 green: 0.5 blue: 0.0];
-	[self addColorAtIndex: 8  red: 0.5 green: 1.0 blue: 0.0];
-
-	[self addColorAtIndex: 9  red: 1.0 green: 0.5 blue: 0.0];
-	[self addColorAtIndex: 10 red: 1.0 green: 1.0 blue: 0.0];
-
-	[self addColorAtIndex: 11 red: 0.5 green: 0.0 blue: 0.5];
-	[self addColorAtIndex: 12 red: 0.5 green: 0.0 blue: 1.0];
-
-	[self addColorAtIndex: 13 red: 1.0 green: 0.0 blue: 0.5];
-	[self addColorAtIndex: 14 red: 1.0 green: 0.0 blue: 1.0];
-
-	[self addColorAtIndex: 15 red: 0.0 green: 0.5 blue: 0.5];
-	[self addColorAtIndex: 16 red: 0.0 green: 0.5 blue: 1.0];
-
-	[self addColorAtIndex: 17 red: 0.0 green: 1.0 blue: 0.5];
-	[self addColorAtIndex: 18 red: 0.0 green: 1.0 blue: 1.0];
-
-	[self addColorAtIndex: 19 red: 0.7 green: 0.7 blue: 0.7];
-	[self addColorAtIndex: 20 red: 0.3 green: 0.3 blue: 0.3];
+	// Create colors for the dots.
+	[self createColors];
 }
 
 -(void) addColorAtIndex: (int)index
@@ -112,6 +87,61 @@
     [self.view addSubview: self.messageView];
 }
 
+-(void) createSettingsButtonAndPopUp
+{
+	// Create settings button.
+	CGRect bounds = CGRectMake(self.view.bounds.size.width - 90, 22, 90, 25);
+	self.buttonSettings = [UIButton buttonWithType: UIButtonTypeSystem];
+    [self.buttonSettings setFrame: bounds];
+	[self.buttonSettings setTitle: @"Settings" forState: UIControlStateNormal];
+	[self.buttonSettings
+		addTarget: self
+		action: @selector(onButtonSettings:)
+		forControlEvents: UIControlEventTouchUpInside];
+    [self.view addSubview: self.buttonSettings];
+
+	// Create popup menu.
+	self.actionSheet =
+		[[UIActionSheet alloc]
+			initWithTitle: nil
+			delegate: self
+			cancelButtonTitle:@"Cancel"
+			destructiveButtonTitle:nil
+			otherButtonTitles: @"Dots", @"Paint", nil];
+}
+
+- (void) createColors
+{
+	// Set up colors for touches. Max touch id should
+	// be 20 in the current case implementation (5 touches,
+	// 4 sides, touch ids starting at 1).
+	self.dotColors = [NSMutableDictionary new];
+
+	[self addColorAtIndex: 1  red: 1.0 green: 0.0 blue: 0.0];
+	[self addColorAtIndex: 2  red: 0.8 green: 0.0 blue: 0.0];
+	[self addColorAtIndex: 3  red: 0.6 green: 0.0 blue: 0.0];
+	[self addColorAtIndex: 4  red: 0.4 green: 0.0 blue: 0.0];
+	[self addColorAtIndex: 5  red: 0.2 green: 0.0 blue: 0.0];
+
+	[self addColorAtIndex: 6  red: 0.0 green: 1.0 blue: 0.0];
+	[self addColorAtIndex: 7  red: 0.0 green: 0.8 blue: 0.0];
+	[self addColorAtIndex: 8  red: 0.0 green: 0.6 blue: 0.0];
+	[self addColorAtIndex: 9  red: 0.0 green: 0.4 blue: 0.0];
+	[self addColorAtIndex: 10 red: 0.0 green: 0.2 blue: 0.0];
+
+	[self addColorAtIndex: 11 red: 0.0 green: 0.0 blue: 1.0];
+	[self addColorAtIndex: 12 red: 0.0 green: 0.0 blue: 0.8];
+	[self addColorAtIndex: 13 red: 0.0 green: 0.0 blue: 0.6];
+	[self addColorAtIndex: 14 red: 0.0 green: 0.0 blue: 0.4];
+	[self addColorAtIndex: 15 red: 0.0 green: 0.0 blue: 0.2];
+
+	[self addColorAtIndex: 16 red: 1.0 green: 1.0 blue: 0.0];
+	[self addColorAtIndex: 17 red: 0.8 green: 0.8 blue: 0.0];
+	[self addColorAtIndex: 18 red: 0.6 green: 0.6 blue: 0.0];
+	[self addColorAtIndex: 19 red: 0.4 green: 0.4 blue: 0.0];
+	[self addColorAtIndex: 20 red: 0.2 green: 0.2 blue: 0.0];
+}
+
 -(void) showMessage:(NSString*)message
 {
 	self.messageView.text = message;
@@ -130,6 +160,21 @@
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
+}
+
+- (void) onButtonSettings: (id)sender
+{
+	[self.actionSheet
+		showFromRect: self.buttonSettings.frame
+		inView: self.view
+		animated: YES];
+}
+
+- (void) actionSheet: (UIActionSheet *)actionSheet
+	clickedButtonAtIndex: (NSInteger)buttonIndex
+{
+	if (1 == buttonIndex) { self.paintModeOn = YES; }
+	else { self.paintModeOn = NO; }
 }
 
 - (void) setupFuffr
@@ -173,102 +218,81 @@
 	NSLog(@"fuffrConnected");
 }
 
-static int TouchConter = 0;
-
 - (void) touchesBegan: (NSSet*)touches
 {
-	//NSLog(@"FuffrDots touchesBegan: %i", (int)touches.count);
-
 	for (FFRTouch* touch in touches)
 	{
-		// A static color table is created in viewDidLoad,
-		// replacing commented out code below.
-		//DotColor* color = [DotColor new];
-		//color.red = (CGFloat) arc4random_uniform(256) / 256;
-		//color.green = (CGFloat) arc4random_uniform(256) / 256;
-		//color.blue = (CGFloat) arc4random_uniform(256) / 256;
-		//[self.dotColors
-		//	setObject: color
-		//	forKey: [NSNumber numberWithInt: (int)touch.identifier]
-	//];
-		if (touch.phase == FFRTouchPhaseBegan)
-		{
-			[self.touches addObject: touch];
-			++TouchConter;
-			//NSLog(@"FuffrDots added touch: %i", (int)touches.count);
-		}
+		[self.touches addObject: touch];
 	}
-
-	//NSLog(@"FuffrDots touchesCount3: %i", (int)self.touches.count);
 
 	[self redrawView];
 }
 
 - (void) touchesMoved: (NSSet*)touches
 {
-	if (touches.count != self.touches.count)
-	{
-		//NSLog(@"FuffrDots touchesMoved: %i touchesCount: %i touchCounter: %i", (int)touches.count, (int)self.touches.count, TouchConter);
-	}
-
-	/*
-	// Debug log.
-	NSLog(@"touchesMoved %i", (int)touches.count);
-	for (FFRTouch* touch in touches)
-	{
-		NSLog(@"  id %i", (int)touch.identifier);
-	}
-	*/
-
 	[self redrawView];
 }
 
 - (void) touchesEnded: (NSSet*)touches
 {
-	//NSLog(@"FuffrDots touchesEnded: %i", (int)touches.count);
-
 	for (FFRTouch* touch in touches)
 	{
-		if (touch.phase == FFRTouchPhaseEnded)
-		{
-			[self.touches removeObject: touch];
-			--TouchConter;
-			//NSLog(@"FuffrDots removed touch: %i", (int)touches.count);
-		}
+		[self.touches removeObject: touch];
 	}
-
-	//NSLog(@"FuffrDots touchesCount: %i", (int)self.touches.count);
 
 	[self redrawView];
 }
 
 - (void) redrawView
 {
-	// Draw on main thread.
-	//dispatch_async(dispatch_get_main_queue(),
-	//^{
-		[self drawImageView];
-    //});
+	[self drawImageView];
 }
 
 - (void)drawImageView
 {
-	CGFloat width = self.imageView.bounds.size.width;
-	CGFloat height = self.imageView.bounds.size.height;
-	CGFloat circleSize = 100;
+	//CGFloat width = self.imageView.bounds.size.width;
+	//CGFloat height = self.imageView.bounds.size.height;
+
+	CGFloat circleSize;
+
+	if (self.paintModeOn)
+	{
+		circleSize = 60;
+	}
+	else
+	{
+		circleSize = 100;
+	}
 
     UIGraphicsBeginImageContext(self.view.frame.size);
+	//UIGraphicsBeginImageContextWithOptions(self.view.frame.size, self.view.opaque, 0.0);
+
     CGContextRef context = UIGraphicsGetCurrentContext();
+
+	if (self.paintModeOn)
+	{
+		[self.imageView.layer renderInContext: context];
+	}
+
+	int nTouches = 0;
 
 	for (FFRTouch* touch in self.touches)
 	{
 		if (touch.phase != FFRTouchPhaseEnded)
 		{
+			++nTouches;
+
 			DotColor* color = [self.dotColors objectForKey:
 				[NSNumber numberWithInt: (int)touch.identifier]];
 			if (color)
 			{
     			CGContextSetRGBFillColor(
+					context,
+					color.red,
+					color.green,
+					color.blue,
+					1.0);
+    			CGContextSetRGBStrokeColor(
 					context,
 					color.red,
 					color.green,
@@ -283,22 +307,52 @@ static int TouchConter = 0;
 					0.0,
 					0.0,
 					1.0);
+    			CGContextSetRGBStrokeColor(
+					context,
+					0.0,
+					0.0,
+					0.0,
+					1.0);
 			}
 
-			CGFloat x = touch.normalizedLocation.x * width;
-			CGFloat y = touch.normalizedLocation.y * height;
-			CGContextFillEllipseInRect(
-				context,
-				CGRectMake(
-					x - (circleSize / 2),
-					y - (circleSize / 2),
-					circleSize,
-					circleSize));
+			if (self.paintModeOn)
+			{
+				CGFloat x1 = touch.previousLocation.x - (circleSize / 2);
+				CGFloat y1 = touch.previousLocation.y - (circleSize / 2);
+				CGFloat x2 = touch.location.x - (circleSize / 2);
+				CGFloat y2 = touch.location.y - (circleSize / 2);
+				if (x1 < 0) { x1 = x2; }
+				if (y1 < 0) { y1 = y2; }
+            	CGContextMoveToPoint(context, x1, y1);
+				CGContextAddLineToPoint(context, x2, y2);
+    			CGContextSetLineCap(context, kCGLineCapRound);
+    			CGContextSetLineWidth(context, circleSize);
+				CGContextSetBlendMode(context, kCGBlendModeNormal);
+    			CGContextStrokePath(context);
+            }
+			else
+			{
+				//CGFloat x = touch.normalizedLocation.x * width;
+				//CGFloat y = touch.normalizedLocation.y * height;
+				CGFloat x = touch.location.x;
+				CGFloat y = touch.location.y;
+				CGContextFillEllipseInRect(
+					context,
+					CGRectMake(
+						x - (circleSize / 2),
+						y - (circleSize / 2),
+						circleSize,
+						circleSize));
+			}
+
 		}
 	}
 
     self.imageView.image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
+
+	NSString* message = [NSString stringWithFormat: @"Number of touches: %i", nTouches];
+	[self showMessage: message];
 }
 
 @end

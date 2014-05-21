@@ -64,13 +64,12 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
  */
 @property (nonatomic, strong) NSMutableArray* serviceRequestQueue;
 
-// Removed discovery KVO mechanism.
-//-(void) storeDiscoveredPeripheral:(CBPeripheral*) peripheral;
-
 @end
 
 
 @implementation FFRBLEManager
+
+#pragma mark - Singleton
 
 +(instancetype) sharedManager
 {
@@ -80,6 +79,8 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 	dispatch_once(&pred, ^{ client = [[self alloc] init]; });
 	return client;
 }
+
+#pragma mark - init/dealloc
 
 -(id) init
 {
@@ -118,23 +119,18 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 	@finally {
 	}
 
-	//[_monitoredServiceIdentifiers removeAllObjects];
-	//_monitoredServiceIdentifiers = nil;
-
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 -(void) reactivated:(NSNotification*) data
 {
-	LOGMETHOD
-
 	if (_manager.state == CBCentralManagerStatePoweredOn) {
 		[_bluetoothAlertView dismissWithClickedButtonIndex:0 animated:TRUE];
 		_bluetoothAlertView = nil;
 	}
 }
 
-#pragma mark -
+#pragma mark - Connect/disconnect
 
 -(void) disconnectPeripheral:(CBPeripheral*)peripheral
 {
@@ -153,15 +149,14 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 
 -(void) connectPeripheral:(CBPeripheral*) peripheral
 {
-	LOGMETHOD
-
 	// store peripheral object to keep reference during connect
 	_disconnectedPeripheral = nil;
 	peripheral.delegate = self;
 
 	[self.connectedDevices addObject:peripheral];
 
-	// Here main queue should be used if async is needed.
+	// TODO:
+	// Here the main queue should be used if async is needed.
 	//dispatch_async(_receiveQueue,
 	dispatch_async(dispatch_get_main_queue(),
 	^{
@@ -172,11 +167,11 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 	[_manager stopScan];
 }
 
+#pragma mark - Service discovery
+
 // TODO: Is this method ever called?
 -(void)discoverServices: (CBPeripheral *)peripheral
 {
-	LOGMETHOD
-
 	NSLog(@"didConnectPeripheral: %@", peripheral);
 
 	_disconnectedPeripheral = nil;
@@ -187,64 +182,6 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 		[peripheral discoverServices:nil];
 	});
 }
-
-
-/* UNUSED CODE
--(void) storeDiscoveredPeripheral:(CBPeripheral*) peripheral
-{
-	@synchronized(self.discoveredDevices)
-	{
-		BOOL known = FALSE;
-
-		// new or updated?
-		for (CBPeripheral*p in self.discoveredDevices) {
-			if (p && [[p.identifier UUIDString] compare:[peripheral.identifier UUIDString]] == NSOrderedSame) {
-				known = TRUE;
-				break;
-			}
-		}
-
-		// log previous devices due to duplicates appearing
-		if (!known) {
-			NSLog(@"new device: %@", [peripheral.identifier UUIDString]);
-			//for (CBPeripheral*p in self.discoveredDevices) {
-				//NSLog(@"known device: %@", p.identifier);
-			//}
-		}
-
-		// send KVO information
-		if (!known) {
-			dispatch_async(dispatch_get_main_queue(), ^{
-				@try {
-					[self willChange:NSKeyValueChangeInsertion valuesAtIndexes:[NSIndexSet indexSetWithIndex:[self.discoveredDevices count]] forKey:@"discoveredDevices"];
-					[self.discoveredDevices insertObject:peripheral atIndex:[self.discoveredDevices count]];
-					[self didChange:NSKeyValueChangeInsertion valuesAtIndexes:[NSIndexSet indexSetWithIndex:[self.discoveredDevices count]] forKey:@"discoveredDevices"];
-				}
-				@catch (NSException *exception) {
-				}
-				@finally {
-				}
-			});
-		}
-		else {
-			NSUInteger index = [self.discoveredDevices indexOfObject:peripheral];
-			if (index != NSNotFound) {
-				dispatch_async(dispatch_get_main_queue(), ^{
-					@try {
-						[self willChange:NSKeyValueChangeReplacement valuesAtIndexes:[NSIndexSet indexSetWithIndex:index] forKey:@"discoveredDevices"];
-						[self.discoveredDevices replaceObjectAtIndex:index withObject:peripheral];
-						[self didChange:NSKeyValueChangeInsertion valuesAtIndexes:[NSIndexSet indexSetWithIndex:index] forKey:@"discoveredDevices"];
-					}
-					@catch (NSException *exception) {
-					}
-					@finally {
-					}
-				});
-			}
-		}
-	}
-}
-*/
 
 -(void) useService: (NSString*)serviceUUID
 	whenAvailable:(void(^)())serviceAvailableBlock
@@ -318,10 +255,10 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 	}
 }
 
+#pragma mark - Scan (not called?)
+
 -(void) startScan:(BOOL) continuous
 {
-	LOGMETHOD
-
 	if (continuous) {
 		NSDictionary *options = [NSDictionary
 			dictionaryWithObjectsAndKeys:
@@ -419,8 +356,6 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 -(void)centralManager:(CBCentralManager *)central
 	didConnectPeripheral:(CBPeripheral *)peripheral
 {
-	LOGMETHOD
-
 	NSLog(@"didConnectPeripheral: %@", peripheral);
 
 	_disconnectedPeripheral = nil;
@@ -437,8 +372,6 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 	didDisconnectPeripheral:(CBPeripheral *)peripheral
 	error:(NSError *)error
 {
-	LOGMETHOD
-
 	NSLog(@"didDisconnectPeripheral: %@, error: %@", peripheral, error);
 
 	[_connectedDevices removeObject:peripheral];
@@ -471,21 +404,17 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 	didFailToConnectPeripheral:(CBPeripheral *)peripheral
 	error:(NSError *)error
 {
-	LOGMETHOD
-
 	NSLog(@"didFailToConnectPeripheral: %@, error: %@", peripheral, error);
 
 	[_connectedDevices removeObject:peripheral];
 	[_discoveredDevices removeObject:peripheral];
 }
 
-#pragma  mark - CBPeripheral delegate
+#pragma mark - CBPeripheral delegate
 
 -(void) peripheral:(CBPeripheral *)peripheral
 	didDiscoverServices:(NSError *)error
 {
-	LOGMETHOD
-
 	if (error)
 	{
 		NSLog(@"peripheral:didDiscoverServices: error %@", error);
@@ -501,28 +430,6 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 	{
 		self.onPeriperalConnected(peripheral);
 	}
-	
-/* TODO: Remove old code.
-	for (CBService *service in peripheral.services)
-	{
-		NSLog(@"Service discovered: %@", service.UUID);
-
-		for (NSString* identifier in self.monitoredServices)
-		{
-			if ([service.UUID isEqualToString: identifier])
-			{
-				NSLog(@"> reading characteristics for service");
-
-				// Note: The dispatch was commented out in the original SensorCaseDemo code.
-				// discover characteristics for the service
-				//dispatch_async(_receiveQueue, ^{
-					// Discover characteristics for the service.
-					[peripheral discoverCharacteristics:nil forService:service];
-				//});
-			}
-		}
-	}
-*/
 }
 
 -(void) peripheral:(CBPeripheral *)peripheral
@@ -551,7 +458,7 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 	didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
 	error:(NSError *)error
 {
-	NSLog(@"didWriteValueForCharacteristic %@ %@, writable: %d, error = %@", characteristic.UUID, characteristic, (characteristic.properties & CBCharacteristicPropertyWrite) > 0, error);
+	//NSLog(@"didWriteValueForCharacteristic %@ %@, writable: %d, error = %@", characteristic.UUID, characteristic, (characteristic.properties & CBCharacteristicPropertyWrite) > 0, error);
 
 	[self.handler didWriteValueForCharacteristic:characteristic error:error];
 }

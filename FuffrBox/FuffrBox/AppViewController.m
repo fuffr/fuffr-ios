@@ -277,6 +277,12 @@ static BOOL FuffrIsConnected = NO;
         // Add custom initialization if needed.
     }
 
+	//[[NSURLCache sharedURLCache] removeAllCachedResponses];
+
+	//NSURLCache *sharedCache = [[NSURLCache alloc]
+	//	initWithMemoryCapacity:0 diskCapacity:0 diskPath:nil];
+	//[NSURLCache setSharedURLCache: sharedCache];
+
 	// Global reference to the AppViewController instance.
 	theAppViewController = self;
 
@@ -364,12 +370,12 @@ static BOOL FuffrIsConnected = NO;
 	[NSURLProtocol registerClass: [URLProtocolFuffrBridge class]];
 
 	// Connect to Evothings Studio.
-	NSURL* url = [NSURL URLWithString:@"http://192.168.43.131:4042"];
+	/*NSURL* url = [NSURL URLWithString:@"http://192.168.43.131:4042"];
 	NSURLRequest* request = [NSURLRequest
 		requestWithURL: url
 		cachePolicy: NSURLRequestReloadIgnoringLocalAndRemoteCacheData
 		timeoutInterval: 10];
-	[self.webView loadRequest: request];
+	[self.webView loadRequest: request];*/
 }
 
 #pragma clang diagnostic push

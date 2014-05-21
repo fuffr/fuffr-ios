@@ -11,11 +11,10 @@
 #import "FFRBLEExtensions.h"
 #import "FFRBLEManager.h"
 
-
 @interface FFRCaseHandler ()
 
 /**
-    Unpacks the bluetooth packet and converts it into a touch object
+	Unpacks the bluetooth packet and converts it into a touch object
  */
 -(FFRTouch*) unpackData:(NSData*)data fromSide:(FFRSide)side;
 
@@ -33,36 +32,40 @@ NSString* const FFRSideTopUUID = @"fff5";
 NSString* const FFRBatteryServiceUUID = @"180f";
 NSString* const FFRBatteryCharacteristicUUID = @"2a19";
 
+#pragma mark - init/dealloc
+
 -(instancetype) init
 {
-    if (self = [super init]) {
-        _backgroundQueue = dispatch_queue_create("com.fuffr.background", nil);
-        self.spaceMapper = [[FFROverlaySpaceMapper alloc] init];
-        _touches = [[FFRTrackingManager alloc] init];
+	if (self = [super init]) {
+		_backgroundQueue = dispatch_queue_create("com.fuffr.background", nil);
+		self.spaceMapper = [[FFROverlaySpaceMapper alloc] init];
+		_touches = [[FFRTrackingManager alloc] init];
 		_touches.backgroundQueue = _backgroundQueue;
-    }
+	}
 
-    return self;
+	return self;
 }
 
 -(void) setPeripheral:(CBPeripheral*) peripheral
 {
-    _peripheral = peripheral;
+	_peripheral = peripheral;
 }
 
 -(void) dealloc
 {
-    _backgroundQueue = nil;
+	_backgroundQueue = nil;
 
-    // disable the case
-    @try {
-        [self enablePeripheral: 0];
-    }
-    @catch (NSException *exception) {
-    }
-    @finally {
-    }
+	// disable the case
+	@try {
+		[self enablePeripheral: 0];
+	}
+	@catch (NSException *exception) {
+	}
+	@finally {
+	}
 }
+
+#pragma mark - Service discovery
 
 - (void) useSensorService: (void(^)())serviceAvailableBlock
 {
@@ -86,7 +89,7 @@ NSString* const FFRBatteryCharacteristicUUID = @"2a19";
 	[_touches clearAllTouches];
 }
 
-#pragma mark - enable/disable sensors
+#pragma mark - Enable/disable sensors
 
 /*
 From release notes document 2014-03-28:
@@ -101,10 +104,10 @@ to read data from MSP430.
 */
 -(void) enableSides:(FFRSide)sides touchesPerSide: (NSNumber*)numberOfTouches
 {
-    if (!_peripheral) {
-        NSLog(@"FFRCaseHandler: No peripheral loaded!");
-        return;
-    }
+	if (!_peripheral) {
+		NSLog(@"FFRCaseHandler: No peripheral loaded!");
+		return;
+	}
 
 	// Turn off touch handling by setting number of touches to zero.
 	// This is to fix a bug that crashes the case when there are touch
@@ -114,50 +117,50 @@ to read data from MSP430.
 		withObject: @0
 		afterDelay: 0.0];
 
-    // Enabling the sensor sides is spread out in time to prevent connection timeouts,
+	// Enabling the sensor sides is spread out in time to prevent connection timeouts,
 	// probably because the case becomes busy processing the commands.
 	// TODO: Is there an alternative to rely on timing?! What about queueing write
 	// requests, and perform them as soon as the previous write is done?
 	// Does the sensor case confirm updates?
-    if (sides & FFRSideTop)
+	if (sides & FFRSideTop)
 	{
-        [self performSelector:@selector(enableTopSide:) withObject:@TRUE afterDelay:0.0];
-        //[_peripheral setNotificationForCharacteristicWithIdentifier:FFRSideTopUUID enabled:on];
-    }
+		[self performSelector:@selector(enableTopSide:) withObject:@TRUE afterDelay:0.0];
+		//[_peripheral setNotificationForCharacteristicWithIdentifier:FFRSideTopUUID enabled:on];
+	}
 	else
 	{
-        [self performSelector:@selector(enableTopSide:) withObject:@FALSE afterDelay:0.0];
-    }
+		[self performSelector:@selector(enableTopSide:) withObject:@FALSE afterDelay:0.0];
+	}
 
-    if (sides & FFRSideLeft)
+	if (sides & FFRSideLeft)
 	{
-        [self performSelector:@selector(enableLeftSide:) withObject:@TRUE afterDelay:0.0];
-        //[_peripheral setNotificationForCharacteristicWithIdentifier:FFRSideLeftUUID enabled:on];
-    }
+		[self performSelector:@selector(enableLeftSide:) withObject:@TRUE afterDelay:0.0];
+		//[_peripheral setNotificationForCharacteristicWithIdentifier:FFRSideLeftUUID enabled:on];
+	}
 	else
 	{
-        [self performSelector:@selector(enableLeftSide:) withObject:@FALSE afterDelay:0.0];
-    }
+		[self performSelector:@selector(enableLeftSide:) withObject:@FALSE afterDelay:0.0];
+	}
 
-    if (sides & FFRSideRight)
+	if (sides & FFRSideRight)
 	{
-        [self performSelector:@selector(enableRightSide:) withObject:@TRUE afterDelay:0.0];
-        //[_peripheral setNotificationForCharacteristicWithIdentifier:FFRSideRightUUID enabled:on];
-    }
+		[self performSelector:@selector(enableRightSide:) withObject:@TRUE afterDelay:0.0];
+		//[_peripheral setNotificationForCharacteristicWithIdentifier:FFRSideRightUUID enabled:on];
+	}
 	else
 	{
-        [self performSelector:@selector(enableRightSide:) withObject:@FALSE afterDelay:0.0];
-    }
+		[self performSelector:@selector(enableRightSide:) withObject:@FALSE afterDelay:0.0];
+	}
 
-    if (sides & FFRSideBottom)
+	if (sides & FFRSideBottom)
 	{
-        [self performSelector:@selector(enableBottomSide:) withObject:@TRUE afterDelay:0.0];
-        //[_peripheral setNotificationForCharacteristicWithIdentifier:FFRSideBottomUUID enabled:on];
-    }
+		[self performSelector:@selector(enableBottomSide:) withObject:@TRUE afterDelay:0.0];
+		//[_peripheral setNotificationForCharacteristicWithIdentifier:FFRSideBottomUUID enabled:on];
+	}
 	else
 	{
-        [self performSelector:@selector(enableBottomSide:) withObject:@FALSE afterDelay:0.0];
-    }
+		[self performSelector:@selector(enableBottomSide:) withObject:@FALSE afterDelay:0.0];
+	}
 
 	// Set number of touches per side (this is a global value for all sides).
 	[self
@@ -167,31 +170,31 @@ to read data from MSP430.
 }
 
 -(void) enableTopSide:(NSNumber*)on {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [_peripheral setNotificationForCharacteristicWithIdentifier:FFRSideTopUUID enabled:on.boolValue];
-    });
-    NSLog(@"FFRCaseHandler: top enabled: %d", on.boolValue);
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[_peripheral setNotificationForCharacteristicWithIdentifier:FFRSideTopUUID enabled:on.boolValue];
+	});
+	NSLog(@"FFRCaseHandler: top enabled: %d", on.boolValue);
 }
 
 -(void) enableLeftSide:(NSNumber*)on {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [_peripheral setNotificationForCharacteristicWithIdentifier:FFRSideLeftUUID enabled:on.boolValue];
-    });
-    NSLog(@"FFRCaseHandler: left enabled: %d", on.boolValue);
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[_peripheral setNotificationForCharacteristicWithIdentifier:FFRSideLeftUUID enabled:on.boolValue];
+	});
+	NSLog(@"FFRCaseHandler: left enabled: %d", on.boolValue);
 }
 
 -(void) enableRightSide:(NSNumber*)on {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [_peripheral setNotificationForCharacteristicWithIdentifier:FFRSideRightUUID enabled:on.boolValue];
-    });
-    NSLog(@"FFRCaseHandler: right enabled: %d", on.boolValue);
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[_peripheral setNotificationForCharacteristicWithIdentifier:FFRSideRightUUID enabled:on.boolValue];
+	});
+	NSLog(@"FFRCaseHandler: right enabled: %d", on.boolValue);
 }
 
 -(void) enableBottomSide:(NSNumber*)on {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [_peripheral setNotificationForCharacteristicWithIdentifier:FFRSideBottomUUID enabled:on.boolValue];
-    });
-    NSLog(@"FFRCaseHandler: bottom enabled: %d", on.boolValue);
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[_peripheral setNotificationForCharacteristicWithIdentifier:FFRSideBottomUUID enabled:on.boolValue];
+	});
+	NSLog(@"FFRCaseHandler: bottom enabled: %d", on.boolValue);
 }
 
 /*
@@ -204,121 +207,121 @@ currently 5 touches. Setting 0 will disable the touch detection.
 */
 -(void) enablePeripheral: (NSNumber*)touchesPerSide
 {
-    const int DataLength = 1;
+	const int DataLength = 1;
 
-    // enable sensors
-    Byte value[DataLength];
-    memset(value, 0, DataLength);
+	// enable sensors
+	Byte value[DataLength];
+	memset(value, 0, DataLength);
 
-    // Origical code:
+	// Origical code:
 	//value[0] = 1;
 
-    // New code:
+	// New code:
 	value[0] = (Byte) touchesPerSide.intValue;
 
-    NSData* data = [NSData dataWithBytes:&value length:DataLength];
-    __weak CBPeripheral* p = _peripheral;
-    @try {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [p writeCharacteristicWithIdentifier:FFRProximityEnablerCharacteristic data:data];
-        });
-    }
-    @catch (NSException *exception) {
-    }
-    @finally {
-    }
+	NSData* data = [NSData dataWithBytes:&value length:DataLength];
+	__weak CBPeripheral* p = _peripheral;
+	@try {
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[p writeCharacteristicWithIdentifier:FFRProximityEnablerCharacteristic data:data];
+		});
+	}
+	@catch (NSException *exception) {
+	}
+	@finally {
+	}
 
-    //[_peripheral writeCharacteristicWithoutResponseForIdentifier:FFRProximityServiceUUID data:data];
+	//[_peripheral writeCharacteristicWithoutResponseForIdentifier:FFRProximityServiceUUID data:data];
 
-    NSLog(@"FFRCaseHandler: num sensor(s) activated per side: %d", touchesPerSide.intValue);
+	NSLog(@"FFRCaseHandler: num sensor(s) activated per side: %d", touchesPerSide.intValue);
 }
 
-#pragma mark - Bluetooth
+#pragma mark - BLE notifications
 
 -(void) didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic {
-    dispatch_async(_backgroundQueue, ^{
-        FFRTouch* touch = nil;
-        FFRSide side = FFRSideNotSet;
+	dispatch_async(_backgroundQueue, ^{
+		FFRTouch* touch = nil;
+		FFRSide side = FFRSideNotSet;
 
-        if ([characteristic.UUID isEqualToString:FFRSideLeftUUID]) {
-            //NSLog(@"reading left side data");
-            side = FFRSideLeft;
-        }
-        else if ([characteristic.UUID isEqualToString:FFRSideRightUUID]) {
-            //NSLog(@"reading right side data");
-            side = FFRSideRight;
-        }
-        else if ([characteristic.UUID isEqualToString:FFRSideTopUUID]) {
-            //NSLog(@"reading top side data");
-            side = FFRSideTop;
-        }
-        else if ([characteristic.UUID isEqualToString:FFRSideBottomUUID]) {
-            //NSLog(@"reading bottom side data");
-            side = FFRSideBottom;
-        }
+		if ([characteristic.UUID isEqualToString:FFRSideLeftUUID]) {
+			//NSLog(@"reading left side data");
+			side = FFRSideLeft;
+		}
+		else if ([characteristic.UUID isEqualToString:FFRSideRightUUID]) {
+			//NSLog(@"reading right side data");
+			side = FFRSideRight;
+		}
+		else if ([characteristic.UUID isEqualToString:FFRSideTopUUID]) {
+			//NSLog(@"reading top side data");
+			side = FFRSideTop;
+		}
+		else if ([characteristic.UUID isEqualToString:FFRSideBottomUUID]) {
+			//NSLog(@"reading bottom side data");
+			side = FFRSideBottom;
+		}
 
-        if (side != FFRSideNotSet) {
-            touch = [self unpackData:characteristic.value fromSide:side];
-            [_touches handleNewOrChangedTrackingObject:touch];
-        }
-        else {
+		if (side != FFRSideNotSet) {
+			touch = [self unpackData:characteristic.value fromSide:side];
+			[_touches handleNewOrChangedTrackingObject:touch];
+		}
+		else {
 			NSLog(@"FFRSideNotSet - this should not happen, aborting");
-            assert(NO);
-        }
-    });
+			assert(NO);
+		}
+	});
 }
 
 -(void) didWriteValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error
 {
 	// TODO: Improve error handling.
-    if (error)
+	if (error)
 	{
 		// Trap error for debugging.
 		NSLog(@"didWriteValueForCharacteristic error: %@", error);
 		assert(false);
 
 		// What effect will this have exactly? (This is the original code.)
-        _peripheral = nil;
-    }
+		_peripheral = nil;
+	}
 }
 
 -(void) deviceDisconnected:(CBPeripheral *)peripheral
 {
-    NSLog(@"FFRCaseHandler: deviceDisconnected");
+	NSLog(@"FFRCaseHandler: deviceDisconnected");
 
 	// Tell tracking manager to remove all touch objects.
 	[_touches clearAllTouches];
 }
 
-#pragma mark - touch data handling
+#pragma mark - Touch data handling
 
 // For debugging.
 //static int NumberOfActiveTouches = 0;
 
 -(FFRTouch*) unpackData:(NSData*)data fromSide:(FFRSide)side
 {
-    FFRRawTrackingData raw;
-    [data getBytes:&raw length:sizeof(FFRRawTrackingData)];
+	FFRRawTrackingData raw;
+	[data getBytes:&raw length:sizeof(FFRRawTrackingData)];
 
-    CGPoint rawPoint = CGPointMake((raw.highX << 8) | raw.lowX, (raw.highY << 8) | raw.lowY);
-    CGPoint normalizedPoint = [self normalizePoint:rawPoint onSide:side];
+	CGPoint rawPoint = CGPointMake((raw.highX << 8) | raw.lowX, (raw.highY << 8) | raw.lowY);
+	CGPoint normalizedPoint = [self normalizePoint:rawPoint onSide:side];
 
 	Byte eventType = raw.eventType;
 	Byte identifier = raw.identifier;
 
-    //NSLog(@"Touch id: %d, event: %d, side: %d", identifier, eventType, side);
+	//NSLog(@"Touch id: %d, event: %d, side: %d", identifier, eventType, side);
 	
-    //NSLog(@"Touch id: %d, event: %d, side: %d, rawPoint: %@, normalized: %@", identifier, eventType, side, NSStringFromCGPoint(rawPoint), NSStringFromCGPoint(normalizedPoint));
+	//NSLog(@"Touch id: %d, event: %d, side: %d, rawPoint: %@, normalized: %@", identifier, eventType, side, NSStringFromCGPoint(rawPoint), NSStringFromCGPoint(normalizedPoint));
 
-    FFRTouch* touch = [[FFRTouch alloc] init];
-    touch.identifier = identifier;
+	FFRTouch* touch = [[FFRTouch alloc] init];
+	touch.identifier = identifier;
 	if (0 == eventType) { touch.phase = FFRTouchPhaseBegan; }
 	else if (1 == eventType) { touch.phase = FFRTouchPhaseMoved; }
 	else if (2 == eventType) { touch.phase = FFRTouchPhaseEnded; }
-    touch.side = side;
-    touch.rawPoint = rawPoint;
+	touch.side = side;
+	touch.rawPoint = rawPoint;
 	touch.normalizedLocation = normalizedPoint;
-    touch.location = [self.spaceMapper locationOnScreen:normalizedPoint fromSide:side];
+	touch.location = [self.spaceMapper locationOnScreen:normalizedPoint fromSide:side];
 
 	// Log down/up events (but not moved).
 	if (eventType != 1)
@@ -330,43 +333,43 @@ currently 5 touches. Setting 0 will disable the touch detection.
 		//NSLog(@"Touch id: %d, event: %d, side: %d, rawcoord: %@", identifier, eventType, side, NSStringFromCGPoint(rawPoint));
 	}
 
-    return touch;
+	return touch;
 }
 
 -(CGPoint) normalizePoint:(CGPoint)point onSide:(FFRSide)side {
 	// Old values (before 2014-04-28).
 	/*
-    const float FFRLongXResolution = 3327.0;
-    const float FFRLongYResolution = 1878.0;
-    const float FFRShortXResolution = 1279.0;
-    const float FFRShortYResolution = 876.0;
+	const float FFRLongXResolution = 3327.0;
+	const float FFRLongYResolution = 1878.0;
+	const float FFRShortXResolution = 1279.0;
+	const float FFRShortYResolution = 876.0;
 	*/
 
 	// New values (from 2014-04-28).
-    const float FFRLongXResolution = 32767.0;
-    const float FFRLongYResolution = 32767.0;
-    const float FFRShortXResolution = 32767.0;
-    const float FFRShortYResolution = 32767.0;
+	const float FFRLongXResolution = 32767.0;
+	const float FFRLongYResolution = 32767.0;
+	const float FFRShortXResolution = 32767.0;
+	const float FFRShortYResolution = 32767.0;
 
-    CGPoint p;
-    switch (side) {
-        case FFRSideRight:
-            p = CGPointMake(point.y / FFRLongYResolution, point.x / FFRLongXResolution);
-            break;
-        case FFRSideLeft:
-            p = CGPointMake(1 - point.y / FFRLongYResolution, 1 - point.x / FFRLongXResolution);
-            break;
-        case FFRSideBottom:
-            p = CGPointMake(point.x / FFRShortXResolution, point.y / FFRShortYResolution);
-            break;
-        case FFRSideTop:
-            p = CGPointMake(1 - point.x / FFRShortXResolution, 1 - point.y / FFRShortYResolution);
-            break;
-        default:
-            break;
-    }
+	CGPoint p;
+	switch (side) {
+		case FFRSideRight:
+			p = CGPointMake(point.y / FFRLongYResolution, point.x / FFRLongXResolution);
+			break;
+		case FFRSideLeft:
+			p = CGPointMake(1 - point.y / FFRLongYResolution, 1 - point.x / FFRLongXResolution);
+			break;
+		case FFRSideBottom:
+			p = CGPointMake(point.x / FFRShortXResolution, point.y / FFRShortYResolution);
+			break;
+		case FFRSideTop:
+			p = CGPointMake(1 - point.x / FFRShortXResolution, 1 - point.y / FFRShortYResolution);
+			break;
+		default:
+			break;
+	}
 
-    return p;
+	return p;
 }
 
 @end

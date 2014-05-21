@@ -5,7 +5,7 @@ var gfx = {};
 
 /* Called when document is loaded and ready. */
 $(function() {
-	setTimeout(fuffrHandler.checkConnection, fuffrHandler.connTimeoutMs);
+	//setTimeout(fuffrHandler.checkConnection, fuffrHandler.connTimeoutMs);
 
 	$('#restart-button').bind('click', function(event) {
 		game.restart();
@@ -125,7 +125,7 @@ game.increaseScore = function(player) {
 	{
 		game.nextLevel();
 	}
-	
+
 	gfx.ball.setCenterX(this.playfieldWidth / 2);
 	gfx.ball.setCenterY(this.playfieldHeight / 2);
 }
@@ -449,7 +449,7 @@ fuffrHandler.checkConnection = function()
 
 fuffr.on.connected = function()
 {
-	hyper.log('Fuffr Connected!')
+	//console.log('Fuffr Connected!')
 	fuffr.enableSides(
 		fuffr.FFRSideRight | fuffr.FFRSideLeft,
 		1)

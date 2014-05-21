@@ -12,16 +12,22 @@
 /**
  * This view controller paints circles for each touch instance.
  */
-@interface AppViewController : UIViewController
+@interface AppViewController : UIViewController<UIActionSheetDelegate>
 
 /** View where touches are drawn. */
 @property UIImageView* imageView;
 
-/** Message view. */
 @property UILabel* messageView;
+
+@property UIButton* buttonSettings;
+
+@property UIActionSheet* actionSheet;
 
 @property NSMutableDictionary* dotColors;
 
+@property BOOL paintModeOn;
+
+/** Current set of touces. */
 @property NSMutableSet* touches;
 
 @end

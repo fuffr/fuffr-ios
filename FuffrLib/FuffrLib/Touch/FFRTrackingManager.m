@@ -14,7 +14,7 @@ NSString* const FFRTrackingMovedNotification = @"FFRTrackingMovedNotification";
 NSString* const FFRTrackingPulsedNotification = @"FFRTrackingPulsedNotification";
 NSString* const FFRTrackingEndedNotification = @"FFRTrackingEndedNotification";
 
-
+/*
 static void logTouches(NSString* label, NSSet* touches)
 {
 	int down = 0, up = 0, moved = 0, total = 0;
@@ -27,6 +27,7 @@ static void logTouches(NSString* label, NSSet* touches)
 	}
 	NSLog(@"%@ DOWN: %i UP: %i MOVED: %i TOTAL: %i", label, down, up, moved, total);
 }
+*/
 
 @interface FFRTrackingManager ()
 
@@ -192,7 +193,7 @@ static void logTouches(NSString* label, NSSet* touches)
 
 	NSSet* touches = [NSSet setWithObject: touch];
 
-	logTouches(@"FFRTracking began", touches);
+	//logTouches(@"FFRTracking began", touches);
 
 	// Notify tracking observers.
 	dispatch_async(dispatch_get_main_queue(),

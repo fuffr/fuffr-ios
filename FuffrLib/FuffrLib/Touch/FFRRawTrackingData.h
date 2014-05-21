@@ -10,14 +10,14 @@
 #define FFRRawTrackingData_h
 
 /**
-    Data struct as delivered from Fuffr
+	Data struct as delivered from Fuffr
  */
 typedef struct
 {
-    /**
-     * Touch id.
-     */
-    Byte identifier : 5;
+	/**
+	 * Touch id.
+	 */
+	Byte identifier : 5;
 
 	/**
 	 * Type of event:
@@ -28,27 +28,27 @@ typedef struct
 	 */
 	Byte eventType : 3;
 
-    //Byte typeAndIdentifier;
+	//Byte typeAndIdentifier;
 
-    /**
-     x-coordinate low bits
-     */
-    Byte lowX;
+	/**
+	 x-coordinate low bits
+	 */
+	Byte lowX;
 
-    /**
-     x-coordinate high bits
-     */
-    Byte highX;
+	/**
+	 x-coordinate high bits
+	 */
+	Byte highX;
 
-    /**
-     y-coordinate low bits
-     */
-    Byte lowY;
+	/**
+	 y-coordinate low bits
+	 */
+	Byte lowY;
 
-    /**
-     y-coordinate high bits
-     */
-    Byte highY;
+	/**
+	 y-coordinate high bits
+	 */
+	Byte highY;
 } FFRRawTrackingData;
 
 #endif
