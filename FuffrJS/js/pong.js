@@ -1,85 +1,85 @@
 
-var lang = {};
-var game = {};
-var gfx = {};
+var lang = {}
+var game = {}
+var gfx = {}
 
 /* Called when document is loaded and ready. */
 $(function() {
-	//setTimeout(fuffrHandler.checkConnection, fuffrHandler.connTimeoutMs);
+	//setTimeout(fuffrHandler.checkConnection, fuffrHandler.connTimeoutMs)
 
 	$('#restart-button').bind('click', function(event) {
-		game.restart();
-	});
+		game.restart()
+	})
 
-	game.initialize();
-	gfx.initialize();
+	game.initialize()
+	gfx.initialize()
 
-	resetPlayfield();
+	resetPlayfield()
 
-	game.start();
-});
+	game.start()
+})
 
-game.mainLoopBaseIntervalMs = 21;
-game.levels = 10;
-game.speedIncreasePerLevel = 1;
-game.scorePointsPerLevel = 5;
-game.secondsPerLevel = 30;
+game.mainLoopBaseIntervalMs = 21
+game.levels = 10
+game.speedIncreasePerLevel = 1
+game.scorePointsPerLevel = 5
+game.secondsPerLevel = 30
 
-lang.missing_init = 'Couldn\'t start the game.';
-lang.fuffr_not_connected = 'Fuffr wasn\'t connected. Do you want to use the simulator?';
-lang.game_finished_text = 'Player %1 wins the game!';
-lang.game_finished_draw_text = 'We have a draw!';
+lang.missing_init = 'Couldn\'t start the game.'
+lang.fuffr_not_connected = 'Fuffr wasn\'t connected. Do you want to use the simulator?'
+lang.game_finished_text = 'Player %1 wins the game!'
+lang.game_finished_draw_text = 'We have a draw!'
 
 game.initialize = function()
 {
-	this.playfieldWidth = $('#playfield').width();
-	this.playfieldHeight = $('#playfield').height();
+	this.playfieldWidth = $('#playfield').width()
+	this.playfieldHeight = $('#playfield').height()
 
-	this.level = 1;
-	this.levelNumberElm = document.getElementById('level');
-	this.speed = 1;
+	this.level = 1
+	this.levelNumberElm = document.getElementById('level')
+	this.speed = 1
 
 	this.player1 = {
 		score: 0,
 		scoreElement : document.getElementById('score-left'),
-	};
+	}
 	this.player2 = {
 		score: 0,
 		scoreElement : document.getElementById('score-right'),
-	};
+	}
 
-	this.levelNumberElm.textContent = this.level;
-	this.player1.scoreElement.textContent = 0;
-	this.player2.scoreElement.textContent = 0;
+	this.levelNumberElm.textContent = this.level
+	this.player1.scoreElement.textContent = 0
+	this.player2.scoreElement.textContent = 0
 
-	$('#game-finished-overlay').hide();
-	$('#playfield').removeClass('dimmed');
-};
+	$('#game-finished-overlay').hide()
+	$('#playfield').removeClass('dimmed')
+}
 
 game.start = function()
 {
 	if (ball == void(0) || gfx.paddleLeft == void(0) || gfx.paddleRight == void(0))
 	{
-		alert(lang.missing_init);
+		alert(lang.missing_init)
 	}
 
-	this.startLevel();
-};
+	this.startLevel()
+}
 
 game.startLevel = function()
 {
 	if (this.mainLoop)
-		window.clearInterval(this.mainLoop);
+		window.clearInterval(this.mainLoop)
 
-	this.levelStartTime = (new Date().getTime());
+	this.levelStartTime = (new Date().getTime())
 
 	if (!this.startTime)
-		this.startTime = this.levelStartTime;
+		this.startTime = this.levelStartTime
 
-	var that = this;
+	var that = this
 	this.mainLoop = window.setInterval(function()
 	{
-		that.checkTimePerLevel();
+		that.checkTimePerLevel()
 		gfx.ball.move()
 		gfx.paddleLeft.measureSpeed()
 		gfx.paddleRight.measureSpeed()
@@ -87,87 +87,87 @@ game.startLevel = function()
 		gfx.ball.checkRightPaddleCollision()
 		gfx.ball.checkWallCollision()
 	},
-	game.mainLoopBaseIntervalMs - game.speed);
-};
+	game.mainLoopBaseIntervalMs - game.speed)
+}
 
 game.end = function()
 {
-	window.clearInterval(this.mainLoop);
+	window.clearInterval(this.mainLoop)
 
-	var winning_player = null;
-	if (game.player1.score > game.player2.score) winning_player = 1;
-	if (game.player2.score > game.player1.score) winning_player = 2;
+	var winning_player = null
+	if (game.player1.score > game.player2.score) winning_player = 1
+	if (game.player2.score > game.player1.score) winning_player = 2
 
-	$('#playfield').addClass('dimmed');
+	$('#playfield').addClass('dimmed')
 	if (winning_player != null)
 	{
-		$('#game-finished-overlay-header').text(lang.game_finished_text.replace('%1', winning_player));
+		$('#game-finished-overlay-header').text(lang.game_finished_text.replace('%1', winning_player))
 	}
 	else
 	{
-		$('#game-finished-overlay-header').text(lang.game_finished_draw_text);
+		$('#game-finished-overlay-header').text(lang.game_finished_draw_text)
 	}
-	$('#game-finished-overlay').show();
-};
+	$('#game-finished-overlay').show()
+}
 
 game.restart = function()
 {
-	game.initialize();
-	game.start();
-};
+	game.initialize()
+	game.start()
+}
 
 game.increaseScore = function(player) {
-	player.score += 1;
+	player.score += 1
 
-	player.scoreElement.textContent = player.score;
+	player.scoreElement.textContent = player.score
 
 	if ((game.player1.score + game.player2.score) % game.scorePointsPerLevel == 0)
 	{
-		game.nextLevel();
+		game.nextLevel()
 	}
 
-	gfx.ball.setCenterX(this.playfieldWidth / 2);
-	gfx.ball.setCenterY(this.playfieldHeight / 2);
+	gfx.ball.setCenterX(this.playfieldWidth / 2)
+	gfx.ball.setCenterY(this.playfieldHeight / 2)
 }
 
 game.nextLevel = function()
 {
-	this.level += 1;
+	this.level += 1
 
 	if (this.level > this.levels)
 	{
-		this.end();
+		this.end()
 	}
 	else
 	{
-		game.levelNumberElm.textContent = this.level;
-		game.speed += game.speedIncreasePerLevel;
-		this.startLevel();
+		game.levelNumberElm.textContent = this.level
+		game.speed += game.speedIncreasePerLevel
+		this.startLevel()
 	}
-};
+}
 
 game.getPlaytimeSeconds = function()
 {
-	var time = (new Date().getTime());
-	return Math.round((time - this.startTime) / 1000);
-};
+	var time = (new Date().getTime())
+	return Math.round((time - this.startTime) / 1000)
+}
 
 game.getLevelPlaytimeSeconds = function()
 {
-	var time = (new Date().getTime());
-	return Math.round((time - this.levelStartTime) / 1000);
-};
+	var time = (new Date().getTime())
+	return Math.round((time - this.levelStartTime) / 1000)
+}
 
 game.checkTimePerLevel = function()
 {
 	if (this.getLevelPlaytimeSeconds() >= game.secondsPerLevel)
 		this.nextLevel()
-};
+}
 
 gfx.initialize = function()
 {
 	if (game.playfieldWidth == void(0) || game.playfieldHeight == void(0))
-		gfx.failedToInitialize();
+		gfx.failedToInitialize()
 
 	gfx.paddleLeft.setDOMElement(document.getElementById('paddle-left'))
 	gfx.paddleLeft.setLeft(0)
@@ -194,7 +194,7 @@ gfx.initialize = function()
 	gfx.ball.setCenterY(game.playfieldHeight / 2)
 	gfx.ball.setDeltaX(4)
 	gfx.ball.setDeltaY(4)
-	gfx.ball.maxDeltaY = 5;
+	gfx.ball.maxDeltaY = 5
 }
 
 var makeSprite = function()
@@ -210,8 +210,8 @@ var makeSprite = function()
 	sprite.setDOMElement = function(element)
 	{
 		sprite.domElement = element
-		sprite.width = sprite.domElement.offsetWidth;
-		sprite.height = sprite.domElement.offsetHeight;
+		sprite.width = sprite.domElement.offsetWidth
+		sprite.height = sprite.domElement.offsetHeight
 	}
 
 	sprite.setLeft = function(x)
@@ -297,9 +297,9 @@ var makeSprite = function()
 	return sprite
 }
 
-gfx.paddleLeft = makeSprite();
-gfx.paddleRight = makeSprite();
-gfx.ball = makeSprite();
+gfx.paddleLeft = makeSprite()
+gfx.paddleRight = makeSprite()
+gfx.ball = makeSprite()
 
 gfx.ball.checkWallCollision = function()
 {
@@ -310,13 +310,13 @@ gfx.ball.checkWallCollision = function()
 	if (nextX < 0 && gfx.ball.dx < 0)
 	{
 		gfx.ball.dx = - gfx.ball.dx
-		game.increaseScore(game.player1);
+		game.increaseScore(game.player1)
 	}
 	// Right wall.
 	else if (nextX > game.playfieldWidth && gfx.ball.dx > 0)
 	{
 		gfx.ball.dx = - gfx.ball.dx
-		game.increaseScore(game.player2);
+		game.increaseScore(game.player2)
 	}
 	// Top wall.
 	else if (nextY < 0 && gfx.ball.dy < 0)
@@ -350,14 +350,14 @@ gfx.ball.checkLeftPaddleCollision = function()
 			collPos = ((nextY - paddle.getCenterY()) / paddle.domElement.offsetHeight),
 			speedTerm = paddleSpeed * 5,
 			posTerm = paddleSpeed * 0.5 * collPos,
-			ballDeltaYChange = speedTerm + posTerm;
+			ballDeltaYChange = speedTerm + posTerm
 
 		if (gfx.ball.dy + ballDeltaYChange > gfx.ball.maxDeltaY)
-			gfx.ball.dy = gfx.ball.maxDeltaY;
+			gfx.ball.dy = gfx.ball.maxDeltaY
 		else
-			gfx.ball.dy += ballDeltaYChange;
+			gfx.ball.dy += ballDeltaYChange
 
-		//console.log('speed term=' + speedTerm + ', pos term=' + posTerm);
+		//console.log('speed term=' + speedTerm + ', pos term=' + posTerm)
 	}
 }
 
@@ -365,7 +365,7 @@ gfx.ball.checkRightPaddleCollision = function()
 {
 	var nextX = gfx.ball.getCenterX() + gfx.ball.dx
 	var nextY = gfx.ball.getCenterY() + gfx.ball.dy
-	// console.log(nextY + '(' + gfx.ball.dy + ')');
+	// console.log(nextY + '(' + gfx.ball.dy + ')')
 
 	var paddle = gfx.paddleRight
 
@@ -382,37 +382,37 @@ gfx.ball.checkRightPaddleCollision = function()
 			collPos = ((nextY - paddle.getCenterY()) / paddle.domElement.offsetHeight),
 			speedTerm = paddleSpeed * 5,
 			posTerm = paddleSpeed * 0.5 * collPos,
-			ballDeltaYChange = speedTerm + posTerm;
+			ballDeltaYChange = speedTerm + posTerm
 
 		if (gfx.ball.dy + ballDeltaYChange > gfx.ball.maxDeltaY)
-			gfx.ball.dy = gfx.ball.maxDeltaY;
+			gfx.ball.dy = gfx.ball.maxDeltaY
 		else
-			gfx.ball.dy += ballDeltaYChange;
+			gfx.ball.dy += ballDeltaYChange
 
-		//console.log('speed term=' + speedTerm + ', pos term=' + posTerm);
+		//console.log('speed term=' + speedTerm + ', pos term=' + posTerm)
 	}
 }
 
 gfx.paddleLeft.measureSpeed =
 gfx.paddleRight.measureSpeed = function()
 {
-	this.dt += game.mainLoopBaseIntervalMs / 1000;
+	this.dt += game.mainLoopBaseIntervalMs / 1000
 	if (this.dt >= 0.1)
 	{
 		if (this.lastY)
-			this.speedY = (this.y - this.lastY) / this.dt;
-		this.lastY = this.y;
-		this.dt = 0;
+			this.speedY = (this.y - this.lastY) / this.dt
+		this.lastY = this.y
+		this.dt = 0
 	}
 	if (this.speedY > this.speedYMax)
-		this.speedYMax = this.speedY;
-};
+		this.speedYMax = this.speedY
+}
 
 gfx.failedToInitialize = function()
 {
-	alert(lang.missing_init);
-	return true;
-};
+	alert(lang.missing_init)
+	return true
+}
 
 var resetPlayfield = function()
 {
@@ -420,7 +420,7 @@ var resetPlayfield = function()
 	game.playfieldHeight = $('#playfield').height()
 	gfx.paddleLeft.setLeft(0)
 	gfx.paddleRight.setRight(game.playfieldWidth)
-};
+}
 
 function OnRightTouch(touchId, touchX, touchY, previousX, previousY, normalizedX, normalizedY)
 {
@@ -434,10 +434,10 @@ function OnLeftTouch(touchId, touchX, touchY, previousX, previousY, normalizedX,
 	gfx.paddleLeft.setCenterY(y)
 }
 
-var fuffrHandler = {};
+var fuffrHandler = {}
 
-fuffrHandler.wasConnected = false;
-fuffrHandler.connTimeoutMs = 3000;
+fuffrHandler.wasConnected = false
+fuffrHandler.connTimeoutMs = 3000
 
 fuffrHandler.checkConnection = function()
 {
@@ -445,7 +445,7 @@ fuffrHandler.checkConnection = function()
 		if (confirm(lang.fuffr_not_connected))
 			simulator.enable()
 	}
-};
+}
 
 fuffr.on.connected = function()
 {
@@ -453,20 +453,20 @@ fuffr.on.connected = function()
 	fuffr.enableSides(
 		fuffr.FFRSideRight | fuffr.FFRSideLeft,
 		1)
-	fuffrHandler.wasConnected = true;
+	fuffrHandler.wasConnected = true
 }
 
 function touchHandler(touches)
 {
-	var foundLeftTouch = false;
-	var foundRightTouch = false;
+	var foundLeftTouch = false
+	var foundRightTouch = false
 
 	for (var i = 0; i < touches.length; ++i)
 	{
 		var touch = touches[i]
 		if (touch.side == fuffr.FFRSideLeft && !foundLeftTouch)
 		{
-			 foundLeftTouch = true;
+			 foundLeftTouch = true
 			 OnLeftTouch(
 			 	touch.id,
 			 	touch.x,
@@ -478,7 +478,7 @@ function touchHandler(touches)
 		}
 		if (touch.side == fuffr.FFRSideRight && !foundRightTouch)
 		{
-			 foundRightTouch = true;
+			 foundRightTouch = true
 			 OnRightTouch(
 			 	touch.id,
 			 	touch.x,
@@ -495,60 +495,60 @@ fuffr.on.touchesBegan = touchHandler
 fuffr.on.touchesMoved = touchHandler
 fuffr.on.touchesEnded = touchHandler
 
-var simulator = {};
+var simulator = {}
 
 simulator.enable = function()
 {
-	$('#playfield').addClass('with-simulator');
-	$('#left-touch-area, #right-touch-area').show();
-	resetPlayfield();
+	$('#playfield').addClass('with-simulator')
+	$('#left-touch-area, #right-touch-area').show()
+	resetPlayfield()
 
-	var element = document.getElementById('left-touch-area');
+	var element = document.getElementById('left-touch-area')
 	Hammer(element).on("touch", function(event) {
-		simulator.handleHammerTouchEvent(event, fuffr.on.touchesBegan);
-	});
+		simulator.handleHammerTouchEvent(event, fuffr.on.touchesBegan)
+	})
 	Hammer(element).on("gesture", function(event) {
-		simulator.handleHammerTouchEvent(event, fuffr.on.touchesMoved);
-	});
+		simulator.handleHammerTouchEvent(event, fuffr.on.touchesMoved)
+	})
 	Hammer(element).on("release", function(event) {
-		simulator.handleHammerTouchEvent(event, fuffr.on.touchesEnded);
-	});
+		simulator.handleHammerTouchEvent(event, fuffr.on.touchesEnded)
+	})
 
-	var element = document.getElementById('right-touch-area');
+	var element = document.getElementById('right-touch-area')
 	Hammer(element).on("touch", function(event) {
-		simulator.handleHammerTouchEvent(event, fuffr.on.touchesBegan);
-	});
+		simulator.handleHammerTouchEvent(event, fuffr.on.touchesBegan)
+	})
 	Hammer(element).on("gesture", function(event) {
-		simulator.handleHammerTouchEvent(event, fuffr.on.touchesMoved);
-	});
+		simulator.handleHammerTouchEvent(event, fuffr.on.touchesMoved)
+	})
 	Hammer(element).on("release", function(event) {
-		simulator.handleHammerTouchEvent(event, fuffr.on.touchesEnded);
-	});
-};
+		simulator.handleHammerTouchEvent(event, fuffr.on.touchesEnded)
+	})
+}
 
 simulator.disable = function()
 {
-	$('#left-touch-area, #right-touch-area').hide();
-	$('#playfield').removeClass('with-simulator');
-	resetPlayfield();
-};
+	$('#left-touch-area, #right-touch-area').hide()
+	$('#playfield').removeClass('with-simulator')
+	resetPlayfield()
+}
 
 simulator.handleHammerTouchEvent = function(event, handler)
 {
-	var touches = [];
+	var touches = []
 
 	for (var t in event.gesture.touches) {
-		var touch = event.gesture.touches[t];
+		var touch = event.gesture.touches[t]
 		if ('object' != typeof touch) continue;
 
-		var side = null;
+		var side = null
 		if (touch.target.id == 'left-touch-area')
-			side = fuffr.FFRSideLeft;
+			side = fuffr.FFRSideLeft
 		if (touch.target.id == 'right-touch-area')
-			side = fuffr.FFRSideRight;
+			side = fuffr.FFRSideRight
 
-		var touchX = touch.x || touch.clientX;
-		var touchY = touch.y || touch.clientY;
+		var touchX = touch.x || touch.clientX
+		var touchY = touch.y || touch.clientY
 
 		touches.push({
 			id	  : touch.identifier,
@@ -559,8 +559,8 @@ simulator.handleHammerTouchEvent = function(event, handler)
 			normx : touchX / touch.target.clientWidth,
 			normy : touchY / touch.target.clientHeight,
 			side  : side
-		});
+		})
 	}
 
-	handler(touches);
-};
+	handler(touches)
+}
