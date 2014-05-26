@@ -37,7 +37,9 @@ static BOOL FuffrIsConnected = NO;
 
 + (BOOL)canInitWithRequest:(NSURLRequest*)theRequest
 {
-	return [theRequest.URL.path hasPrefix: @"/fuffr-bridge@"];
+	NSRange range = [theRequest.URL.path rangeOfString: @"/fuffr-bridge@"];
+    BOOL found = (range.location != NSNotFound);
+	return found;
 }
 
 + (NSURLRequest*)canonicalRequestForRequest:(NSURLRequest*)theRequest
@@ -503,6 +505,10 @@ static BOOL FuffrIsConnected = NO;
 	{
 		[self jsCommandUpdateFirmware: tokens];
 	}
+	else if ([commandName isEqualToString: @"consoleLog"])
+	{
+		[self jsCommandConsoleLog: tokens];
+	}
 }
 
 - (void) jsCommandDomLoaded: (NSArray*) tokens
@@ -570,6 +576,12 @@ static BOOL FuffrIsConnected = NO;
             	NSLog(@"Data: %@",text);
         	}
 		}];
+}
+
+- (void) jsCommandConsoleLog: (NSArray*) tokens
+{
+	NSString* message = [NSString stringWithString:[tokens objectAtIndex: 2]];
+	NSLog(@"%@", message);
 }
 
 - (void) onButtonBack: (id)sender
