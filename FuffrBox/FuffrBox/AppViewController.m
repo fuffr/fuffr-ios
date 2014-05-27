@@ -15,6 +15,7 @@
 #import <FuffrLib/FFRPanGestureRecognizer.h>
 #import <FuffrLib/FFRRotationGestureRecognizer.h>
 #import <FuffrLib/FFRFirmwareDownloader.h>
+#import <FuffrLib/FFROADHandler.h>
 #import <FuffrLib/UIView+Toast.h>
 
 /**
@@ -365,19 +366,27 @@ static BOOL FuffrIsConnected = NO;
 	self.webView.scrollView.bounces = NO;
 	self.view.multipleTouchEnabled = YES;
 	[self.webView setBackgroundColor:[UIColor greenColor]];
-	[self.webView loadHTMLString:@"<html><body style='background:rgb(100,200,255);font-family:sans-serif;'><h1>Welcome to FuffrBox</h1><h3>Play games and make your own apps for Fuffr!</h3><h3>Enter url to page and select go.</h3></body></html>" baseURL:nil];
 
     [self.view addSubview: self.webView];
 
 	[NSURLProtocol registerClass: [URLProtocolFuffrBridge class]];
 
+	// Set URL to local start page.
+	NSString* path = [[NSBundle mainBundle]
+		pathForResource:@"index" ofType:@"html" inDirectory:@"www"];
+	NSURL* url = [NSURL fileURLWithPath:path isDirectory:NO];
+
+	//[self.webView loadHTMLString:@"<html><body style='background:rgb(100,200,255);font-family:sans-serif;'><h1>Welcome to FuffrBox</h1><h3>Play games and make your own apps for Fuffr!</h3><h3>Enter url to page and select go.</h3></body></html>" baseURL:nil];
+
 	// Connect to Evothings Studio.
-	/*NSURL* url = [NSURL URLWithString:@"http://192.168.43.131:4042"];
+	//NSURL* url = [NSURL URLWithString:@"http://192.168.43.131:4042"];
+
+	// Load URL into web view.
 	NSURLRequest* request = [NSURLRequest
 		requestWithURL: url
 		cachePolicy: NSURLRequestReloadIgnoringLocalAndRemoteCacheData
 		timeoutInterval: 10];
-	[self.webView loadRequest: request];*/
+	[self.webView loadRequest: request];
 }
 
 #pragma clang diagnostic push
@@ -440,7 +449,7 @@ static BOOL FuffrIsConnected = NO;
 			^{
 				NSLog(@"Fuffr Connected");
 				[self.view makeToast: @"Fuffr Connected"];
-				[[FFRTouchManager sharedManager]
+				[manager
 					enableSides: FFRSideTop | FFRSideLeft | FFRSideRight | FFRSideBottom
 					touchesPerSide: @2 // Default number of touches per side.
 					];
@@ -503,7 +512,7 @@ static BOOL FuffrIsConnected = NO;
 	}
 	else if ([commandName isEqualToString: @"updateFirmware"])
 	{
-		[self jsCommandUpdateFirmware: tokens];
+		//[self jsCommandUpdateFirmware: tokens];
 	}
 	else if ([commandName isEqualToString: @"consoleLog"])
 	{
@@ -564,6 +573,30 @@ static BOOL FuffrIsConnected = NO;
 // TODO: Implement.
 - (void) jsCommandUpdateFirmware: (NSArray*) tokens
 {
+	// Turn off touces.
+	[[FFRTouchManager sharedManager]
+		enableSides: FFRSideTop | FFRSideLeft | FFRSideRight | FFRSideBottom
+		touchesPerSide: @0];
+
+	// Set up OAD handler.
+	FFRBLEManager* bleManager = [FFRBLEManager sharedManager];
+	FFROADHandler* handler = [FFROADHandler alloc];
+	BOOL success = [handler initWithPeripheral: [bleManager connectedDevice]];
+	if (success)
+	{
+		// Set the handler.
+		bleManager.handler = handler;
+
+		// Get firmware image version to download.
+		[handler queryCurrentImageVersion: ^void (char version)
+		{
+			NSLog(@"*** Image type is: %c", version);
+
+			// TODO: Proceed with download.
+		}];
+	}
+
+	/*
 	[[FFRFirmwareDownloader new]
 		downloadFirmwareDataFromURL: @"http://divineprog.com/"
 		callback: ^void(NSData* data)
@@ -576,6 +609,7 @@ static BOOL FuffrIsConnected = NO;
             	NSLog(@"Data: %@",text);
         	}
 		}];
+	*/
 }
 
 - (void) jsCommandConsoleLog: (NSArray*) tokens

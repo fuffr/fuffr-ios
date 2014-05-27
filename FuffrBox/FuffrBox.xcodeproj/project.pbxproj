@@ -21,6 +21,7 @@
 		21B26CCF18EBFCAC009FE791 /* FuffrBoxTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 21B26CCE18EBFCAC009FE791 /* FuffrBoxTests.m */; };
 		21B26CED18EBFDE2009FE791 /* libFuffrLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 21B26CE818EBFDD0009FE791 /* libFuffrLib.a */; };
 		21B26CF118EBFE71009FE791 /* AppViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 21B26CF018EBFE71009FE791 /* AppViewController.m */; };
+		21F87D3D1934A4F500C388C0 /* www in Resources */ = {isa = PBXBuildFile; fileRef = 21F87D3C1934A4F500C388C0 /* www */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,6 +75,7 @@
 		21B26CE218EBFDD0009FE791 /* FuffrLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FuffrLib.xcodeproj; path = ../FuffrLib/FuffrLib.xcodeproj; sourceTree = "<group>"; };
 		21B26CEF18EBFE71009FE791 /* AppViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppViewController.h; sourceTree = "<group>"; };
 		21B26CF018EBFE71009FE791 /* AppViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppViewController.m; sourceTree = "<group>"; };
+		21F87D3C1934A4F500C388C0 /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; path = www; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +106,7 @@
 		21B26C9D18EBFCAC009FE791 = {
 			isa = PBXGroup;
 			children = (
+				21F87D3C1934A4F500C388C0 /* www */,
 				21B26CAF18EBFCAC009FE791 /* FuffrBox */,
 				21B26CC818EBFCAC009FE791 /* FuffrBoxTests */,
 				21B26CA818EBFCAC009FE791 /* Frameworks */,
@@ -282,6 +285,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				21F87D3D1934A4F500C388C0 /* www in Resources */,
 				21B26CB418EBFCAC009FE791 /* InfoPlist.strings in Resources */,
 				21B26CBC18EBFCAC009FE791 /* Images.xcassets in Resources */,
 			);

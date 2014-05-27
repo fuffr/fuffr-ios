@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,user-scalable=yes, initial-scale=1"/>
+    <title>Fuffr WebView Demos</title>
+	<link rel="stylesheet" href="common.css"/>
+	<style>
+	</style>
+	<script src="jquery.js"></script>
+	<script src="fuffr.js"></script>
+</head>
+<body>
+
+<h1>Welcome to FuffrBox</h1>
+
+<div class="content">
+	<a href="http://kindborg.com/fuffr/">Fuffr Demos</a>
+	<a href="#" onclick="updateFirmware()">Update Firmware</a>
+</div>
+
+<script>
+function updateFirmware()
+{
+	fuffr.internal.callNative('updateFirmware@')
+}
+</script>
+
+</body>
+</html>

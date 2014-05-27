@@ -278,7 +278,6 @@
 		219718EE18D60711007B6E84 /* Communication */ = {
 			isa = PBXGroup;
 			children = (
-				2197196818D6138D007B6E84 /* FFRoad.h */,
 				219718EF18D60711007B6E84 /* Mapping */,
 				219718F918D60711007B6E84 /* FFRBLEExtensions.h */,
 				219718FA18D60711007B6E84 /* FFRBLEExtensions.m */,
@@ -288,6 +287,7 @@
 				219718FE18D60711007B6E84 /* FFRCaseHandler.m */,
 				219718FF18D60711007B6E84 /* FFROADHandler.h */,
 				2197190018D60711007B6E84 /* FFROADHandler.m */,
+				2197196818D6138D007B6E84 /* FFRoad.h */,
 				2197190118D60711007B6E84 /* FFRPeripheralHandler.h */,
 			);
 			path = Communication;

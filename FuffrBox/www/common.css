@@ -1,0 +1,33 @@
+html, body {
+	margin: 0px;
+	padding: 0px;
+	background-color: #ffffff;
+	font-family: sans-serif;
+	text-decoration: none;
+}
+
+h1 {
+	font-size: 180%;
+	font-weight: bold;
+	margin: 0px 0px;
+	padding: 10px 20px;
+	color: #ffffff;
+	background-color: #2173bd;
+}
+
+.content {
+	margin: 10px;
+	padding: 10px;
+	background-color: #ffffff;
+}
+
+a {
+	display: block;
+	margin: 0px 0px 20px 0px;
+	padding: 10px 20px;
+	font-size: 140%;
+	font-weight: bold;
+	text-decoration: none;
+	color: #ffffff;
+	background-color: #34bfde;
+}

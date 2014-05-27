@@ -35,67 +35,77 @@ extern NSString* const FFRProgrammingUserInfoProgressKey;
  */
 extern NSString* const FFRProgrammingUserInfoTimeLeftKey;
 
-
 /**
-    The state of the programming process
+	The state of the programming process
  */
 typedef enum {
-    /**
-     The programmer is idle
-     */
-    FFRProgrammingStateIdle,
+	/**
+	 The programmer is idle
+	 */
+	FFRProgrammingStateIdle,
 
-    /**
-     The programmer is busy sending/writing the firmware
-     */
-    FFRProgrammingStateWriting,
+	/**
+	 The programmer is busy sending/writing the firmware
+	 */
+	FFRProgrammingStateWriting,
 
-    /**
-     The programming failed because the device disconnected
-     */
-    FFRProgrammingStateFailedDueToDeviceDisconnect,
+	/**
+	 The programming failed because the device disconnected
+	 */
+	FFRProgrammingStateFailedDueToDeviceDisconnect,
 
-    /**
-     The programming was completed
-     */
-    FFRProgrammingStateWriteCompleted,
+	/**
+	 The programming was completed
+	 */
+	FFRProgrammingStateWriteCompleted,
 
-    /**
-     The programming was cancelled
-     */
-    FFRProgrammingStateCancelRequested
+	/**
+	 The programming was cancelled
+	 */
+	FFRProgrammingStateCancelRequested
 } FFRProgrammingState;
-
 
 /**
  Class for handling OAD updates to the case, based on TI OAD examples
  */
-@interface FFROADHandler : NSObject {
-    CBPeripheral* _peripheral;
-    BOOL _imageDetected;
+@interface FFROADHandler : NSObject<FFRPeripheralHandler>
+{
+	CBPeripheral* _peripheral;
+	BOOL _imageDetected; // TODO: Redundant? Use _currentImageVersion.
 
-    uint16_t _currentImageVersion;
-    uint nBlocks;
-    uint nBytes;
-    uint iBlocks;
-    uint iBytes;
-    Byte* _dataBuffer;
+	uint16_t _currentImageVersion;
+	uint nBlocks;
+	uint nBytes;
+	uint iBlocks;
+	uint iBytes;
+	Byte* _dataBuffer;
 }
 
 /**
-    The current state of the programming process
+	The current state of the programming process
  */
 @property (nonatomic, assign, readonly) FFRProgrammingState state;
 
 /**
-    Initializes the OAD handler for the peripheral
+ * Called with the image version (A or B).
+ */
+@property (nonatomic, copy) void (^imageVersionCallback)(char version);
+
+/**
+	Initializes the OAD handler for the peripheral
  */
 -(id) initWithPeripheral:(CBPeripheral*)peripheral;
 
 /**
-    Validates an image and if OK continues with the update.
-    NSNotifications are sent to inform on progress
+ * Ask the case for the current image version (A or B).
+ * @return Callback returns 'A' or 'B' in param version on success.
  */
--(BOOL) validateAndLoadImage:(NSString*)filename;
+- (void) queryCurrentImageVersion:(void(^)(char version))callback;
+
+/**
+	Validates an image and if OK continues with the update.
+	NSNotifications are sent to inform on progress
+ */
+-(BOOL) validateAndLoadImage:(NSData*)data;
 
 @end

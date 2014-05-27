@@ -50,7 +50,7 @@ extern NSString* const FFRBatteryCharacteristicUUID;
 /**
     Main class for handling BLE communication with Fuffr
  */
-@interface FFRCaseHandler : NSObject {
+@interface FFRCaseHandler : NSObject<FFRPeripheralHandler> {
     // The peripheral
     CBPeripheral* _peripheral;
 
