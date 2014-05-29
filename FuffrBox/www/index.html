@@ -5,26 +5,52 @@
 	<meta name="viewport" content="width=device-width,user-scalable=yes, initial-scale=1"/>
     <title>Fuffr WebView Demos</title>
 	<link rel="stylesheet" href="common.css"/>
-	<style>
-	</style>
-	<script src="jquery.js"></script>
-	<script src="fuffr.js"></script>
+	<script src="lib/jquery.js"></script>
+	<script src="lib/fuffr.js"></script>
+	<script src="lib/jquery.scrollstop.js"></script>
+	<script src="lib/jquery.easing.min.js"></script>
+	<script src="lib/jquery.scrollsnap.js"></script>
+	<script type="text/javascript">
+	$(document).ready(function()
+	{
+		$('#demos-list').scrollsnap({
+			snaps: 'li',
+			direction: 'x',
+			proximity: 10000,
+			latency: 200,
+			duration: 200
+		});
+	});
+
+	function updateFirmware()
+	{
+		fuffr.internal.callNative('updateFirmware@')
+	}
+	</script>
 </head>
+<!--<body onload="loaded()">-->
 <body>
 
-<h1>Welcome to FuffrBox</h1>
-
-<div class="content">
-	<a href="http://kindborg.com/fuffr/">Fuffr Demos</a>
-	<a href="#" onclick="updateFirmware()">Update Firmware</a>
+<div class="logo-container">
+	<img class="logo" src="gfx/logo.png" />
 </div>
 
-<script>
-function updateFirmware()
-{
-	fuffr.internal.callNative('updateFirmware@')
-}
-</script>
+<div class="header-margin-aspect"></div>
+<h1>Welcome to FuffrBox</h1>
+<p class="header-description">40 words / Short description on one-two rows about FuffrBox.
+Description on one-two rows about FuffrBox. Description on one-two rows about FuffrBox.</p>
+
+<div id="demos-list">
+	<ul>
+		<li>
+			<a href="http://kindborg.com/fuffr/">Fuffr Demos</a><br /><br />
+			<a href="#" onclick="updateFirmware()">Update Firmware</a>
+		</li>
+		<li>
+			<a href="http://kindborg.com/fuffr/">Fuffr Demo</a>
+		</li>
+	</ul>
+</div>
 
 </body>
 </html>
