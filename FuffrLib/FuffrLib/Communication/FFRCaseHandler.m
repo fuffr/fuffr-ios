@@ -39,8 +39,8 @@ NSString* const FFRBatteryCharacteristicUUID = @"2a19";
 	if (self = [super init]) {
 		_backgroundQueue = dispatch_queue_create("com.fuffr.background", nil);
 		self.spaceMapper = [[FFROverlaySpaceMapper alloc] init];
-		_touches = [[FFRTrackingManager alloc] init];
-		_touches.backgroundQueue = _backgroundQueue;
+		_trackingManager = [[FFRTrackingManager alloc] init];
+		_trackingManager.backgroundQueue = _backgroundQueue;
 	}
 
 	return self;
@@ -51,18 +51,23 @@ NSString* const FFRBatteryCharacteristicUUID = @"2a19";
 	_peripheral = peripheral;
 }
 
+-(void) shutDown
+{
+	//[self enableSides: FFRSideNotSet touchesPerSide: @0];
+	if (_trackingManager)
+	{
+		[_trackingManager shutDown];
+		_trackingManager = nil;
+	}
+
+	_backgroundQueue = nil;
+	self.spaceMapper = nil;
+	_peripheral = nil;
+}
+
 -(void) dealloc
 {
-	_backgroundQueue = nil;
-
-	// disable the case
-	@try {
-		[self enablePeripheral: 0];
-	}
-	@catch (NSException *exception) {
-	}
-	@finally {
-	}
+	[self shutDown];
 }
 
 #pragma mark - Service discovery
@@ -86,7 +91,7 @@ NSString* const FFRBatteryCharacteristicUUID = @"2a19";
  */
 -(void) clearAllTouches
 {
-	[_touches clearAllTouches];
+	[_trackingManager clearAllTouches];
 }
 
 #pragma mark - Enable/disable sensors
@@ -104,8 +109,8 @@ to read data from MSP430.
 */
 -(void) enableSides:(FFRSide)sides touchesPerSide: (NSNumber*)numberOfTouches
 {
-	if (!_peripheral) {
-		NSLog(@"FFRCaseHandler: No peripheral loaded!");
+	if (!_peripheral)
+	{
 		return;
 	}
 
@@ -221,6 +226,7 @@ currently 5 touches. Setting 0 will disable the touch detection.
 
 	NSData* data = [NSData dataWithBytes:&value length:DataLength];
 	__weak CBPeripheral* p = _peripheral;
+	//TODO: Why is try/catch needed? And why are not any errors handled?
 	@try {
 		dispatch_async(dispatch_get_main_queue(), ^{
 			[p writeCharacteristicWithIdentifier:FFRProximityEnablerCharacteristic data:data];
@@ -238,7 +244,8 @@ currently 5 touches. Setting 0 will disable the touch detection.
 
 #pragma mark - BLE notifications
 
--(void) didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic {
+-(void) didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
+{
 	dispatch_async(_backgroundQueue, ^{
 		FFRTouch* touch = nil;
 		FFRSide side = FFRSideNotSet;
@@ -262,7 +269,7 @@ currently 5 touches. Setting 0 will disable the touch detection.
 
 		if (side != FFRSideNotSet) {
 			touch = [self unpackData:characteristic.value fromSide:side];
-			[_touches handleNewOrChangedTrackingObject:touch];
+			[_trackingManager handleNewOrChangedTrackingObject:touch];
 		}
 		else {
 			NSLog(@"FFRSideNotSet - this should not happen, aborting");
@@ -285,12 +292,12 @@ currently 5 touches. Setting 0 will disable the touch detection.
 	}
 }
 
--(void) deviceDisconnected:(CBPeripheral *)peripheral
+-(void) peripheralDisconnected:(CBPeripheral *)peripheral
 {
-	NSLog(@"FFRCaseHandler: deviceDisconnected");
+	NSLog(@"FFRCaseHandler: peripheralDisconnected");
 
 	// Tell tracking manager to remove all touch objects.
-	[_touches clearAllTouches];
+	[_trackingManager clearAllTouches];
 }
 
 #pragma mark - Touch data handling

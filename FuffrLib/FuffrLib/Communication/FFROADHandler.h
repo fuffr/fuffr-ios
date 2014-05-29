@@ -92,9 +92,9 @@ typedef enum {
 @property (nonatomic, copy) void (^imageVersionCallback)(char version);
 
 /**
-	Initializes the OAD handler for the peripheral
+ * Activate the image version service of the case.
  */
--(id) initWithPeripheral:(CBPeripheral*)peripheral;
+- (void) useImageVersionService: (void(^)())serviceAvailableBlock;
 
 /**
  * Ask the case for the current image version (A or B).

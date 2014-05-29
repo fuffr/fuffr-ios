@@ -60,6 +60,11 @@ extern const float FFRTrackingManagerUpdateSpeed;
 @property NSTimeInterval touchRemoveTimeout;
 
 /**
+ * Stops timer and deallocates all objects.
+ */
+- (void) shutDown;
+
+/**
  * Remove all tracked touch objects.
  * This method is useful when resetting Fuffr.
  */

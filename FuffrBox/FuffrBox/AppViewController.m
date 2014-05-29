@@ -449,6 +449,7 @@ static BOOL FuffrIsConnected = NO;
 			^{
 				NSLog(@"Fuffr Connected");
 				[self.view makeToast: @"Fuffr Connected"];
+				/* TODO: Let the apps enable sides in JavaScript instead. */
 				[manager
 					enableSides: FFRSideTop | FFRSideLeft | FFRSideRight | FFRSideBottom
 					touchesPerSide: @2 // Default number of touches per side.
@@ -512,7 +513,7 @@ static BOOL FuffrIsConnected = NO;
 	}
 	else if ([commandName isEqualToString: @"updateFirmware"])
 	{
-		//[self jsCommandUpdateFirmware: tokens];
+		[self jsCommandUpdateFirmware: tokens];
 	}
 	else if ([commandName isEqualToString: @"consoleLog"])
 	{
@@ -573,28 +574,30 @@ static BOOL FuffrIsConnected = NO;
 // TODO: Implement.
 - (void) jsCommandUpdateFirmware: (NSArray*) tokens
 {
-	// Turn off touces.
-	[[FFRTouchManager sharedManager]
-		enableSides: FFRSideTop | FFRSideLeft | FFRSideRight | FFRSideBottom
-		touchesPerSide: @0];
+	FFRBLEManager* bleManager = [FFRBLEManager sharedManager];
+
+	// Turn off and release case handler.
+	id currentHandler = bleManager.handler;
+	bleManager.handler = nil;
+	[currentHandler shutDown];
 
 	// Set up OAD handler.
-	FFRBLEManager* bleManager = [FFRBLEManager sharedManager];
 	FFROADHandler* handler = [FFROADHandler alloc];
-	BOOL success = [handler initWithPeripheral: [bleManager connectedDevice]];
-	if (success)
-	{
-		// Set the handler.
-		bleManager.handler = handler;
+	[handler setPeripheral: [bleManager connectedPeripheral]];
+
+	// Set the handler.
+	bleManager.handler = handler;
+	[bleManager.handler useImageVersionService:
+	^{
+		NSLog(@"Found image version service");
 
 		// Get firmware image version to download.
 		[handler queryCurrentImageVersion: ^void (char version)
 		{
 			NSLog(@"*** Image type is: %c", version);
-
 			// TODO: Proceed with download.
 		}];
-	}
+	}];
 
 	/*
 	[[FFRFirmwareDownloader new]

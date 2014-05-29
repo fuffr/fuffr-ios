@@ -9,23 +9,33 @@
 #import <Foundation/Foundation.h>
 
 /**
-    Simple protocol for handling a BLE peripheral
+ * Protocol for handling a BLE peripheral.
  */
 @protocol FFRPeripheralHandler <NSObject>
 
 /**
- Called when notifyable characteristics update their values
+ * Initialize the handler for the peripheral.
+ */
+-(void) setPeripheral:(CBPeripheral*)peripheral;
+
+/**
+ * Called when notifyable characteristics update their values.
  */
 -(void) didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic;
 
 /**
- Callback when writing to characteristics (if not requesting write with no response)
+ * Callback when writing to characteristics (if not requesting write with no response).
  */
 -(void) didWriteValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error;
 
 /**
- The device was disconnected
+ * The device was disconnected.
  */
--(void) deviceDisconnected:(CBPeripheral *)peripheral;
+-(void) peripheralDisconnected:(CBPeripheral *)peripheral;
+
+/**
+ * Turn off handler and deallocate resources.
+ */
+-(void) shutDown;
 
 @end

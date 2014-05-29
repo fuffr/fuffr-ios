@@ -6,8 +6,9 @@
 //  Copyright (c) 2013 Fuffr. All rights reserved.
 //
 
-#import "FFROADHandler.h"
 #import <CoreBluetooth/CoreBluetooth.h>
+#import "FFRBLEManager.h"
+#import "FFROADHandler.h"
 #import "FFRBLEExtensions.h"
 #import "FFRoad.h"
 
@@ -29,8 +30,10 @@ NSString* const FFRProgrammingUserInfoTimeLeftKey = @"FFRProgrammingTimeLeftKey"
 
 #pragma mark - init and dealloc
 
--(instancetype) init {
-	if (self = [super init]) {
+-(instancetype) init
+{
+	if (self = [super init])
+	{
 		_state = FFRProgrammingStateIdle;
 		_dataBuffer = NULL;
 	}
@@ -38,9 +41,19 @@ NSString* const FFRProgrammingUserInfoTimeLeftKey = @"FFRProgrammingTimeLeftKey"
 	return self;
 }
 
--(void) dealloc {
-	[self deconfigureProfile];
-	[self clearBuffer];
+-(void) dealloc
+{
+	[self shutDown];
+}
+
+-(void) shutDown
+{
+	if (_peripheral)
+	{
+		[self disableImageVersionNotification];
+		[self clearBuffer];
+		_peripheral = nil;
+	}
 }
 
 #pragma mark - Buffer storage
@@ -60,19 +73,24 @@ NSString* const FFRProgrammingUserInfoTimeLeftKey = @"FFRProgrammingTimeLeftKey"
 
 #pragma mark - Public methods
 
--(id) initWithPeripheral:(CBPeripheral *)peripheral {
-	if (self = [self init]) {
-		_peripheral = peripheral;
-	}
+-(void) setPeripheral:(CBPeripheral *)peripheral
+{
+	_peripheral = peripheral;
+}
 
-	return self;
+- (void) useImageVersionService: (void(^)())serviceAvailableBlock
+{
+	[[FFRBLEManager sharedManager]
+		useService: tiOADService
+		whenAvailable: serviceAvailableBlock];
 }
 
 - (void) queryCurrentImageVersion:(void(^)(char version))callback
 {
 	self.imageVersionCallback = callback;
 
-	[self detectImage];
+	//[self detectImage];
+	[self performSelector:@selector(detectImage) withObject:nil afterDelay:1.0];
 }
 
 -(BOOL) validateAndLoadImage:(NSData*)data
@@ -114,36 +132,61 @@ NSString* const FFRProgrammingUserInfoTimeLeftKey = @"FFRProgrammingTimeLeftKey"
 
 -(void) detectImage
 {
-	NSLog(@"Detecting image for peripheral: %@, delegate: %@", _peripheral, _peripheral.delegate);
+	NSLog(@"Detecting image for peripheral");
 
 	// Set flags to indicate that image version is not yet detected.
 	_imageDetected = NO;
 	_currentImageVersion = 0xFFFF;
 
+	// Enable image version notification.
+	[self
+		performSelector:@selector(enableImageVersionNotification)
+		withObject:nil
+		afterDelay:0.0];
+
+	// Schedule detection of image version A.
+	[self
+		performSelector:@selector(detectImageVersionA)
+		withObject:nil
+		afterDelay:0.5];
+
+	// If not version A, we will get no notification, therefore
+	// schedule another write, for version B.
+	[self
+		performSelector:@selector(detectImageVersionB)
+		withObject:nil
+		afterDelay:2.0];
+}
+
+-(void) enableImageVersionNotification
+{
 	// Enable notifrication on the image version characteristic.
 	// Note that this is for info about version A/B, not the version number.
 	[_peripheral
 		setNotificationForCharacteristicWithIdentifier:tiOADImageNotify
 		enabled:YES];
+}
 
+-(void) disableImageVersionNotification
+{
+	// Updated enabled flag from TRUE to FALSE (NO).
+	// (this must have been a typo in the original code)
+	[_peripheral
+		setNotificationForCharacteristicWithIdentifier:tiOADImageNotify
+		enabled:NO];
+}
+
+-(void) detectImageVersionA
+{
 	// Write 0 to check if this is version A.
 	unsigned char data = 0x00;
 	[_peripheral
 		writeCharacteristicWithIdentifier:tiOADImageNotify
 		data:[NSData dataWithBytes:&data length:1]];
-
-	// If not version A, we will get no notification, therefore
-	// schedule another write, for version B.
-	[self
-		performSelector:@selector(imageDetectTimerTick:)
-		withObject:nil
-		afterDelay:1.5];
 }
 
--(void) imageDetectTimerTick:(id)sender
+-(void) detectImageVersionB
 {
-	NSLog(@"imageDetectTimerTick:");
-
 	// Check if image already detected, return if so.
 	if (_imageDetected) { return; }
 
@@ -152,17 +195,6 @@ NSString* const FFRProgrammingUserInfoTimeLeftKey = @"FFRProgrammingTimeLeftKey"
 	[_peripheral
 		writeCharacteristicWithIdentifier:tiOADImageNotify
 		data:[NSData dataWithBytes:&data length:1]];
-}
-
--(void) deconfigureProfile
-{
-	NSLog(@"Deconfiguring OAD Profile");
-
-	// Updated enabled flag from TRUE to FALSE (NO).
-	// (this must have been a typo in the original code)
-	[_peripheral
-		setNotificationForCharacteristicWithIdentifier: tiOADImageNotify
-		enabled: NO];
 }
 
 #pragma mark - Bluetooth delegate
@@ -198,7 +230,7 @@ NSString* const FFRProgrammingUserInfoTimeLeftKey = @"FFRProgrammingTimeLeftKey"
 	NSLog(@"didWriteValueForCharacteristic: %@", characteristic);
 }
 
--(void)deviceDisconnected:(CBPeripheral *)peripheral {
+-(void) peripheralDisconnected:(CBPeripheral *)peripheral {
 	if ([peripheral isEqual:_peripheral] && _state == FFRProgrammingStateWriting) {
 		_state = FFRProgrammingStateFailedDueToDeviceDisconnect;
 

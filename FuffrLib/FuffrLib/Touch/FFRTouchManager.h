@@ -67,6 +67,15 @@
  */
 - (void) useSensorService: (void(^)())serviceAvailableBlock;
 
+// TODO: Not working. Implement support for battery service in case handler.
+- (void) useBatteryService: (void(^)())serviceAvailableBlock;
+
+/**
+ * Read characteristics for the image version service.
+ * @param serviceAvailableBlock Called when characteristics are available.
+ */
+- (void) useImageVersionService: (void(^)())serviceAvailableBlock;
+
 /**
  * Enable sides of Fuffr.
  * @param sides Sides to enable, bitwise or:ed values 

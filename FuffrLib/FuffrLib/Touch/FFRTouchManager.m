@@ -68,12 +68,12 @@
  * The device with strongest signal strength, used during scanning
  * to determine closest device.
  */
-@property CBPeripheral* deviceWithMaxRSSI;
+@property CBPeripheral* peripheralWithMaxRSSI;
 
 /**
  * The device we are connected to. Used when reconnecting.
  */
-@property CBPeripheral* activeDevice;
+@property CBPeripheral* activePeripheral;
 
 /**
  * Connected and disconnected blocks.
@@ -188,19 +188,19 @@ static int touchBlockIdCounter = 0;
 	NSLog(@"FFRTouchManager: App called disconnectFuffr");
 
 	FFRBLEManager* bleManager = [FFRBLEManager sharedManager];
-	self.activeDevice = [bleManager connectedDevice];
-	if (self.activeDevice != nil)
+	self.activePeripheral = [bleManager connectedPeripheral];
+	if (self.activePeripheral != nil)
 	{
-		[bleManager disconnectPeripheral: self.activeDevice];
+		[bleManager disconnectPeripheral: self.activePeripheral];
 	}
 }
 
 - (void) reconnectFuffr
 {
 	FFRBLEManager* bleManager = [FFRBLEManager sharedManager];
-	if (self.activeDevice != nil)
+	if (self.activePeripheral != nil)
 	{
-		[bleManager connectPeripheral: self.activeDevice];
+		[bleManager connectPeripheral: self.activePeripheral];
 	}
 }
 
@@ -208,6 +208,18 @@ static int touchBlockIdCounter = 0;
 {
 	[[FFRBLEManager sharedManager].handler
 		useSensorService: serviceAvailableBlock];
+}
+
+- (void) useBatteryService: (void(^)())serviceAvailableBlock
+{
+	[[FFRBLEManager sharedManager].handler
+		useBatteryService: serviceAvailableBlock];
+}
+
+- (void) useImageVersionService: (void(^)())serviceAvailableBlock
+{
+	[[FFRBLEManager sharedManager].handler
+		useImageVersionService: serviceAvailableBlock];
 }
 
 - (void) enableSides:(FFRSide)sides touchesPerSide: (NSNumber*)numberOfTouches
@@ -317,8 +329,8 @@ static int touchBlockIdCounter = 0;
 	self.onDisconnectedBlock = nil;
 	self.touchObservers = [NSMutableArray array];
 	self.gestureRecognizers = [NSMutableArray array];
-	self.deviceWithMaxRSSI = nil;
-	self.activeDevice = nil;
+	self.peripheralWithMaxRSSI = nil;
+	self.activePeripheral = nil;
 	[self registerTouchMethods];
 	[self registerPeripheralDiscoverer];
 	[self registerConnectionCallbacks];
@@ -361,10 +373,10 @@ static int touchBlockIdCounter = 0;
 
 -(void) connectToDeviceWithMaxRSSI
 {
-	NSLog(@"connectToDeviceWithMaxRSSI: %@", self.deviceWithMaxRSSI.name);
+	NSLog(@"connectToDeviceWithMaxRSSI: %@", self.peripheralWithMaxRSSI.name);
 
 	// This is where we connect.
-	[[FFRBLEManager sharedManager] connectPeripheral: self.deviceWithMaxRSSI];
+	[[FFRBLEManager sharedManager] connectPeripheral: self.peripheralWithMaxRSSI];
 }
 
 - (void) registerPeripheralDiscoverer
@@ -380,10 +392,10 @@ static int touchBlockIdCounter = 0;
 		if (stringContains(p.name, @"Fuffr") ||
 			stringContains(p.name, @"Neonode"))
 		{
-			if (nil == me.deviceWithMaxRSSI)
+			if (nil == me.peripheralWithMaxRSSI)
 			{
 				NSLog(@"start timer for connectToDeviceWithMaxRSSI: %@", p.name);
-				me.deviceWithMaxRSSI = p;
+				me.peripheralWithMaxRSSI = p;
 				[NSTimer
 					scheduledTimerWithTimeInterval: 1.0
 					target: me
@@ -394,12 +406,12 @@ static int touchBlockIdCounter = 0;
 			}
 			else
 			{
-				NSNumber* rssiMax = me.deviceWithMaxRSSI.discoveryRSSI;
+				NSNumber* rssiMax = me.peripheralWithMaxRSSI.discoveryRSSI;
 				NSNumber* rssiNew = p.discoveryRSSI;
 				if (rssiNew.intValue > rssiMax.intValue)
 				{
 					NSLog(@"Found device with stronger RSSI: %@", p.name);
-					me.deviceWithMaxRSSI = p;
+					me.peripheralWithMaxRSSI = p;
 				}
 			}
 		}
