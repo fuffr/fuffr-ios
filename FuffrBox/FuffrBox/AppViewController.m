@@ -14,7 +14,6 @@
 #import <FuffrLib/FFRPinchGestureRecognizer.h>
 #import <FuffrLib/FFRPanGestureRecognizer.h>
 #import <FuffrLib/FFRRotationGestureRecognizer.h>
-#import <FuffrLib/FFRFirmwareDownloader.h>
 #import <FuffrLib/FFROADHandler.h>
 #import <FuffrLib/UIView+Toast.h>
 
@@ -389,6 +388,9 @@ static BOOL FuffrIsConnected = NO;
 	[self.webView loadRequest: request];
 }
 
+/*
+// WebGL commented out in production version.
+
 #pragma clang diagnostic push
 #pragma GCC diagnostic ignored "-Wundeclared-selector"
 
@@ -412,15 +414,31 @@ static BOOL FuffrIsConnected = NO;
 }
 
 #pragma clang diagnostic pop
+*/
 
 -(void) viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear: animated];
 
-	[self enableWebGL];
+	// Commented out WebGL code in production version.
+	//[self enableWebGL];
 
 	// Connect to Fuffr and setup touch events.
 	[self setupFuffr];
+}
+
+- (void) viewWillDisappear: (BOOL)animated
+{
+	NSLog(@"FuffrBox: viewWillDisappear");
+    [[NSNotificationCenter defaultCenter] removeObserver: self];
+	[[FFRTouchManager sharedManager] shutDown]; // Disconnect Fuffr.
+	//  [[FFRTouchManager sharedManager] disconnectFuffr];
+    [super viewWillDisappear: animated];
+}
+
+-(void) viewDidDisappear: (BOOL)animated
+{
+	NSLog(@"FuffrBox: viewDidDisappear");
 }
 
 - (void)didReceiveMemoryWarning
@@ -431,6 +449,7 @@ static BOOL FuffrIsConnected = NO;
 - (void) setupFuffr
 {
 	[self connectToFuffr];
+
 	[self setupTouches];
 }
 
@@ -439,24 +458,18 @@ static BOOL FuffrIsConnected = NO;
 	[self.view makeToast: @"Scanning for Fuffr"];
 
 	// Get a reference to the touch manager.
+	// First time the manager is requested, it will be created
+	// and start scanning for a Fuffr device.
 	FFRTouchManager* manager = [FFRTouchManager sharedManager];
 
 	// Set connected and disconnected action blocks.
 	[manager
 		onFuffrConnected:
 		^{
-			[manager useSensorService:
-			^{
-				NSLog(@"Fuffr Connected");
-				[self.view makeToast: @"Fuffr Connected"];
-				/* TODO: Let the apps enable sides in JavaScript instead. */
-				[manager
-					enableSides: FFRSideTop | FFRSideLeft | FFRSideRight | FFRSideBottom
-					touchesPerSide: @2 // Default number of touches per side.
-					];
-				FuffrIsConnected = YES;
-				[self callJS: @"fuffr.on.connected()"];
-			}];
+			NSLog(@"Fuffr Connected");
+			[self.view makeToast: @"Fuffr Connected"];
+			FuffrIsConnected = YES;
+			[self callJS: @"fuffr.on.connected()"];
 		}
 		onFuffrDisconnected:
 		^{
@@ -533,9 +546,13 @@ static BOOL FuffrIsConnected = NO;
 {
 	NSString* sides = [NSString stringWithString:[tokens objectAtIndex: 2]];
 	NSString* touches = [NSString stringWithString:[tokens objectAtIndex: 3]];
-	[[FFRTouchManager sharedManager]
-		enableSides: (FFRSide)[sides intValue]
-		touchesPerSide: [NSNumber numberWithInt: [touches intValue]]];
+	
+	[[FFRTouchManager sharedManager] useSensorService:
+	^{
+		[[FFRTouchManager sharedManager]
+			enableSides: (FFRSide)[sides intValue]
+			touchesPerSide: [NSNumber numberWithInt: [touches intValue]]];
+	}];
 }
 
 - (void) jsCommandAddGesture: (NSArray*) tokens
@@ -571,48 +588,9 @@ static BOOL FuffrIsConnected = NO;
 	[self.gestureListeners removeAllObjects];
 }
 
-// TODO: Implement.
 - (void) jsCommandUpdateFirmware: (NSArray*) tokens
 {
-	FFRBLEManager* bleManager = [FFRBLEManager sharedManager];
-
-	// Turn off and release case handler.
-	id currentHandler = bleManager.handler;
-	bleManager.handler = nil;
-	[currentHandler shutDown];
-
-	// Set up OAD handler.
-	FFROADHandler* handler = [FFROADHandler alloc];
-	[handler setPeripheral: [bleManager connectedPeripheral]];
-
-	// Set the handler.
-	bleManager.handler = handler;
-	[bleManager.handler useImageVersionService:
-	^{
-		NSLog(@"Found image version service");
-
-		// Get firmware image version to download.
-		[handler queryCurrentImageVersion: ^void (char version)
-		{
-			NSLog(@"*** Image type is: %c", version);
-			// TODO: Proceed with download.
-		}];
-	}];
-
-	/*
-	[[FFRFirmwareDownloader new]
-		downloadFirmwareDataFromURL: @"http://divineprog.com/"
-		callback: ^void(NSData* data)
-		{
-			if (data)
-			{
-				NSString* text = [[NSString alloc]
-					initWithData: data
-					encoding: NSUTF8StringEncoding];
-            	NSLog(@"Data: %@",text);
-        	}
-		}];
-	*/
+	[[FFRTouchManager sharedManager] updateFirmware];
 }
 
 - (void) jsCommandConsoleLog: (NSArray*) tokens

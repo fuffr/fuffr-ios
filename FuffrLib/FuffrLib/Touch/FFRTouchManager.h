@@ -10,6 +10,7 @@
 #import <Foundation/Foundation.h>
 #import "FFRBLEManager.h"
 #import "FFRCaseHandler.h"
+#import "FFROADHandler.h"
 #import "FFRGestureRecognizer.h"
 #import "FFRLongPressGestureRecognizer.h"
 #import "FFRPanGestureRecognizer.h"
@@ -62,12 +63,17 @@
 - (void) reconnectFuffr;
 
 /**
+ * Disconnect Fuffr and release the touch manager.
+ */
+- (void) shutDown;
+
+/**
  * Read characteristics for sensor service.
  * @param serviceAvailableBlock Called when characteristics are available.
  */
 - (void) useSensorService: (void(^)())serviceAvailableBlock;
 
-// TODO: Not working. Implement support for battery service in case handler.
+// TODO: Not working yet. Implement support for battery service in case handler.
 - (void) useBatteryService: (void(^)())serviceAvailableBlock;
 
 /**
@@ -75,6 +81,11 @@
  * @param serviceAvailableBlock Called when characteristics are available.
  */
 - (void) useImageVersionService: (void(^)())serviceAvailableBlock;
+
+/**
+ * Do an online update the firmware of the Fuffr.
+ */
+- (void) updateFirmware;
 
 /**
  * Enable sides of Fuffr.

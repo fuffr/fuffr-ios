@@ -17,9 +17,9 @@
 #define HI_UINT16(a) (((a) >> 8) & 0xff)
 #define LO_UINT16(a) ((a) & 0xff)
 
-NSString* const tiOADService =			  @"0xF000FFC0-0451-4000-B000-000000000000";
-NSString* const tiOADImageNotify =		  @"0xF000FFC1-0451-4000-B000-000000000000";
-NSString* const tiOADImageBlockRequest =	@"0xF000FFC2-0451-4000-B000-000000000000";
+NSString* const tiOADService =           @"0xF000FFC0-0451-4000-B000-000000000000";
+NSString* const tiOADImageNotify =       @"0xF000FFC1-0451-4000-B000-000000000000";
+NSString* const tiOADImageBlockRequest = @"0xF000FFC2-0451-4000-B000-000000000000";
 
 NSString* const FFRProgrammingNotification = @"FFRProgrammingNotification";
 NSString* const FFRProgrammingUserInfoStateKey = @"FFRProgrammingStateKey";
@@ -58,14 +58,17 @@ NSString* const FFRProgrammingUserInfoTimeLeftKey = @"FFRProgrammingTimeLeftKey"
 
 #pragma mark - Buffer storage
 
--(void) storeToBuffer:(NSData*) data {
+-(void) storeToBuffer:(NSData*) data
+{
 	[self clearBuffer];
 	_dataBuffer = malloc(data.length);
 	[data getBytes:_dataBuffer];
 }
 
--(void) clearBuffer {
-	if (_dataBuffer != NULL) {
+-(void) clearBuffer
+{
+	if (_dataBuffer != NULL)
+	{
 		free(_dataBuffer);
 		_dataBuffer = NULL;
 	}
@@ -95,12 +98,14 @@ NSString* const FFRProgrammingUserInfoTimeLeftKey = @"FFRProgrammingTimeLeftKey"
 
 -(BOOL) validateAndLoadImage:(NSData*)data
 {
+	NSLog(@"OAD validateAndLoadImage");
+
 	if (_imageDetected && [self verifyCorrectImage:data])
 	{
 		// Here image upload is started.
 		[self uploadImage:data];
 		
-		return TRUE;
+		return YES;
 	}
 	else if (_currentImageVersion == 0xFFFF)
 	{
@@ -125,14 +130,14 @@ NSString* const FFRProgrammingUserInfoTimeLeftKey = @"FFRProgrammingTimeLeftKey"
 		[wrongImage show];
 	}
 
-	return FALSE;
+	return NO;
 }
 
 #pragma mark - Bluetooth handling
 
 -(void) detectImage
 {
-	NSLog(@"Detecting image for peripheral");
+	NSLog(@"OAD detectImage");
 
 	// Set flags to indicate that image version is not yet detected.
 	_imageDetected = NO;
@@ -207,11 +212,18 @@ NSString* const FFRProgrammingUserInfoTimeLeftKey = @"FFRProgrammingTimeLeftKey"
 
 		if (_currentImageVersion == 0xFFFF)
 		{
+			[self disableImageVersionNotification];
+
+			[NSObject
+				cancelPreviousPerformRequestsWithTarget: self
+				selector: @selector(detectImageVersionB)
+				object: nil];
+
 			unsigned char data[characteristic.value.length];
 			[characteristic.value getBytes:&data];
 
 			_currentImageVersion = ((uint16_t)data[1] << 8 & 0xff00) | ((uint16_t)data[0] & 0xff);
-			NSLog(@"self.imgVersion: %04hx", _currentImageVersion);
+			NSLog(@"OAD self.imgVersion: %04hx", _currentImageVersion);
 
 			// Call image version callback on the main queue.
 			dispatch_async(dispatch_get_main_queue(),
@@ -219,56 +231,79 @@ NSString* const FFRProgrammingUserInfoTimeLeftKey = @"FFRProgrammingTimeLeftKey"
 				self.imageVersionCallback((_currentImageVersion & 0x01) ? 'B' : 'A');
 			});
 		}
-
-		NSLog(@"OAD Image notify: %@", characteristic.value);
+		else
+		{
+			NSLog(@"OAD Unhandled didUpdateValueForCharacteristic: %@", characteristic.value);
+		}
 	}
 }
 
 -(void) didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
 	error:(NSError *)error
 {
-	NSLog(@"didWriteValueForCharacteristic: %@", characteristic);
+	NSLog(@"OAD didWriteValueForCharacteristic: %@", characteristic);
 }
 
--(void) peripheralDisconnected:(CBPeripheral *)peripheral {
-	if ([peripheral isEqual:_peripheral] && _state == FFRProgrammingStateWriting) {
+-(void) peripheralDisconnected:(CBPeripheral *)peripheral
+{
+	if ([peripheral isEqual:_peripheral] && _state == FFRProgrammingStateWriting)
+	{
 		_state = FFRProgrammingStateFailedDueToDeviceDisconnect;
 
-		UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"FW Upgrade Failed!" message:@"Device disconnected during programming, firmware upgrade was not finished!" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-		[alertView show];
+		[[NSNotificationCenter defaultCenter]
+			postNotificationName:FFRProgrammingNotification
+			object:self
+			userInfo:@{
+				FFRProgrammingUserInfoProgressKey: @0.0f,
+				FFRProgrammingUserInfoStateKey:[NSNumber numberWithInt:self.state],
+				FFRProgrammingUserInfoTimeLeftKey: @0}];
 
-		[[NSNotificationCenter defaultCenter] postNotificationName:FFRProgrammingNotification object:self userInfo:@{FFRProgrammingUserInfoProgressKey: @0.0f, FFRProgrammingUserInfoStateKey:[NSNumber numberWithInt:self.state], FFRProgrammingUserInfoTimeLeftKey: @0}];
+		UIAlertView *alertView = [[UIAlertView alloc]
+			initWithTitle:@"FW Upgrade Failed!"
+			message:@"Device disconnected during programming, firmware upgrade was not finished!"
+			delegate:self
+			cancelButtonTitle:@"OK"
+			otherButtonTitles:nil];
+		[alertView show];
 	}
 }
 
 #pragma mark - Image handling
 
--(BOOL) verifyCorrectImage:(NSData*)data {
+-(BOOL) verifyCorrectImage:(NSData*)data
+{
 	unsigned char imageFileData[data.length];
+
 	[data getBytes:imageFileData];
 
 	img_hdr_t imgHeader;
 	memcpy(&imgHeader, &imageFileData[0 + OAD_IMG_HDR_OSET], sizeof(img_hdr_t));
 
-// Well, vi vet redan hur vi ska valja mellan A och B: _currentImageVersion & 0x01.
-
-	if ((imgHeader.ver & 0x01) != (_currentImageVersion & 0x01)) {
+	// Image version in header must differ.
+	if ((imgHeader.ver & 0x01) != (_currentImageVersion & 0x01))
+	{
 		return YES;
 	}
-	else {
+	else
+	{
 		return NO;
 	}
 }
 
--(void) uploadImage:(NSData*)image {
+-(void) uploadImage:(NSData*)image
+{
 	_state = FFRProgrammingStateWriting;
+
+	NSLog(@"OAD uploadImage ");
+
 	[self storeToBuffer:image];
 
 	uint8_t requestData[OAD_IMG_HDR_SIZE + 2 + 2]; // 12Bytes
 
-	for (int ii = 0; ii < 20; ii++) {
+	// Debug logging commented out.
+	/*for (int ii = 0; ii < 20; ii++) {
 		NSLog(@"%02hhx", _dataBuffer[ii]);
-	}
+	}*/
 
 	img_hdr_t imgHeader;
 	memcpy(&imgHeader, &_dataBuffer[0 + OAD_IMG_HDR_OSET], sizeof(img_hdr_t));
@@ -278,7 +313,7 @@ NSString* const FFRProgrammingUserInfoTimeLeftKey = @"FFRProgrammingTimeLeftKey"
 	requestData[2] = LO_UINT16(imgHeader.len);
 	requestData[3] = HI_UINT16(imgHeader.len);
 
-	NSLog(@"Image version = %04hx, len = %04hx, %d, %lu", imgHeader.ver, imgHeader.len, imgHeader.len, (unsigned long)image.length);
+	NSLog(@"OAD Image version = %04hx, len = %04hx, %d, %lu", imgHeader.ver, imgHeader.len, imgHeader.len, (unsigned long)image.length);
 
 	memcpy(requestData + 4, &imgHeader.uid, sizeof(imgHeader.uid));
 
@@ -288,7 +323,9 @@ NSString* const FFRProgrammingUserInfoTimeLeftKey = @"FFRProgrammingTimeLeftKey"
 	requestData[OAD_IMG_HDR_SIZE + 2] = LO_UINT16(15);
 	requestData[OAD_IMG_HDR_SIZE + 1] = HI_UINT16(15);
 
-	[_peripheral writeCharacteristicWithIdentifier:tiOADImageNotify data:[NSData dataWithBytes:requestData length:OAD_IMG_HDR_SIZE + 2 + 2]];
+	[_peripheral
+		writeCharacteristicWithIdentifier:tiOADImageNotify
+		data:[NSData dataWithBytes:requestData length:OAD_IMG_HDR_SIZE + 2 + 2]];
 
 	// calculate blocks to send
 	nBlocks = imgHeader.len / (OAD_BLOCK_SIZE / HAL_FLASH_WORD_SIZE);
@@ -296,21 +333,31 @@ NSString* const FFRProgrammingUserInfoTimeLeftKey = @"FFRProgrammingTimeLeftKey"
 	iBlocks = 0;
 	iBytes = 0;
 
-	[NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(programmingTimerTick:) userInfo:nil repeats:NO];
+	[NSTimer
+		scheduledTimerWithTimeInterval:0.1
+		target:self
+		selector:@selector(programmingTimerTick:)
+		userInfo:nil
+		repeats:NO];
 }
 
--(void) programmingTimerTick:(NSTimer*) timer {
-	// stop transfer
-	if (self.state == FFRProgrammingStateCancelRequested || self.state == FFRProgrammingStateFailedDueToDeviceDisconnect) {
+-(void) programmingTimerTick:(NSTimer*) timer
+{
+	// Stop transfer if requested or disconnected.
+	if (self.state == FFRProgrammingStateCancelRequested ||
+		self.state == FFRProgrammingStateFailedDueToDeviceDisconnect)
+	{
 		_state = FFRProgrammingStateIdle;
 		return;
 	}
 
-	//Prepare Block
+	// Allocate data block.
 	uint8_t requestData[2 + OAD_BLOCK_SIZE];
 
-	// This block is run 4 times, this is needed to get CoreBluetooth to send consequetive packets in the same connection interval.
-	for (int ii = 0; ii < 4; ii++) {
+	// This block is run 4 times, this is needed to get CoreBluetooth to send
+	// consequetive packets in the same connection interval.
+	for (int ii = 0; ii < 4; ii++)
+	{
 		requestData[0] = LO_UINT16(iBlocks);
 		requestData[1] = HI_UINT16(iBlocks);
 
@@ -321,30 +368,51 @@ NSString* const FFRProgrammingUserInfoTimeLeftKey = @"FFRProgrammingTimeLeftKey"
 		for (int i = 0; i < 2 + OAD_BLOCK_SIZE; ++i) {
 			[log appendFormat:@"%c", requestData[i]];
 		}
-
 		NSLog(@"data send: %@", log);*/
 
-		[_peripheral writeCharacteristicWithoutResponseForIdentifier:tiOADImageBlockRequest data:[NSData dataWithBytes:requestData length:2 + OAD_BLOCK_SIZE]];
+		[_peripheral
+			writeCharacteristicWithoutResponseForIdentifier:tiOADImageBlockRequest
+			data:[NSData dataWithBytes:requestData length:2 + OAD_BLOCK_SIZE]];
 
 		iBlocks++;
 		iBytes += OAD_BLOCK_SIZE;
 
-		if (iBlocks == nBlocks) {
+		if (iBlocks == nBlocks)
+		{
 			_state = FFRProgrammingStateWriteCompleted;
-			[[NSNotificationCenter defaultCenter] postNotificationName:FFRProgrammingNotification object:self userInfo:@{FFRProgrammingUserInfoProgressKey: @1.0f, FFRProgrammingUserInfoStateKey:[NSNumber numberWithInt:self.state], FFRProgrammingUserInfoTimeLeftKey: @0}];
+			[[NSNotificationCenter defaultCenter]
+				postNotificationName:FFRProgrammingNotification
+				object:self
+				userInfo:@{
+					FFRProgrammingUserInfoProgressKey: @1.0f,
+					FFRProgrammingUserInfoStateKey:[NSNumber numberWithInt:self.state],
+					FFRProgrammingUserInfoTimeLeftKey: @0}];
 			_state = FFRProgrammingStateIdle;
 			return;
 		}
-		else {
-			if (ii == 3) {
-				[NSTimer scheduledTimerWithTimeInterval:0.09 target:self selector:@selector(programmingTimerTick:) userInfo:nil repeats:NO];
+		else
+		{
+			if (ii == 3)
+			{
+				[NSTimer
+					scheduledTimerWithTimeInterval:0.09
+					target:self
+					selector:@selector(programmingTimerTick:)
+					userInfo:nil
+					repeats:NO];
 			}
 		}
 	}
 
 	float progress = (float)iBlocks / (float)nBlocks;
 	float secondsLeft = 0.09 / 4 * (nBlocks - iBlocks);
-	[[NSNotificationCenter defaultCenter] postNotificationName:FFRProgrammingNotification object:self userInfo:@{FFRProgrammingUserInfoProgressKey: [NSNumber numberWithFloat:progress], FFRProgrammingUserInfoStateKey:[NSNumber numberWithInt:self.state], FFRProgrammingUserInfoTimeLeftKey: [NSNumber numberWithFloat:secondsLeft]}];
+	[[NSNotificationCenter defaultCenter]
+		postNotificationName:FFRProgrammingNotification
+		object:self
+		userInfo:@{
+			FFRProgrammingUserInfoProgressKey: [NSNumber numberWithFloat:progress],
+			FFRProgrammingUserInfoStateKey:[NSNumber numberWithInt:self.state],
+			FFRProgrammingUserInfoTimeLeftKey: [NSNumber numberWithFloat:secondsLeft]}];
 }
 
 @end

@@ -51,9 +51,14 @@ NSString* const FFRBatteryCharacteristicUUID = @"2a19";
 	_peripheral = peripheral;
 }
 
+-(void) dealloc
+{
+	[self shutDown];
+}
+
 -(void) shutDown
 {
-	//[self enableSides: FFRSideNotSet touchesPerSide: @0];
+	[self enableSides: FFRSideNotSet touchesPerSide: @0];
 	if (_trackingManager)
 	{
 		[_trackingManager shutDown];
@@ -63,11 +68,6 @@ NSString* const FFRBatteryCharacteristicUUID = @"2a19";
 	_backgroundQueue = nil;
 	self.spaceMapper = nil;
 	_peripheral = nil;
-}
-
--(void) dealloc
-{
-	[self shutDown];
 }
 
 #pragma mark - Service discovery

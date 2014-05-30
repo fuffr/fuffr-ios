@@ -92,12 +92,6 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 		self.connectedPeripherals = [NSMutableArray array];
 		self.discoveredPeripherals = [NSMutableArray array];
 		self.serviceRequestQueue = [NSMutableArray array];
-
-		[[NSNotificationCenter defaultCenter]
-			addObserver:self
-			selector:@selector(reactivated:)
-			name:UIApplicationDidBecomeActiveNotification
-			object:nil];
 	}
 
 	return self;
