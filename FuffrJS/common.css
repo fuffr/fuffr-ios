@@ -1,33 +1,164 @@
+
+@font-face {
+	font-family: 'Gotham Rounded';
+	src: url("fonts/gotham-rounded/gothamrnd-book-webfont.eot");
+	src: url("fonts/gotham-rounded/gothamrnd-book-webfont.eot?#iefix") format("embedded-opentype"), url("fonts/gotham-rounded/gothamrnd-book-webfont.woff") format("woff"), url("fonts/gotham-rounded/gothamrnd-book-webfont.ttf") format("truetype"), url("fonts/gotham-rounded/gothamrnd-book-webfont.svg#gotham_roundedbook") format("svg");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Gotham Rounded';
+	src: url("fonts/gotham-rounded/gothamrnd-bold-webfont.eot");
+	src: url("fonts/gotham-rounded/gothamrnd-bold-webfont.eot?#iefix") format("embedded-opentype"), url("fonts/gotham-rounded/gothamrnd-bold-webfont.woff") format("woff"), url("fonts/gotham-rounded/gothamrnd-bold-webfont.ttf") format("truetype"), url("fonts/gotham-rounded/gothamrnd-bold-webfont.svg#gotham_roundedbold") format("svg");
+	font-weight: bold;
+	font-style: normal;
+}
+
 html, body {
-	margin: 0px;
-	padding: 0px;
-	background-color: #ffffff;
-	font-family: sans-serif;
-	text-decoration: none;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	background-color: #fff;
+	font-family: 'Gotham Rounded', sans-serif;
+	font-weight: normal;
+	font-size: 100px;
+	font-size: 25vmax;
+	overflow: hidden;
+
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
+
+	-webkit-transform: translateZ(0);
+	-moz-transform: translateZ(0);
+	-ms-transform: translateZ(0);
+	-o-transform: translateZ(0);
+	transform: translateZ(0);
+
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+
+	-webkit-text-size-adjust: none;
+	-moz-text-size-adjust: none;
+	-ms-text-size-adjust: none;
+	-o-text-size-adjust: none;
+	text-size-adjust: none;
+}
+
+div.logo-container {
+	position: relative;
+	width: 100%;
+	height: 33%;
+	background-color: #33bfde;
+}
+
+/* For old browsers. */
+img.logo {
+	position: absolute;
+	max-width: 47%;
+	top: 36%;
+	left: 26%;
+}
+
+/* For modern browsers */
+img.logo:empty {
+	top: 50%;
+	left: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	-moz-transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+	-o-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+}
+
+@media screen and (orientation: portrait) {
+	img.logo { max-width: 47%; }
+}
+
+@media screen and (orientation: landscape) {
+	div.logo-container { height: 25%; }
+	img.logo { max-height: 64%; }
+}
+
+div.header-margin-aspect
+{
+	display: block;
+	clear: both;
+	width: 3%;
+}
+div.header-margin-aspect:after
+{
+	display: block;
+	padding-top: 100%;
+	content: '';
 }
 
 h1 {
-	font-size: 180%;
+	font-size: 14%;
 	font-weight: bold;
-	margin: 0px 0px;
-	padding: 10px 20px;
-	color: #ffffff;
-	background-color: #2173bd;
+	margin: 0 3%;
+	padding: 0;
+	line-height: 100%;
+	color: #33bfde;
 }
 
-.content {
-	margin: 10px;
-	padding: 10px;
-	background-color: #ffffff;
+p.header-description {
+	width: 94%;
+	margin: 1% 0;
+	padding: 0 3%;
+
+	font-size: 8%;
+	text-align: justify;
 }
 
-a {
-	display: block;
-	margin: 0px 0px 20px 0px;
-	padding: 10px 20px;
-	font-size: 140%;
+#demos-list {
+	width: 94%;
+	height: 40%;
+	margin: 3% 3%;
+	padding: 0;
+
+	white-space: nowrap;
+	overflow-x: scroll;
+	overflow-y: hidden;
+
+	background-color: #fff;
+	font-size: 11%;
+}
+
+#demos-list ul {
+	display: inline;
+	list-style: none;
+
+	height: 100%;
+	margin: 0;
+	padding: 0;
+
+	white-space: nowrap;
+	line-height: 0;
+	vertical-align: top;
+}
+
+#demos-list li {
+	display: inline-block;
+	
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+
+	line-height: 100%;
+	vertical-align: top;
+}
+
+#demos-list a {
 	font-weight: bold;
 	text-decoration: none;
-	color: #ffffff;
-	background-color: #34bfde;
+	color: #ed5491;
+	text-decoration: underline;
 }

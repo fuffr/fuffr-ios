@@ -5,18 +5,46 @@
 	<meta name="viewport" content="width=device-width,user-scalable=no, initial-scale=1"/>
     <title>Fuffr WebView Demos</title>
 	<link rel="stylesheet" href="common.css"/>
-	<style>
-	</style>
 	<script src="lib/jquery.js"></script>
+	<script src="lib/jquery.scrollstop.js"></script>
+	<script src="lib/jquery.easing.min.js"></script>
+	<script src="lib/jquery.scrollsnap.js"></script>
+	<script type="text/javascript">
+	$(document).ready(function()
+	{
+		$('#demos-list').scrollsnap({
+			snaps: 'li',
+			direction: 'x',
+			proximity: 10000,
+			latency: 200,
+			duration: 200
+		});
+	});
+	</script>
 </head>
 <body>
 
-<h1>Fuffr Demos</h1>
+<div class="logo-container">
+	<img class="logo" src="gfx/logo.png" />
+</div>
 
-<div class="content">
-	<a href="dancing-squares.html">Dancing Squares</a>
-	<a href="vibrant-field.html">Vibrant Field</a>
-	<a href="pong.html">Pong</a>
+<div class="header-margin-aspect"></div>
+<h1>Welcome to Fuffr Box</h1>
+<p class="header-description">40 words / Short description on one-two rows about FuffrBox.
+Description on one-two rows about FuffrBox. Description on one-two rows about FuffrBox.</p>
+
+<div id="demos-list">
+	<ul>
+		<li>
+			<a href="pong.html">Pong</a>
+		</li>
+		<li>
+			<a href="dancing-squares.html">Dancing Squares</a>
+		</li>
+		<li>
+			<a href="vibrant-field.html">Vibrant Field</a>
+		</li>
+	</ul>
 </div>
 
 </body>
