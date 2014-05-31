@@ -82,6 +82,7 @@ img.logo:empty {
 }
 
 @media screen and (orientation: landscape) {
+	div.logo-container { height: 25%; }
 	img.logo { max-height: 64%; }
 }
 
