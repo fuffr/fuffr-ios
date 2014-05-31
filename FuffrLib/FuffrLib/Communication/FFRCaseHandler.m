@@ -58,7 +58,6 @@ NSString* const FFRBatteryCharacteristicUUID = @"2a19";
 
 -(void) shutDown
 {
-	[self enableSides: FFRSideNotSet touchesPerSide: @0];
 	if (_trackingManager)
 	{
 		[_trackingManager shutDown];

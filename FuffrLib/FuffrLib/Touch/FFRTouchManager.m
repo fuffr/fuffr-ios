@@ -254,10 +254,16 @@ static int touchBlockIdCounter = 0;
 
 - (void) updateFirmware
 {
-	if (self.firmwareUpdateState != FFRFirmwareUpdateNotInProgress) { return; }
+	// Guard agains multiple invocations during update.
+	if (self.firmwareUpdateState != FFRFirmwareUpdateNotInProgress)
+	{
+		return;
+	}
 
+	// Set initial update state.
 	self.firmwareUpdateState = FFRFirmwareUpdateInitiated;
 
+	// Initalise progress UI.
 	[SVProgressHUD setBackgroundColor: [UIColor lightGrayColor]];
 	[SVProgressHUD setRingThickness: 4.0];
 	[SVProgressHUD
@@ -266,35 +272,39 @@ static int touchBlockIdCounter = 0;
 
 	FFRBLEManager* bleManager = [FFRBLEManager sharedManager];
 
-	// Turn off and release case handler.
-	id currentHandler = bleManager.handler;
-	bleManager.handler = nil;
-	[currentHandler shutDown];
-
-	// Set up OAD handler.
-	FFROADHandler* handler = [FFROADHandler alloc];
-	[handler setPeripheral: [bleManager connectedPeripheral]];
-
-	// Set the handler.
-	bleManager.handler = handler;
-
-	// Scan for required service.
-	[bleManager.handler useImageVersionService:
+	// Current handler is case handler.
+	[bleManager.handler useSensorService:
 	^{
-		NSLog(@"Found image version service");
+		// Turn off and release case handler.
+		[bleManager.handler enableSides: FFRSideNotSet touchesPerSide: @0];
+		[bleManager.handler shutDown];
+		bleManager.handler = nil;
 
-		// Get firmware image version to download.
-		[handler queryCurrentImageVersion: ^void (char version)
-		{
-			NSLog(@"*** Image type is: %c", version);
+		// Create OAD handler.
+		FFROADHandler* handler = [FFROADHandler alloc];
+		[handler setPeripheral: [bleManager connectedPeripheral]];
 
-			// Update to the version not running.
-			self.firmwareImageVersion = ('A' == version ? 'B' : 'A');
+		// Set OAD handler.
+		bleManager.handler = handler;
 
-			[self
-				performSelector: @selector(updateFirmwareCC2541)
-				withObject: nil
-				afterDelay: 2.0];
+		// Scan for required service.
+		[bleManager.handler useImageVersionService:
+		^{
+			NSLog(@"Found image version service");
+
+			// Get firmware image version to download.
+			[handler queryCurrentImageVersion: ^void (char version)
+			{
+				NSLog(@"*** Image type is: %c", version);
+
+				// Update to the version not running.
+				self.firmwareImageVersion = ('A' == version ? 'B' : 'A');
+
+				[self
+					performSelector: @selector(updateFirmwareCC2541)
+					withObject: nil
+					afterDelay: 2.0];
+			}];
 		}];
 	}];
 }
@@ -380,16 +390,14 @@ static int touchBlockIdCounter = 0;
 			NSLog(@"Firmware part 2 updated");
 
 			[SVProgressHUD showSuccessWithStatus:@"Firmware updated"];
-        	[self performSelector:@selector(dismissFirmwareProgress) withObject:nil afterDelay:5.0];
 
-			// Done.
-        	self.firmwareUpdateState = FFRFirmwareUpdateNotInProgress;
+        	[self performSelector:@selector(firmwareUpdateEnded) withObject:nil afterDelay:3.0];
 
 			NSLog(@"Firmware update done");
 			
 			UIAlertView *alertView = [[UIAlertView alloc]
 				initWithTitle:@"Firmware Upgraded"
-				message:@"Please quit application and reset Fuffr, then restart and connect."
+				message:@"Press Reset then press Scan on the Fuffr to connect."
 				delegate:self
 				cancelButtonTitle:@"OK"
 				otherButtonTitles:nil];
@@ -399,8 +407,8 @@ static int touchBlockIdCounter = 0;
     else if (state == FFRProgrammingStateFailedDueToDeviceDisconnect)
 	{
 		NSLog(@"Device disconnected during update");
-        [self performSelector:@selector(dismissFirmwareProgress) withObject:nil afterDelay:0.0];
-		self.firmwareUpdateState = FFRFirmwareUpdateNotInProgress;
+
+        [self performSelector:@selector(firmwareUpdateEnded) withObject:nil afterDelay:3.0];
 
 		UIAlertView *alertView = [[UIAlertView alloc]
 			initWithTitle:@"Fuffr Disconnected"
@@ -412,14 +420,21 @@ static int touchBlockIdCounter = 0;
     }
     else if (state == FFRProgrammingStateIdle)
 	{
-        [self performSelector:@selector(dismissFirmwareProgress) withObject:nil afterDelay:5.0];
-		self.firmwareUpdateState = FFRFirmwareUpdateNotInProgress;
+        [self performSelector:@selector(firmwareUpdateEnded) withObject:nil afterDelay:3.0];
 	}
 }
 
-- (void)dismissFirmwareProgress
+- (void)firmwareUpdateEnded
 {
-	[SVProgressHUD dismiss];
+	if (self.firmwareUpdateState != FFRFirmwareUpdateNotInProgress)
+	{
+		[SVProgressHUD dismiss];
+
+		// Recreate sensor case handler.
+		[FFRBLEManager sharedManager].handler = [FFRCaseHandler new];
+
+		self.firmwareUpdateState = FFRFirmwareUpdateNotInProgress;
+	}
 }
 
 - (void) enableSides:(FFRSide)sides touchesPerSide: (NSNumber*)numberOfTouches

@@ -469,9 +469,6 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 {
 	FFRServiceRequestCommand* command;
 
-	// There must be an item in the queue when we get here.
-	assert([self.serviceRequestQueue count] > 0);
-
 	// Get service request from the queue.
 	if ([self.serviceRequestQueue count] > 0)
 	{

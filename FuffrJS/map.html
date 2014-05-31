@@ -43,7 +43,7 @@ var prevPanY = 0
 
 function onPan(state, panX, panY)
 {
-	hyper.log('Fuffr onPan: ' + state + ' ' + panX + ' ' + panY)
+	console.log('Fuffr onPan: ' + state + ' ' + panX + ' ' + panY)
 
 	if (fuffr.FFRGestureRecognizerStateChanged == state)
 	{
@@ -66,7 +66,7 @@ var baseZoom = 0
 
 function onPinch(state, scale)
 {
-	hyper.log('Fuffr onPinch: ' + state + ' ' + scale)
+	console.log('Fuffr onPinch: ' + state + ' ' + scale)
 
 	if (0 == baseZoom)
 	{
@@ -76,7 +76,7 @@ function onPinch(state, scale)
 	if (fuffr.FFRGestureRecognizerStateChanged == state)
 	{
 		var zoomStep = Math.round((2 * scale) - 2)
-		hyper.log('zoomStep: ' + zoomStep)
+		console.log('zoomStep: ' + zoomStep)
 		map.setZoom(baseZoom + zoomStep)
 	}
 
@@ -88,7 +88,6 @@ function onPinch(state, scale)
 
 fuffr.on.connected = function()
 {
-	hyper.log('Fuffr Connected!')
 	fuffr.enableSides(
 		fuffr.FFRSideRight | fuffr.FFRSideLeft,
 		2)
