@@ -12,7 +12,14 @@
 	<script type="text/javascript">
 	$(document).ready(function()
 	{
-		$('#demos-list').scrollsnap({
+		$('#categories-list').scrollsnap({
+			snaps: 'div',
+			direction: 'y',
+			proximity: 100,
+			latency: 200,
+			duration: 200
+		});
+		$('#demos-list, #demos-list2').scrollsnap({
 			snaps: 'li',
 			direction: 'x',
 			proximity: 10000,
@@ -30,21 +37,51 @@
 
 <div class="header-margin-aspect"></div>
 <h1>Welcome to Fuffr Box</h1>
-<p class="header-description">40 words / Short description on one-two rows about FuffrBox.
-Description on one-two rows about FuffrBox. Description on one-two rows about FuffrBox.</p>
+<p class="header-description">40 words / Short description on one-two rows about Fuffr Box.
+Description on one-two rows.</p>
 
-<div id="demos-list">
-	<ul>
-		<li>
-			<a href="pong.html">Pong</a>
-		</li>
-		<li>
-			<a href="dancing-squares.html">Dancing Squares</a>
-		</li>
-		<li>
-			<a href="vibrant-field.html">Vibrant Field</a>
-		</li>
-	</ul>
+<div id="categories-list" class="vertical-list">
+
+	<div id="demos-list" class="horizontal-list">
+		<ul>
+			<li>
+				<img src="gfx/icon_sample1.png" alt="Pong" /><br />
+				<a href="pong.html">Pong</a><br />
+				Games
+			</li>
+			<li>
+				<img src="gfx/icon_sample2.png" alt="Pong" /><br />
+				<a href="dancing-squares.html">Dancing Squares</a><br />
+				Games
+			</li>
+			<li>
+				<img src="gfx/icon_sample3.png" alt="Pong" /><br />
+				<a href="vibrant-field.html">Vibrant Field</a><br />
+				Games
+			</li>
+		</ul>
+	</div>
+
+	<div id="demos-list2" class="horizontal-list">
+		<ul>
+			<li>
+				<img src="gfx/icon_sample4.png" alt="Pong" /><br />
+				<a href="pong.html">Fuffr DJ</a><br />
+				Music
+			</li>
+			<li>
+				<img src="gfx/icon_sample5.png" alt="Pong" /><br />
+				<a href="dancing-squares.html">Fuffr TV Remote</a><br />
+				Utilities
+			</li>
+			<li>
+				<img src="gfx/icon_sample3.png" alt="Pong" /><br />
+				<a href="vibrant-field.html">Fuffr Sketch</a><br />
+				Utilities
+			</li>
+		</ul>
+	</div>
+
 </div>
 
 </body>
