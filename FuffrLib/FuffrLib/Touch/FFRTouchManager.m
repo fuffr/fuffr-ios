@@ -8,6 +8,8 @@
 //
 
 #import "FFRTouchManager.h"
+#import "FFRFirmwareDownloader.h"
+#import "SVProgressHUD.h"
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
@@ -68,12 +70,12 @@
  * The device with strongest signal strength, used during scanning
  * to determine closest device.
  */
-@property CBPeripheral* deviceWithMaxRSSI;
+@property CBPeripheral* peripheralWithMaxRSSI;
 
 /**
  * The device we are connected to. Used when reconnecting.
  */
-@property CBPeripheral* activeDevice;
+@property CBPeripheral* activePeripheral;
 
 /**
  * Connected and disconnected blocks.
@@ -87,6 +89,24 @@
 
 /** List of gesture recognizers. */
 @property NSMutableArray* gestureRecognizers;
+
+/** Firmware update state. */
+@property NSInteger firmwareUpdateState;
+
+/** Firmware A/B version. */
+@property char firmwareImageVersion;
+
+/**
+ * Type that defines constants for firmware update states.
+ */
+typedef enum
+{
+	FFRFirmwareUpdateNotInProgress = 0,
+	FFRFirmwareUpdateInitiated = 1,
+	FFRFirmwareUpdateCC2541 = 2,
+	FFRFirmwareUpdateMSP430 = 3
+}
+FFRFirmwareUpdate;
 
 @end
 
@@ -149,6 +169,11 @@ static int touchBlockIdCounter = 0;
 	if (NULL == sharedInstance)
 	{
 		sharedInstance = [FFRTouchManager new];
+		
+		[sharedInstance registerTouchMethods];
+		[sharedInstance registerPeripheralDiscoverer];
+		[sharedInstance registerConnectionCallbacks];
+		[sharedInstance registerFirmwareNotification];
 	}
 
 	return sharedInstance;
@@ -188,26 +213,228 @@ static int touchBlockIdCounter = 0;
 	NSLog(@"FFRTouchManager: App called disconnectFuffr");
 
 	FFRBLEManager* bleManager = [FFRBLEManager sharedManager];
-	self.activeDevice = [bleManager connectedDevice];
-	if (self.activeDevice != nil)
+	self.activePeripheral = [bleManager connectedPeripheral];
+	if (self.activePeripheral != nil)
 	{
-		[bleManager disconnectPeripheral: self.activeDevice];
+		[bleManager disconnectPeripheral: self.activePeripheral];
 	}
 }
 
 - (void) reconnectFuffr
 {
 	FFRBLEManager* bleManager = [FFRBLEManager sharedManager];
-	if (self.activeDevice != nil)
+	if (self.activePeripheral != nil)
 	{
-		[bleManager connectPeripheral: self.activeDevice];
+		[bleManager connectPeripheral: self.activePeripheral];
 	}
+}
+
+- (void) shutDown
+{
+	[self disconnectFuffr];
 }
 
 - (void) useSensorService: (void(^)())serviceAvailableBlock
 {
 	[[FFRBLEManager sharedManager].handler
 		useSensorService: serviceAvailableBlock];
+}
+
+- (void) useBatteryService: (void(^)())serviceAvailableBlock
+{
+	[[FFRBLEManager sharedManager].handler
+		useBatteryService: serviceAvailableBlock];
+}
+
+- (void) useImageVersionService: (void(^)())serviceAvailableBlock
+{
+	[[FFRBLEManager sharedManager].handler
+		useImageVersionService: serviceAvailableBlock];
+}
+
+- (void) updateFirmware
+{
+	// Guard agains multiple invocations during update.
+	if (self.firmwareUpdateState != FFRFirmwareUpdateNotInProgress)
+	{
+		return;
+	}
+
+	// Set initial update state.
+	self.firmwareUpdateState = FFRFirmwareUpdateInitiated;
+
+	// Initalise progress UI.
+	[SVProgressHUD setBackgroundColor: [UIColor lightGrayColor]];
+	[SVProgressHUD setRingThickness: 4.0];
+	[SVProgressHUD
+		showWithStatus: @"Perparing Update 1(2)"
+		maskType: SVProgressHUDMaskTypeBlack];
+
+	FFRBLEManager* bleManager = [FFRBLEManager sharedManager];
+
+	// Current handler is case handler.
+	[bleManager.handler useSensorService:
+	^{
+		// Turn off and release case handler.
+		[bleManager.handler enableSides: FFRSideNotSet touchesPerSide: @0];
+		[bleManager.handler shutDown];
+		bleManager.handler = nil;
+
+		// Create OAD handler.
+		FFROADHandler* handler = [FFROADHandler alloc];
+		[handler setPeripheral: [bleManager connectedPeripheral]];
+
+		// Set OAD handler.
+		bleManager.handler = handler;
+
+		// Scan for required service.
+		[bleManager.handler useImageVersionService:
+		^{
+			NSLog(@"Found image version service");
+
+			// Get firmware image version to download.
+			[handler queryCurrentImageVersion: ^void (char version)
+			{
+				NSLog(@"*** Image type is: %c", version);
+
+				// Update to the version not running.
+				self.firmwareImageVersion = ('A' == version ? 'B' : 'A');
+
+				[self
+					performSelector: @selector(updateFirmwareCC2541)
+					withObject: nil
+					afterDelay: 2.0];
+			}];
+		}];
+	}];
+}
+
+- (void) updateFirmwareCC2541
+{
+	NSLog(@"updateFirmwareCC2541");
+	[self updateFirmware: @"CC2541" nextState: FFRFirmwareUpdateCC2541];
+}
+
+- (void) updateFirmwareMSP430
+{
+	NSLog(@"updateFirmwareMSP430");
+	[self updateFirmware: @"MSP430" nextState: FFRFirmwareUpdateMSP430];
+}
+
+- (void) updateFirmware: (NSString*)firmwareId nextState: (int)state
+{
+	[[FFRFirmwareDownloader new]
+		downloadFirmware: firmwareId
+		version: self.firmwareImageVersion
+		callback: ^void(NSData* data)
+		{
+			if (data)
+			{
+				NSLog(@"Got %@ data: %i", firmwareId, (int)[data length]);
+
+				BOOL started = [[FFRBLEManager sharedManager].handler
+					validateAndLoadImage: data];
+				if (started)
+				{
+					self.firmwareUpdateState = state;
+				}
+				else
+				{
+					self.firmwareUpdateState = FFRFirmwareUpdateNotInProgress;
+				}
+			}
+			else
+			{
+				NSLog(@"Failed to get %@ data", firmwareId);
+				self.firmwareUpdateState = FFRFirmwareUpdateNotInProgress;
+			}
+		}];
+}
+
+- (void) firmwareProgress: (NSNotification*) data
+{
+    FFRProgrammingState state = [(NSNumber*)[data.userInfo
+		objectForKey: FFRProgrammingUserInfoStateKey] intValue];
+    float progress = [(NSNumber*)[data.userInfo
+		objectForKey: FFRProgrammingUserInfoProgressKey] floatValue];
+    int secondsLeft = [(NSNumber*)[data.userInfo
+		objectForKey: FFRProgrammingUserInfoTimeLeftKey] floatValue];
+
+    if (state == FFRProgrammingStateWriting)
+	{
+		NSString* message =
+			[NSString stringWithFormat:@"%@: %d:%02d",
+				(FFRFirmwareUpdateCC2541 == self.firmwareUpdateState) ? @"Update 1(2)" : @"Update 2(2)",
+				secondsLeft / 60,
+				secondsLeft % 60];
+		[SVProgressHUD
+			showProgress: progress
+			status: message
+			maskType: SVProgressHUDMaskTypeBlack];
+    }
+    else if (state == FFRProgrammingStateWriteCompleted)
+	{
+		if (FFRFirmwareUpdateCC2541 == self.firmwareUpdateState)
+		{
+			NSLog(@"Firmware part 1 updated");
+			[SVProgressHUD
+				showWithStatus: @"Perparing Update 2(2)"
+				maskType: SVProgressHUDMaskTypeBlack];
+        	[self
+				performSelector: @selector(updateFirmwareMSP430)
+				withObject: nil
+				afterDelay: 20.0];
+		}
+		else if (FFRFirmwareUpdateMSP430 == self.firmwareUpdateState)
+		{
+			NSLog(@"Firmware part 2 updated");
+
+			[SVProgressHUD showSuccessWithStatus:@"Firmware updated"];
+
+        	[self performSelector:@selector(firmwareUpdateEnded) withObject:nil afterDelay:3.0];
+
+			NSLog(@"Firmware update done");
+			
+			UIAlertView *alertView = [[UIAlertView alloc]
+				initWithTitle:@"Firmware Upgraded"
+				message:@"Press Reset then press Scan on the Fuffr to connect."
+				delegate:self
+				cancelButtonTitle:@"OK"
+				otherButtonTitles:nil];
+			[alertView show];
+		}
+    }
+    else if (state == FFRProgrammingStateFailedDueToDeviceDisconnect)
+	{
+		NSLog(@"Device disconnected during update");
+
+        [self performSelector:@selector(firmwareUpdateEnded) withObject:nil afterDelay:3.0];
+
+		UIAlertView *alertView = [[UIAlertView alloc]
+			initWithTitle:@"Fuffr Disconnected"
+			message:@"Fuffr disconnected during update. Please quit app, reset Fuffr, restart and connect again."
+			delegate:self
+			cancelButtonTitle:@"OK"
+			otherButtonTitles:nil];
+		[alertView show];
+    }
+    else if (state == FFRProgrammingStateIdle)
+	{
+        [self performSelector:@selector(firmwareUpdateEnded) withObject:nil afterDelay:3.0];
+	}
+}
+
+- (void)firmwareUpdateEnded
+{
+	if (self.firmwareUpdateState != FFRFirmwareUpdateNotInProgress)
+	{
+		[SVProgressHUD dismiss];
+
+		// Recreate sensor case handler.
+		[FFRBLEManager sharedManager].handler = [FFRCaseHandler new];
+
+		self.firmwareUpdateState = FFRFirmwareUpdateNotInProgress;
+	}
 }
 
 - (void) enableSides:(FFRSide)sides touchesPerSide: (NSNumber*)numberOfTouches
@@ -313,15 +540,16 @@ static int touchBlockIdCounter = 0;
 
 - (id) init
 {
-	self.onConnectedBlock = nil;
-	self.onDisconnectedBlock = nil;
-	self.touchObservers = [NSMutableArray array];
-	self.gestureRecognizers = [NSMutableArray array];
-	self.deviceWithMaxRSSI = nil;
-	self.activeDevice = nil;
-	[self registerTouchMethods];
-	[self registerPeripheralDiscoverer];
-	[self registerConnectionCallbacks];
+	if (self = [super init])
+	{
+		self.onConnectedBlock = nil;
+		self.onDisconnectedBlock = nil;
+		self.touchObservers = [NSMutableArray array];
+		self.gestureRecognizers = [NSMutableArray array];
+		self.peripheralWithMaxRSSI = nil;
+		self.activePeripheral = nil;
+		self.firmwareUpdateState = FFRFirmwareUpdateNotInProgress;
+	}
 	return self;
 }
 
@@ -361,10 +589,10 @@ static int touchBlockIdCounter = 0;
 
 -(void) connectToDeviceWithMaxRSSI
 {
-	NSLog(@"connectToDeviceWithMaxRSSI: %@", self.deviceWithMaxRSSI.name);
+	NSLog(@"connectToDeviceWithMaxRSSI: %@", self.peripheralWithMaxRSSI.name);
 
 	// This is where we connect.
-	[[FFRBLEManager sharedManager] connectPeripheral: self.deviceWithMaxRSSI];
+	[[FFRBLEManager sharedManager] connectPeripheral: self.peripheralWithMaxRSSI];
 }
 
 - (void) registerPeripheralDiscoverer
@@ -380,10 +608,10 @@ static int touchBlockIdCounter = 0;
 		if (stringContains(p.name, @"Fuffr") ||
 			stringContains(p.name, @"Neonode"))
 		{
-			if (nil == me.deviceWithMaxRSSI)
+			if (nil == me.peripheralWithMaxRSSI)
 			{
 				NSLog(@"start timer for connectToDeviceWithMaxRSSI: %@", p.name);
-				me.deviceWithMaxRSSI = p;
+				me.peripheralWithMaxRSSI = p;
 				[NSTimer
 					scheduledTimerWithTimeInterval: 1.0
 					target: me
@@ -394,12 +622,12 @@ static int touchBlockIdCounter = 0;
 			}
 			else
 			{
-				NSNumber* rssiMax = me.deviceWithMaxRSSI.discoveryRSSI;
+				NSNumber* rssiMax = me.peripheralWithMaxRSSI.discoveryRSSI;
 				NSNumber* rssiNew = p.discoveryRSSI;
 				if (rssiNew.intValue > rssiMax.intValue)
 				{
 					NSLog(@"Found device with stronger RSSI: %@", p.name);
-					me.deviceWithMaxRSSI = p;
+					me.peripheralWithMaxRSSI = p;
 				}
 			}
 		}
@@ -410,7 +638,7 @@ static int touchBlockIdCounter = 0;
 {
 	FFRBLEManager* bleManager = [FFRBLEManager sharedManager];
 
-	// Create BLE manager handler object.
+	// Create sensor case handler as default.
 	bleManager.handler = [FFRCaseHandler new];
 
 	__weak FFRBLEManager* manager = bleManager;
@@ -436,6 +664,16 @@ static int touchBlockIdCounter = 0;
 				me.onDisconnectedBlock();
 			}
 		};
+}
+
+- (void) registerFirmwareNotification
+{
+	// Add firmware notification update observer.
+	[[NSNotificationCenter defaultCenter]
+		addObserver: self
+		selector: @selector(firmwareProgress:)
+		name: FFRProgrammingNotification
+		object: nil];
 }
 
 - (void) registerTouchMethods

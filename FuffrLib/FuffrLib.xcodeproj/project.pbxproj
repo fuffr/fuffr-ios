@@ -47,8 +47,6 @@
 		2197196318D60B3F007B6E84 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2197195F18D60B25007B6E84 /* CoreBluetooth.framework */; };
 		2197196418D60B42007B6E84 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2197196118D60B32007B6E84 /* CoreGraphics.framework */; };
 		2197196718D60EA1007B6E84 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2197196618D60EA1007B6E84 /* UIKit.framework */; };
-		21AC5C11191A44E80018A1E3 /* UIView+Toast.h in Headers */ = {isa = PBXBuildFile; fileRef = 21AC5C0F191A44E80018A1E3 /* UIView+Toast.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		21AC5C12191A44E80018A1E3 /* UIView+Toast.m in Sources */ = {isa = PBXBuildFile; fileRef = 21AC5C10191A44E80018A1E3 /* UIView+Toast.m */; };
 		21BCD6C118EF21D900944ACC /* FFRLowPassFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 21BCD6BF18EF21D900944ACC /* FFRLowPassFilter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		21BCD6C218EF21D900944ACC /* FFRLowPassFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 21BCD6C018EF21D900944ACC /* FFRLowPassFilter.m */; };
 		21C8CCD918D6634000E70941 /* FFRoad.h in Headers */ = {isa = PBXBuildFile; fileRef = 2197196818D6138D007B6E84 /* FFRoad.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -70,6 +68,11 @@
 		21C8CCE918D6634000E70941 /* FFRRawTrackingData.h in Headers */ = {isa = PBXBuildFile; fileRef = 2197193A18D60711007B6E84 /* FFRRawTrackingData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		21C8CCEA18D6634000E70941 /* FFRFirmwareMetaData.h in Headers */ = {isa = PBXBuildFile; fileRef = 2197193C18D60711007B6E84 /* FFRFirmwareMetaData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		21C8CCEB18D6634000E70941 /* FFRFirmwareUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = 2197193E18D60711007B6E84 /* FFRFirmwareUtility.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		21E640AE19387DB000EFDC1A /* UIView+Toast.h in Headers */ = {isa = PBXBuildFile; fileRef = 21E640A819387DB000EFDC1A /* UIView+Toast.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		21E640AF19387DB000EFDC1A /* UIView+Toast.m in Sources */ = {isa = PBXBuildFile; fileRef = 21E640A919387DB000EFDC1A /* UIView+Toast.m */; };
+		21E640B719387E9D00EFDC1A /* SVProgressHUD-Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 21E640B319387E9D00EFDC1A /* SVProgressHUD-Prefix.pch */; settings = {ATTRIBUTES = (Public, ); }; };
+		21E640B819387E9D00EFDC1A /* SVProgressHUD.h in Headers */ = {isa = PBXBuildFile; fileRef = 21E640B519387E9D00EFDC1A /* SVProgressHUD.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		21E640B919387E9D00EFDC1A /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 21E640B619387E9D00EFDC1A /* SVProgressHUD.m */; };
 		29923FF81907BD7D00D945EB /* FFRDoubleTapGestureRecognizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 29923FF61907BD7D00D945EB /* FFRDoubleTapGestureRecognizer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		29923FF91907BD7D00D945EB /* FFRDoubleTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 29923FF71907BD7D00D945EB /* FFRDoubleTapGestureRecognizer.m */; };
 /* End PBXBuildFile section */
@@ -145,10 +148,14 @@
 		2197196118D60B32007B6E84 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		2197196618D60EA1007B6E84 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		2197196818D6138D007B6E84 /* FFRoad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFRoad.h; sourceTree = "<group>"; };
-		21AC5C0F191A44E80018A1E3 /* UIView+Toast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Toast.h"; sourceTree = "<group>"; };
-		21AC5C10191A44E80018A1E3 /* UIView+Toast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Toast.m"; sourceTree = "<group>"; };
 		21BCD6BF18EF21D900944ACC /* FFRLowPassFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFRLowPassFilter.h; sourceTree = "<group>"; };
 		21BCD6C018EF21D900944ACC /* FFRLowPassFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFRLowPassFilter.m; sourceTree = "<group>"; };
+		21E640A819387DB000EFDC1A /* UIView+Toast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Toast.h"; sourceTree = "<group>"; };
+		21E640A919387DB000EFDC1A /* UIView+Toast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Toast.m"; sourceTree = "<group>"; };
+		21E640B319387E9D00EFDC1A /* SVProgressHUD-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SVProgressHUD-Prefix.pch"; sourceTree = "<group>"; };
+		21E640B419387E9D00EFDC1A /* SVProgressHUD.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = SVProgressHUD.bundle; sourceTree = "<group>"; };
+		21E640B519387E9D00EFDC1A /* SVProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVProgressHUD.h; sourceTree = "<group>"; };
+		21E640B619387E9D00EFDC1A /* SVProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVProgressHUD.m; sourceTree = "<group>"; };
 		29923FF61907BD7D00D945EB /* FFRDoubleTapGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFRDoubleTapGestureRecognizer.h; sourceTree = "<group>"; };
 		29923FF71907BD7D00D945EB /* FFRDoubleTapGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFRDoubleTapGestureRecognizer.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -350,10 +357,30 @@
 		21AC5C0E191A44E80018A1E3 /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				21AC5C0F191A44E80018A1E3 /* UIView+Toast.h */,
-				21AC5C10191A44E80018A1E3 /* UIView+Toast.m */,
+				21E640B219387E9D00EFDC1A /* SVProgressHUD */,
+				21E640A719387DB000EFDC1A /* Toast */,
 			);
 			path = UI;
+			sourceTree = "<group>";
+		};
+		21E640A719387DB000EFDC1A /* Toast */ = {
+			isa = PBXGroup;
+			children = (
+				21E640A819387DB000EFDC1A /* UIView+Toast.h */,
+				21E640A919387DB000EFDC1A /* UIView+Toast.m */,
+			);
+			path = Toast;
+			sourceTree = "<group>";
+		};
+		21E640B219387E9D00EFDC1A /* SVProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				21E640B319387E9D00EFDC1A /* SVProgressHUD-Prefix.pch */,
+				21E640B419387E9D00EFDC1A /* SVProgressHUD.bundle */,
+				21E640B519387E9D00EFDC1A /* SVProgressHUD.h */,
+				21E640B619387E9D00EFDC1A /* SVProgressHUD.m */,
+			);
+			path = SVProgressHUD;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -390,9 +417,11 @@
 				21C8CCE918D6634000E70941 /* FFRRawTrackingData.h in Headers */,
 				21C8CCEA18D6634000E70941 /* FFRFirmwareMetaData.h in Headers */,
 				21BCD6C118EF21D900944ACC /* FFRLowPassFilter.h in Headers */,
-				21916D8D191BA23300A36F04 /* FFRFirmwareDownloader.h in Headers */,
 				21C8CCEB18D6634000E70941 /* FFRFirmwareUtility.h in Headers */,
-				21AC5C11191A44E80018A1E3 /* UIView+Toast.h in Headers */,
+				21916D8D191BA23300A36F04 /* FFRFirmwareDownloader.h in Headers */,
+				21E640B819387E9D00EFDC1A /* SVProgressHUD.h in Headers */,
+				21E640B719387E9D00EFDC1A /* SVProgressHUD-Prefix.pch in Headers */,
+				21E640AE19387DB000EFDC1A /* UIView+Toast.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -477,18 +506,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				21E640AF19387DB000EFDC1A /* UIView+Toast.m in Sources */,
 				2197194618D60711007B6E84 /* FFRCaseHandler.m in Sources */,
 				2197194318D60711007B6E84 /* FFRTopBottomSpaceMapper.m in Sources */,
 				2197194418D60711007B6E84 /* FFRBLEExtensions.m in Sources */,
 				2197195B18D60711007B6E84 /* FFRTouchManager.m in Sources */,
 				215E0B3318DC67CF00484E43 /* FFRGestureRecognizer.m in Sources */,
 				2197194118D60711007B6E84 /* FFROverlaySpaceMapper.m in Sources */,
-				21AC5C12191A44E80018A1E3 /* UIView+Toast.m in Sources */,
 				29923FF91907BD7D00D945EB /* FFRDoubleTapGestureRecognizer.m in Sources */,
 				2197194018D60711007B6E84 /* FFRLeftRightSpaceMapper.m in Sources */,
 				215E0B3718DC67CF00484E43 /* FFRPanGestureRecognizer.m in Sources */,
 				2197194218D60711007B6E84 /* FFRQuadrantSpaceMapper.m in Sources */,
 				21BCD6C218EF21D900944ACC /* FFRLowPassFilter.m in Sources */,
+				21E640B919387E9D00EFDC1A /* SVProgressHUD.m in Sources */,
 				21916D8E191BA23300A36F04 /* FFRFirmwareDownloader.m in Sources */,
 				215E0B3F18DC67CF00484E43 /* FFRTapGestureRecognizer.m in Sources */,
 				215E0B3B18DC67CF00484E43 /* FFRRotationGestureRecognizer.m in Sources */,

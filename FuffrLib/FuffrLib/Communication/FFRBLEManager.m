@@ -47,17 +47,17 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 /**
  * Device UUID, if a matching device is found, it will be autoconnected.
  */
-@property (nonatomic, copy) NSString* monitoredDeviceIdentifier;
+@property (nonatomic, copy) NSString* monitoredPeripheralIdentifier;
 
 /**
  * List of discovered devices.
  */
-@property (nonatomic, strong) NSMutableArray* discoveredDevices;
+@property (nonatomic, strong) NSMutableArray* discoveredPeripherals;
 
 /**
  * List of connected devices. This is currently limited to one device.
  */
-@property (nonatomic, strong) NSMutableArray* connectedDevices;
+@property (nonatomic, strong) NSMutableArray* connectedPeripherals;
 
 /**
  * UUID stringss of monitored services.
@@ -89,15 +89,9 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 		_receiveQueue = dispatch_queue_create("com.fuffr.receivequeue", nil);
 
 		_manager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
-		self.connectedDevices = [NSMutableArray array];
-		self.discoveredDevices = [NSMutableArray array];
+		self.connectedPeripherals = [NSMutableArray array];
+		self.discoveredPeripherals = [NSMutableArray array];
 		self.serviceRequestQueue = [NSMutableArray array];
-
-		[[NSNotificationCenter defaultCenter]
-			addObserver:self
-			selector:@selector(reactivated:)
-			name:UIApplicationDidBecomeActiveNotification
-			object:nil];
 	}
 
 	return self;
@@ -108,7 +102,7 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 	//_receiveQueue = nil;
 
 	@try {
-		for (CBPeripheral* peripheral in self.connectedDevices) {
+		for (CBPeripheral* peripheral in self.connectedPeripherals) {
 			if (peripheral) {
 				[_manager cancelPeripheralConnection:peripheral];
 			}
@@ -136,15 +130,15 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 {
 	NSLog(@"FFRBLEManager: App called disconnectPeripheral:");
 
-	[_connectedDevices removeObject:peripheral];
+	[_connectedPeripherals removeObject:peripheral];
 
 	_disconnectedPeripheral = peripheral;
 	[_manager cancelPeripheralConnection:peripheral];
 }
 
-- (CBPeripheral*) connectedDevice
+- (CBPeripheral*) connectedPeripheral
 {
-	return [self.connectedDevices firstObject];
+	return [self.connectedPeripherals firstObject];
 }
 
 -(void) connectPeripheral:(CBPeripheral*) peripheral
@@ -153,7 +147,7 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 	_disconnectedPeripheral = nil;
 	peripheral.delegate = self;
 
-	[self.connectedDevices addObject:peripheral];
+	[self.connectedPeripherals addObject:peripheral];
 
 	// TODO:
 	// Here the main queue should be used if async is needed.
@@ -163,7 +157,7 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 		[_manager connectPeripheral:peripheral options:nil];
 	});
 
-	[_discoveredDevices removeObject:peripheral];
+	[_discoveredPeripherals removeObject:peripheral];
 	[_manager stopScan];
 }
 
@@ -175,7 +169,7 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 	NSLog(@"didConnectPeripheral: %@", peripheral);
 
 	_disconnectedPeripheral = nil;
-	[_discoveredDevices addObject:peripheral];
+	[_discoveredPeripherals addObject:peripheral];
 
 	// Here service discovery is started.
 	dispatch_async(dispatch_get_main_queue(), ^{
@@ -191,10 +185,10 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 	// if not discovery is initiated.
 
 	// Are we connected to a device?
-	if ([self.connectedDevices count] > 0)
+	if ([self.connectedPeripherals count] > 0)
 	{
 		// Are services discovered?
-		CBPeripheral* device = [self.connectedDevices firstObject];
+		CBPeripheral* device = [self.connectedPeripherals firstObject];
 		if (device.services)
 		{
 			// Find service.
@@ -232,7 +226,7 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 						// Discover characteristics now if queue length is 1.
 						if (1 == [self.serviceRequestQueue count])
 						{
-							[[self connectedDevice]
+							[[self connectedPeripheral]
 								discoverCharacteristics: nil
 								forService: service];
 						}
@@ -308,7 +302,7 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 	}
 	else if (errorMessage)
 	{
-		[self.discoveredDevices removeAllObjects];
+		[self.discoveredPeripherals removeAllObjects];
 		_bluetoothAlertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:errorMessage delegate:self cancelButtonTitle:NSLocalizedString(@"Ok", @"Ok") otherButtonTitles:nil];
 		[_bluetoothAlertView show];
 		// NSLocalizedString(@"Ok", @"Ok")
@@ -336,7 +330,7 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 	// Here connect seems to be made to a known device. If this is done,
 	// observers of discovery should not be notified !?
 	// TODO: Investigate and fix.
-	if ([peripheral.identifier isEqualToString:self.monitoredDeviceIdentifier])
+	if ([peripheral.identifier isEqualToString:self.monitoredPeripheralIdentifier])
 	{
 		NSLog(@"centralManager:didDiscoverPeripheral: connecting to monitored device...");
 
@@ -359,7 +353,7 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 	NSLog(@"didConnectPeripheral: %@", peripheral);
 
 	_disconnectedPeripheral = nil;
-	[_discoveredDevices addObject:peripheral];
+	[_discoveredPeripherals addObject:peripheral];
 
 	// Here service discovery is started.
 	dispatch_async(dispatch_get_main_queue(), ^{
@@ -374,9 +368,12 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 {
 	NSLog(@"didDisconnectPeripheral: %@, error: %@", peripheral, error);
 
-	[_connectedDevices removeObject:peripheral];
+	[_connectedPeripherals removeObject:peripheral];
 
-	[self.handler deviceDisconnected:peripheral];
+	if (self.handler)
+	{
+		[self.handler peripheralDisconnected: peripheral];
+	}
 
 	if (self.onPeriperalDisconnected)
 	{
@@ -406,8 +403,8 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 {
 	NSLog(@"didFailToConnectPeripheral: %@, error: %@", peripheral, error);
 
-	[_connectedDevices removeObject:peripheral];
-	[_discoveredDevices removeObject:peripheral];
+	[_connectedPeripherals removeObject:peripheral];
+	[_discoveredPeripherals removeObject:peripheral];
 }
 
 #pragma mark - CBPeripheral delegate
@@ -443,12 +440,12 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 	didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
 	error:(NSError *)error
 {
-	//NSLog(@"didUpdateValueForCharacteristic %@ %@, error = %@", characteristic.UUID, characteristic, error);
+	//NSLog(@"didUpdateValueForCharacteristic 1: %@ %@, error: %@", characteristic.UUID, characteristic, error);
 
 	// The purpose of the receive queue could be to read notifications
 	// as quickly as possible.
 	dispatch_async(_receiveQueue, ^{
-		if (!error) {
+		if (!error && self.handler) {
 			[self.handler didUpdateValueForCharacteristic:characteristic];
 		}
 	});
@@ -460,7 +457,10 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 {
 	//NSLog(@"didWriteValueForCharacteristic %@ %@, writable: %d, error = %@", characteristic.UUID, characteristic, (characteristic.properties & CBCharacteristicPropertyWrite) > 0, error);
 
-	[self.handler didWriteValueForCharacteristic:characteristic error:error];
+	if (self.handler)
+	{
+		[self.handler didWriteValueForCharacteristic:characteristic error:error];
+	}
 }
 
 -(void) peripheral:(CBPeripheral *)peripheral
@@ -468,9 +468,6 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 	error:(NSError *)error
 {
 	FFRServiceRequestCommand* command;
-
-	// There must be an item in the queue when we get here.
-	assert([self.serviceRequestQueue count] > 0);
 
 	// Get service request from the queue.
 	if ([self.serviceRequestQueue count] > 0)
@@ -485,7 +482,7 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 		if ([self.serviceRequestQueue count] > 0)
 		{
 			command = [self.serviceRequestQueue objectAtIndex: 0];
-			[[self connectedDevice]
+			[[self connectedPeripheral]
 				discoverCharacteristics: nil
 				forService: command.service];
 		}

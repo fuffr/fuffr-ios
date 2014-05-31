@@ -36,7 +36,7 @@ extern NSString* const FFRProgrammingUserInfoProgressKey;
 extern NSString* const FFRProgrammingUserInfoTimeLeftKey;
 
 /**
-	The state of the programming process
+ * The state of the firmware programming process.
  */
 typedef enum {
 	/**
@@ -63,7 +63,8 @@ typedef enum {
 	 The programming was cancelled
 	 */
 	FFRProgrammingStateCancelRequested
-} FFRProgrammingState;
+}
+FFRProgrammingState;
 
 /**
  Class for handling OAD updates to the case, based on TI OAD examples
@@ -92,9 +93,9 @@ typedef enum {
 @property (nonatomic, copy) void (^imageVersionCallback)(char version);
 
 /**
-	Initializes the OAD handler for the peripheral
+ * Activate the image version service of the case.
  */
--(id) initWithPeripheral:(CBPeripheral*)peripheral;
+- (void) useImageVersionService: (void(^)())serviceAvailableBlock;
 
 /**
  * Ask the case for the current image version (A or B).

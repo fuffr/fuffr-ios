@@ -60,9 +60,21 @@ static void logTouches(NSString* label, NSSet* touches)
 
 -(void) dealloc
 {
-	[_timer invalidate];
-	_timer = nil;
-	[self clearAllTouches];
+	[self shutDown];
+}
+
+-(void) shutDown
+{
+	if (_timer)
+	{
+		[_timer invalidate];
+		_timer = nil;
+	}
+	if (_trackedObjects)
+	{
+		[self clearAllTouches];
+		_trackedObjects = nil;
+	}
 }
 
 -(void) clearAllTouches
@@ -75,6 +87,8 @@ static void logTouches(NSString* label, NSSet* touches)
 
 -(void) timerPruneTouches:(id) sender
 {
+	if (!_trackedObjects) { return; }
+	
 	//NSLog(@"timerPruneTouches queue: %s", dispatch_queue_get_label(dispatch_get_current_queue()));
 	dispatch_async(self.backgroundQueue,
 	^{

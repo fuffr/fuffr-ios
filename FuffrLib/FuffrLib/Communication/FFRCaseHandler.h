@@ -50,12 +50,13 @@ extern NSString* const FFRBatteryCharacteristicUUID;
 /**
     Main class for handling BLE communication with Fuffr
  */
-@interface FFRCaseHandler : NSObject<FFRPeripheralHandler> {
+@interface FFRCaseHandler : NSObject<FFRPeripheralHandler>
+{
     // The peripheral
     CBPeripheral* _peripheral;
 
     // tracks touch data to be able to supply began/ended events
-    FFRTrackingManager* _touches;
+    FFRTrackingManager* _trackingManager;
 	
     dispatch_queue_t _backgroundQueue;
 }
@@ -65,26 +66,15 @@ extern NSString* const FFRBatteryCharacteristicUUID;
  */
 @property (nonatomic, strong) id<FFRExternalSpaceMapper> spaceMapper;
 
--(void) setPeripheral:(CBPeripheral*) peripheral;
-
+/**
+ * Activate the sensor service of the case.
+ */
 - (void) useSensorService: (void(^)())serviceAvailableBlock;
 
+/**
+ * Activate the battery service of the case.
+ */
 - (void) useBatteryService: (void(^)())serviceAvailableBlock;
-
-/**
- * Called when notifyable characteristics update their values.
- */
--(void) didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic;
-
-/**
- * Callback when writing to characteristics (if not requesting write with no response).
- */
--(void) didWriteValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error;
-
-/**
- * The device was disconnected.
- */
--(void) deviceDisconnected:(CBPeripheral *)peripheral;
 
 /**
  * Tell the tracking manager to remove all touches.

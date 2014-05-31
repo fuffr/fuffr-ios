@@ -72,7 +72,7 @@
 /**
  * Get the currently connected device.
  */
-- (CBPeripheral*) connectedDevice;
+- (CBPeripheral*) connectedPeripheral;
 
 /**
  * This method makes sure that the characteristics for the given service
