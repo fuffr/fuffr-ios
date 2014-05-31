@@ -77,13 +77,13 @@ img.logo:empty {
 	transform: translate(-50%, -50%);
 }
 
-div.header-margin-aspect
+div.header-margin-proportional
 {
 	display: block;
 	clear: both;
 	width: 3%;
 }
-div.header-margin-aspect:after
+div.header-margin-proportional:after
 {
 	display: block;
 	padding-top: 100%;
@@ -115,7 +115,8 @@ p.header-description {
 .vertical-list {
 	width: 94%;
 	height: 55%;
-	margin: 5% 3%;
+	margin-top: 3%;
+	margin-left: 3%;
 	overflow: scroll;
 }
 
@@ -158,12 +159,15 @@ p.header-description {
 	width: 35%;
 	height: 100%;
 	margin: 0;
-	padding: 0 5% 0 0;
+	padding: 0 0 0 5%;
 
 	overflow: hidden;
 	text-overflow: ellipsis;
 	line-height: 120%;
 	vertical-align: top;
+}
+.horizontal-list li:first-child {
+	padding-left: 0;
 }
 
 .horizontal-list li a {
@@ -189,10 +193,11 @@ p.header-description {
 	div.logo-container { height: 25%; }
 	img.logo { max-height: 64%; }
 
-	div.header-margin-aspect { width: 1.5%; }
+	div.header-margin-proportional { width: 1.5%; }
 	h1 { margin-left: 1.5%; }
 	p.header-description { margin-left: 1.5%; }
 
+	.vertical-list { width:97%; margin-left: 1.5%; }
 	.horizontal-list { height: 96%; }
 	.horizontal-list:first-child { height: 99%; }
 }
