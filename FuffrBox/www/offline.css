@@ -1,4 +1,7 @@
 
-.vertical-list { height: 90%; }
+/* Show 1 row at a time. */
+.horizontal-list { height: 96%; }
+.horizontal-list:first-child { height: 97%; }
 
+/* Show 1 column at a time. */
 .horizontal-list li { width: 95%; }
