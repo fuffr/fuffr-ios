@@ -18,8 +18,8 @@
 #import <FuffrLib/FFROADHandler.h>
 #import <FuffrLib/UIView+Toast.h>
 
-#define URL_ARE_YOU_THERE @"http://evomedia.evothings.com/fuffr/AreYouThere.txt"
-#define URL_START_PAGE @"http://evomedia.evothings.com/fuffr/demo/"
+#define URL_ARE_YOU_THERE @"http://demo.fuffr.com/AreYouThere.txt"
+#define URL_START_PAGE @"http://demo.fuffr.com/"
 #define URL_FIRMWARE_LIST @"http://evomedia.evothings.com/fuffr/firmware/firmware.lst"
 
 /**
@@ -42,7 +42,9 @@ static BOOL FuffrIsConnected = NO;
 
 + (BOOL)canInitWithRequest:(NSURLRequest*)theRequest
 {
-	NSRange range = [theRequest.URL.path rangeOfString: @"/fuffr-bridge@"];
+	NSString* path = theRequest.URL.path;
+	if (!path) { return NO; }
+	NSRange range = [path rangeOfString: @"/fuffr-bridge@"];
     BOOL found = (range.location != NSNotFound);
 	return found;
 }
@@ -73,11 +75,13 @@ static BOOL FuffrIsConnected = NO;
 
 	NSData* data = [@"OK" dataUsingEncoding: NSUTF8StringEncoding];
 
+	// Not used.
 	/*NSURLResponse* response = [[NSURLResponse alloc]
 		initWithURL: self.request.URL
 		MIMEType: @"text/plain"
 		expectedContentLength: -1
 		textEncodingName: nil];*/
+
 	[[self client]
 		URLProtocol: self
 		didReceiveResponse: response
@@ -85,9 +89,10 @@ static BOOL FuffrIsConnected = NO;
 	[[self client] URLProtocol: self didLoadData: data];
 	[[self client] URLProtocolDidFinishLoading: self];
 
+	// Not used.
 	/*[[self client]
-			URLProtocol: self
-			didFailWithError: createError()];*/
+		URLProtocol: self
+		didFailWithError: createError()];*/
 }
 
 - (void)stopLoading
@@ -497,23 +502,17 @@ static void CreateSwipeGesture(
 
 -(void) loadWebViewContent
 {
-	NSLog(@"Testing connection");
-
 	NSURL* startPageURL;
 	NSURL* testURL = [NSURL URLWithString: URL_ARE_YOU_THERE];
 	NSData* data = [NSData dataWithContentsOfURL: testURL];
 
-	if (!data)
+	if (data)
 	{
-    	NSLog(@"Device is connected to the internet");
-
 		// Set URL to online page.
 		startPageURL = [NSURL URLWithString: URL_START_PAGE];
 	}
 	else
 	{
-    	NSLog(@"Device is not connected to the internet");
-
 		// Set URL to local start page.
 		NSString* path = [[NSBundle mainBundle]
 			pathForResource:@"index" ofType:@"html" inDirectory:@"www"];
@@ -737,7 +736,7 @@ static void CreateSwipeGesture(
 
 	NSString* urlString = self.urlField.text;
 
-	if (![urlString hasPrefix: @"http://"])
+	if (![urlString hasPrefix: @"http"])
 	{
 		urlString = [NSString stringWithFormat:@"http://%@", urlString];
 	}
@@ -769,7 +768,7 @@ static void CreateSwipeGesture(
 	}
 	else
 	{
-		self.urlField.text = @"fuffr.com";
+		self.urlField.text = @"http://demos.fuffr.com";
 	}
 }
 

@@ -51,7 +51,7 @@ fuffr.on.connected = function() {}
 /**
  * Called when disconnected from Fuffr.
  */
-fuffr.on.disconnected = function() { console.log("fuffr disconnected"); }
+fuffr.on.disconnected = function() { fuffr.log("fuffr disconnected"); }
 
 /** Information about a touch.
 * @typedef {Object} Touch
@@ -113,20 +113,91 @@ fuffr.enableSides = function(sides, touchesPerSide, win, fail)
 		fail)
 }
 
+/**
+* Log message to the Xcode console.
+* @param {string} message - log message.
+* @param win - optional success callback function that takes no parameters
+* @param fail - optional error callback function that takes no parameters
+*/
+fuffr.log = function(message, win, fail)
+{
+	fuffr.internal.callNative(
+		'consoleLog@' + message + '@',
+		win,
+		fail)
+}
+
 /** Add a gesture recognizer.
 * @param {number} gestureType - one of the FFRGesture constants.
 * @param {number} sides - one or more of the FFRSide constants.
+* @param {object} params - optional object with gesture parameters.
 * @param {function} callback - a function that will be called when the gesture is recognized.
 * The parameters in the callback vary depending on gestureType.
 * The callback takes one of these forms: panCallback(), pinchCallback(), rotateCallback() or gestureCallback()
 * @returns {number} gestureId - identifies the gesture that was just added. Pass this value to removeGesture().
 */
-fuffr.addGesture = function(gestureType, sides, callback)
+fuffr.addGesture = function()
 {
+	// Set function args.
+	var args = arguments
+	var gestureType = args[0]
+	var sides = args[1]
+	var params = null
+	var callback = null
+
+	if (args.length == 4)
+	{
+		params = args[2]
+		callback = args[3]
+	}
+	else
+	if (args.length == 3)
+	{
+		callback = args[2]
+	}
+
+	// There must be a callback set.
+	if (!callback && typeof callback != 'function')
+	{
+		return
+	}
+
+	// Set the callback id and add callback to table.
 	var gestureId = ++callbackIdCounter
 	callbackTable[gestureId] = callback
-	fuffr.internal.callNative(
-		'addGesture@' + gestureType + '@' + sides + '@' + gestureId + '@')
+
+	// Set basic message.
+	var message = 'addGesture@' + gestureType + '@' + sides + '@' + gestureId + '@'
+
+	// Add gesture parameters if any. Order is always the
+	// max/min duration and the max/min distance.
+	if (params)
+	{
+		// Add duration param.
+		if (params.maximumDuration)
+		{
+			message += 'maximumDistance@' + params.maximumDuration + '@'
+		}
+		else
+		if (params.minimumDuration)
+		{
+			message += 'minumumDistance@' + params.minimumDuration + '@'
+		}
+
+		// Add distance param.
+		if (params.maximumDistance)
+		{
+			message += 'maximumDistance@' + params.maximumDistance + '@'
+		}
+		else
+		if (params.minimumDistance)
+		{
+			message += 'minumumDistance@' + params.minimumDistance + '@'
+		}
+	}
+
+	// Call native.
+	fuffr.internal.callNative(message)
 	return gestureId
 }
 
