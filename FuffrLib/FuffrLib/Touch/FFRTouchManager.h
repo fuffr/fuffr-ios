@@ -85,7 +85,7 @@
 /**
  * Do an online update the firmware of the Fuffr.
  */
-- (void) updateFirmware;
+- (void) updateFirmwareFromURL: (NSString*) url;
 
 /**
  * Enable sides of Fuffr.

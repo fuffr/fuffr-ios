@@ -239,13 +239,13 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 		else
 		{
 			// Not valid state, services must have been discovered.
-			assert(NO);
+			NSLog(@"useService: Services not discovered");
 		}
 	}
 	else
 	{
 		// Not valid state, device must have been connected.
-		assert(NO);
+		NSLog(@"useService: Device not connected");
 	}
 }
 

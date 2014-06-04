@@ -9,6 +9,7 @@
 #import "AppViewController.h"
 
 #import <FuffrLib/FFRTapGestureRecognizer.h>
+#import <FuffrLib/FFRDoubleTapGestureRecognizer.h>
 #import <FuffrLib/FFRLongPressGestureRecognizer.h>
 #import <FuffrLib/FFRSwipeGestureRecognizer.h>
 #import <FuffrLib/FFRPinchGestureRecognizer.h>
@@ -16,6 +17,12 @@
 #import <FuffrLib/FFRRotationGestureRecognizer.h>
 #import <FuffrLib/FFROADHandler.h>
 #import <FuffrLib/UIView+Toast.h>
+
+#define URL_ARE_YOU_THERE @"http://evomedia.evothings.com/fuffr/AreYouThere.txt"
+#define URL_START_PAGE @"http://evomedia.evothings.com/fuffr/demo/"
+#define URL_FIRMWARE_LIST @"http://evomedia.evothings.com/fuffr/firmware/firmware.lst"
+
+extern NSString* FFRFirmwareDownloader_URL;
 
 /**
  * Reference to the AppViewController instance.
@@ -50,15 +57,17 @@ static BOOL FuffrIsConnected = NO;
 - (void)startLoading
 {
 	NSString* path = self.request.URL.path;
-
-	[theAppViewController executeJavaScriptCommand: path];
+	if (path)
+	{
+		[theAppViewController executeJavaScriptCommand: path];
+	}
 
 	NSDictionary* headers = @{
 		@"Access-Control-Allow-Origin" : @"*",
 		@"Access-Control-Allow-Headers" : @"Content-Type"
 	};
 
-	NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc]
+	NSHTTPURLResponse* response = [[NSHTTPURLResponse alloc]
 		initWithURL: self.request.URL
 		statusCode: 200
 		HTTPVersion: @"1.1"
@@ -98,31 +107,102 @@ static BOOL FuffrIsConnected = NO;
 @property (nonatomic, strong) FFRGestureRecognizer* recognizer;
 @property (nonatomic, weak) AppViewController* controller;
 
-+ (GestureListener*) withGestureId: (int) gestureId
-	type: (int) type
-	side: (FFRSide) side
++ (GestureListener*) withTokens: (NSArray*) tokens
 	controller: (AppViewController*) theController;
 
 - (void) onPan: (FFRPanGestureRecognizer*) recognizer;
 - (void) onPinch:(FFRPinchGestureRecognizer*) recognizer;
 - (void) onRotation:(FFRRotationGestureRecognizer*) recognizer;
 - (void) onTap:(FFRTapGestureRecognizer*) recognizer;
-//- (void) onDoubleTap:(FFRDoubleTapGestureRecognizer*) recognizer;
+- (void) onDoubleTap:(FFRDoubleTapGestureRecognizer*) recognizer;
 - (void) onLongPress:(FFRLongPressGestureRecognizer*) recognizer;
 - (void) onSwipe:(FFRSwipeGestureRecognizer*) recognizer;
 
 @end
 
+// Helper function for creating a swipe gesture.
+static void CreateSwipeGesture(
+	GestureListener* gestureListener,
+	FFRSwipeGestureRecognizerDirection direction,
+	NSTimeInterval maximumDuration,
+	BOOL maximumDurationIsSet,
+	CGFloat minimumDistance,
+	BOOL minimumDistanceIsSet)
+{
+	FFRSwipeGestureRecognizer* recognizer = [FFRSwipeGestureRecognizer new];
+	recognizer.direction = direction;
+	if (maximumDurationIsSet)
+	{
+			recognizer.maximumDuration = maximumDuration;
+	}
+	if (minimumDistanceIsSet)
+	{
+		recognizer.minimumDistance = minimumDistance;
+	}
+	[recognizer
+		addTarget: gestureListener
+		action: @selector(onSwipe:)];
+	gestureListener.recognizer = recognizer;
+}
+
 @implementation GestureListener
 
-+ (GestureListener*) withGestureId: (int) gestureId
-	type: (int) type
-	side: (FFRSide) side
++ (GestureListener*) withTokens: (NSArray*) tokens
 	controller: (AppViewController*) theController
 {
+	NSString* gestureType = [NSString stringWithString:[tokens objectAtIndex: 2]];
+	NSString* gestureSide = [NSString stringWithString:[tokens objectAtIndex: 3]];
+	NSString* gestureId = [NSString stringWithString:[tokens objectAtIndex: 4]];
+
+	// TODO: handle invalid values for type & side.
+	int type = [gestureType intValue];
+	FFRSide side = [gestureSide intValue];
+	int gestureIntId = [gestureId intValue];
+
+	// Extract gesture parameters.
+	NSTimeInterval minimumDuration = 0;
+	NSTimeInterval maximumDuration = 0;
+	CGFloat minimumDistance = 0;
+	CGFloat maximumDistance = 0;
+	BOOL minimumDurationIsSet = NO;
+	BOOL maximumDurationIsSet = NO;
+	BOOL minimumDistanceIsSet = NO;
+	BOOL maximumDistanceIsSet = NO;
+
+	for (int tokenIndex = 6; tokenIndex < tokens.count; tokenIndex += 2)
+	{
+		NSString* paramName = [NSString stringWithString:[tokens objectAtIndex: tokenIndex]];
+		NSString* paramValue = [NSString stringWithString:[tokens objectAtIndex: tokenIndex + 1]];
+		if ([paramName isEqualToString: @"maximumDuration"])
+		{
+			maximumDuration = [paramValue intValue];
+			maximumDurationIsSet = YES;
+		}
+		else
+		if ([paramName isEqualToString: @"minimumDuration"])
+		{
+			minimumDuration = [paramValue intValue];
+			minimumDurationIsSet = YES;
+		}
+		else
+		if ([paramName isEqualToString: @"maximumDistance"])
+		{
+			maximumDistance = [paramValue intValue];
+			maximumDistanceIsSet = YES;
+		}
+		else
+		if ([paramName isEqualToString: @"minimumDistance"])
+		{
+			minimumDistance = [paramValue intValue];
+			minimumDistanceIsSet = YES;
+		}
+	}
+
+	// Create gesture handler object.
+
 	GestureListener* me = [GestureListener new];
 
-	me.gestureId = gestureId;
+	me.gestureId = gestureIntId;
 	me.controller = theController;
 
 	if (1 == type)
@@ -148,63 +228,98 @@ static BOOL FuffrIsConnected = NO;
 	}
 	else if (4 == type)
 	{
-		me.recognizer = [FFRTapGestureRecognizer new];
-    	[me.recognizer
+		FFRTapGestureRecognizer* recognizer = [FFRTapGestureRecognizer new];
+		if (maximumDurationIsSet)
+		{
+			recognizer.maximumDuration = maximumDuration;
+		}
+		if (maximumDistanceIsSet)
+		{
+			recognizer.maximumDistance = maximumDistance;
+		}
+    	[recognizer
 			addTarget: me
 			action: @selector(onTap:)];
+		me.recognizer = recognizer;
 	}
 	else if (5 == type)
 	{
-		// TODO: Implement.
-		//me.recognizer = [FFRDoubleTapGestureRecognizer new];
+		FFRDoubleTapGestureRecognizer* recognizer = [FFRDoubleTapGestureRecognizer new];
+		if (maximumDurationIsSet)
+		{
+			recognizer.maximumDuration = maximumDuration;
+		}
+		if (maximumDistanceIsSet)
+		{
+			recognizer.maximumDistance = maximumDistance;
+		}
+    	[recognizer
+			addTarget: me
+			action: @selector(onDoubleTap:)];
+		me.recognizer = recognizer;
 	}
 	else if (6 == type)
 	{
-		me.recognizer = [FFRLongPressGestureRecognizer new];
-    	[me.recognizer
+		FFRLongPressGestureRecognizer* recognizer = [FFRLongPressGestureRecognizer new];
+		if (minimumDurationIsSet)
+		{
+			recognizer.minimumDuration = minimumDuration;
+		}
+		if (maximumDistanceIsSet)
+		{
+			recognizer.maximumDistance = maximumDistance;
+		}
+    	[recognizer
 			addTarget: me
 			action: @selector(onLongPress:)];
+		me.recognizer = recognizer;
 	}
 	else if (7 == type)
 	{
-		FFRSwipeGestureRecognizer* swipe = [FFRSwipeGestureRecognizer new];
-		swipe.direction = UISwipeGestureRecognizerDirectionLeft;
-		me.recognizer = swipe;
-    	[me.recognizer
-			addTarget: me
-			action: @selector(onSwipe:)];
+		CreateSwipeGesture(
+			me,
+			FFRSwipeGestureRecognizerDirectionLeft,
+			maximumDuration,
+			maximumDurationIsSet,
+			minimumDistance,
+			minimumDistanceIsSet);
 	}
 	else if (8 == type)
 	{
-		FFRSwipeGestureRecognizer* swipe = [FFRSwipeGestureRecognizer new];
-		swipe.direction = UISwipeGestureRecognizerDirectionRight;
-		me.recognizer = swipe;
-    	[me.recognizer
-			addTarget: me
-			action: @selector(onSwipe:)];
+		CreateSwipeGesture(
+			me,
+			FFRSwipeGestureRecognizerDirectionRight,
+			maximumDuration,
+			maximumDurationIsSet,
+			minimumDistance,
+			minimumDistanceIsSet);
 	}
 	else if (9 == type)
 	{
-		FFRSwipeGestureRecognizer* swipe = [FFRSwipeGestureRecognizer new];
-		swipe.direction = UISwipeGestureRecognizerDirectionUp;
-		me.recognizer = swipe;
-    	[me.recognizer
-			addTarget: me
-			action: @selector(onSwipe:)];
+		CreateSwipeGesture(
+			me,
+			FFRSwipeGestureRecognizerDirectionUp,
+			maximumDuration,
+			maximumDurationIsSet,
+			minimumDistance,
+			minimumDistanceIsSet);
 	}
 	else if (10 == type)
 	{
-		FFRSwipeGestureRecognizer* swipe = [FFRSwipeGestureRecognizer new];
-		swipe.direction = UISwipeGestureRecognizerDirectionDown;
-		me.recognizer = swipe;
-    	[me.recognizer
-			addTarget: me
-			action: @selector(onSwipe:)];
+		CreateSwipeGesture(
+			me,
+			FFRSwipeGestureRecognizerDirectionDown,
+			maximumDuration,
+			maximumDurationIsSet,
+			minimumDistance,
+			minimumDistanceIsSet);
 	}
 
 	me.recognizer.side = side;
 
 	[[FFRTouchManager sharedManager] addGestureRecognizer: me.recognizer];
+
+	[theController.gestureListeners setObject: me forKey: gestureId];
 
 	return me;
 }
@@ -241,6 +356,15 @@ static BOOL FuffrIsConnected = NO;
 }
 
 - (void) onTap:(FFRTapGestureRecognizer*) recognizer
+{
+	NSString* code = [NSString stringWithFormat:
+		@"fuffr.internal.performCallback(%i,%i)",
+		self.gestureId,
+		recognizer.state];
+	[self.controller callJS: code];
+}
+
+- (void) onDoubleTap:(FFRDoubleTapGestureRecognizer*) recognizer
 {
 	NSString* code = [NSString stringWithFormat:
 		@"fuffr.internal.performCallback(%i,%i)",
@@ -370,26 +494,44 @@ static BOOL FuffrIsConnected = NO;
 
 	[NSURLProtocol registerClass: [URLProtocolFuffrBridge class]];
 
-	// Set URL to local start page.
-	NSString* path = [[NSBundle mainBundle]
-		pathForResource:@"index" ofType:@"html" inDirectory:@"www"];
-	NSURL* url = [NSURL fileURLWithPath:path isDirectory:NO];
+	[self loadWebViewContent];
+}
 
-	//[self.webView loadHTMLString:@"<html><body style='background:rgb(100,200,255);font-family:sans-serif;'><h1>Welcome to FuffrBox</h1><h3>Play games and make your own apps for Fuffr!</h3><h3>Enter url to page and select go.</h3></body></html>" baseURL:nil];
+-(void) loadWebViewContent
+{
+	NSLog(@"Testing connection");
 
-	// Connect to Evothings Studio.
-	//NSURL* url = [NSURL URLWithString:@"http://192.168.43.131:4042"];
+	NSURL* startPageURL;
+	NSURL* testURL = [NSURL URLWithString: URL_ARE_YOU_THERE];
+	NSData* data = [NSData dataWithContentsOfURL: testURL];
+
+	if (data)
+	{
+    	NSLog(@"Device is connected to the internet");
+
+		// Set URL to online page.
+		startPageURL = [NSURL URLWithString: URL_START_PAGE];
+	}
+	else
+	{
+    	NSLog(@"Device is not connected to the internet");
+
+		// Set URL to local start page.
+		NSString* path = [[NSBundle mainBundle]
+			pathForResource:@"index" ofType:@"html" inDirectory:@"www"];
+		startPageURL = [NSURL fileURLWithPath:path isDirectory:NO];
+	}
 
 	// Load URL into web view.
 	NSURLRequest* request = [NSURLRequest
-		requestWithURL: url
+		requestWithURL: startPageURL
 		cachePolicy: NSURLRequestReloadIgnoringLocalAndRemoteCacheData
 		timeoutInterval: 10];
 	[self.webView loadRequest: request];
 }
 
 /*
-// WebGL commented out in production version.
+// WebGL enable hack commented out in production version.
 
 #pragma clang diagnostic push
 #pragma GCC diagnostic ignored "-Wundeclared-selector"
@@ -431,7 +573,7 @@ static BOOL FuffrIsConnected = NO;
 {
 	NSLog(@"FuffrBox: viewWillDisappear");
     [[NSNotificationCenter defaultCenter] removeObserver: self];
-	[[FFRTouchManager sharedManager] shutDown]; // Disconnect Fuffr.
+	[[FFRTouchManager sharedManager] shutDown]; // Disconnects Fuffr.
 	//  [[FFRTouchManager sharedManager] disconnectFuffr];
     [super viewWillDisappear: animated];
 }
@@ -503,10 +645,10 @@ static BOOL FuffrIsConnected = NO;
 
 - (void) executeJavaScriptCommand: (NSString*) command
 {
+	NSLog(@"executeJavaScriptCommand: %@", command);
+
 	NSArray* tokens = [command componentsSeparatedByString:@"@"];
 	NSString* commandName = [NSString stringWithString:[tokens objectAtIndex: 1]];
-
-	NSLog(@"executeJavaScriptCommand: %@", command);
 
 	if ([commandName isEqualToString: @"domLoaded"])
 	{
@@ -557,22 +699,9 @@ static BOOL FuffrIsConnected = NO;
 
 - (void) jsCommandAddGesture: (NSArray*) tokens
 {
-	NSString* gestureType = [NSString stringWithString:[tokens objectAtIndex: 2]];
-	NSString* gestureSide = [NSString stringWithString:[tokens objectAtIndex: 3]];
-	NSString* gestureId = [NSString stringWithString:[tokens objectAtIndex: 4]];
-
-	int type = [gestureType intValue];
-	FFRSide side = [gestureSide intValue];
-	int gestId = [gestureId intValue];
-
-	// TODO: handle invalid values for type & side.
-	GestureListener* gesture = [GestureListener
-		withGestureId: gestId
-		type: type
-		side: side
+	[GestureListener
+		withTokens: tokens
 		controller: self];
-
-	[self.gestureListeners setObject: gesture forKey: gestureId];
 }
 
 - (void) jsCommandRemoveGesture: (NSArray*) tokens
@@ -590,7 +719,7 @@ static BOOL FuffrIsConnected = NO;
 
 - (void) jsCommandUpdateFirmware: (NSArray*) tokens
 {
-	[[FFRTouchManager sharedManager] updateFirmware];
+	[[FFRTouchManager sharedManager] updateFirmwareFromURL: URL_FIRMWARE_LIST];
 }
 
 - (void) jsCommandConsoleLog: (NSArray*) tokens

@@ -135,14 +135,7 @@
 
 -(void) touchesEnded: (NSSet*)touches
 {
-	LOGMETHOD
-
 	//NSLog(@"touchesEnded: %i", (int)touches.count);
-
-	for (FFRTouch* touch in touches)
-	{
-		assert(touch.phase == FFRTouchPhaseEnded);
-	}
 
 	if (self.touch != nil && self.touch.phase == FFRTouchPhaseEnded)
 	{

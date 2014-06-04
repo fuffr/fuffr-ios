@@ -252,8 +252,11 @@ static int touchBlockIdCounter = 0;
 		useImageVersionService: serviceAvailableBlock];
 }
 
-- (void) updateFirmware
+- (void) updateFirmwareFromURL: (NSString*) url
 {
+	// Must set URL using global variable prior to update.
+	FFRFirmwareDownloader_URL = url;
+
 	// Guard agains multiple invocations during update.
 	if (self.firmwareUpdateState != FFRFirmwareUpdateNotInProgress)
 	{

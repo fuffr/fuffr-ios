@@ -20,7 +20,7 @@
 -(id) init {
 	if (self = [super init]) {
 		_actionPairs = [NSMutableArray array];
-		self.state = UIGestureRecognizerStatePossible;
+		self.state = FFRGestureRecognizerStateUnknown;
 	}
 
 	return self;

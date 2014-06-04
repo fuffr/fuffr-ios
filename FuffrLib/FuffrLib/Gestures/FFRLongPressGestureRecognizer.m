@@ -63,7 +63,7 @@
 		//NSLog(@"LongPress diff dist: %f", distance);
 		if (distance < self.maximumDistance)
 		{
-			self.state = UIGestureRecognizerStateEnded;
+			self.state = FFRGestureRecognizerStateEnded;
 			[self performAction];
 		}
 		self.touch = nil;

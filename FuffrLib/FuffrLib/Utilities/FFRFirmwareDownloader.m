@@ -10,6 +10,10 @@
 
 // For format of firmware URL list, see header file.
 
+// Location of firmware file list.
+
+NSString* FFRFirmwareDownloader_URL = nil;
+
 @implementation FFRFirmwareDownloader
 
 // Public methods.
@@ -18,6 +22,9 @@
 	version: (char)version
 	callback: (void(^)(NSData* data))callback
 {
+	// Download URL must be set.
+	if (!FFRFirmwareDownloader_URL) { return; }
+
 	// Download url list.
 	[self downloadImageVersionFile:
 		^void(NSString* urlList)
@@ -149,7 +156,7 @@ NSString* XMLTagContent(NSString* xmlData, NSString* tag, int start)
 - (void) downloadImageVersionFile: (void(^)(NSString* data))callback
 {
 	[self
-		downloadDataFromURL: @"http://evomedia.evothings.com/fuffr/firmware/firmware.lst"
+		downloadDataFromURL: FFRFirmwareDownloader_URL
 		callback: ^void(NSData* data)
 		{
 			if (data)

@@ -272,7 +272,6 @@ currently 5 touches. Setting 0 will disable the touch detection.
 		}
 		else {
 			NSLog(@"FFRSideNotSet - this should not happen, aborting");
-			assert(NO);
 		}
 	});
 }
@@ -284,7 +283,7 @@ currently 5 touches. Setting 0 will disable the touch detection.
 	{
 		// Trap error for debugging.
 		NSLog(@"didWriteValueForCharacteristic error: %@", error);
-		assert(false);
+		//assert(false);
 
 		// What effect will this have exactly? (This is the original code.)
 		_peripheral = nil;
@@ -315,7 +314,7 @@ currently 5 touches. Setting 0 will disable the touch detection.
 	Byte eventType = raw.eventType;
 	Byte identifier = raw.identifier;
 
-	//NSLog(@"Touch id: %d, event: %d, side: %d", identifier, eventType, side);
+	//if (eventType != 1) NSLog(@"Touch id: %d, event: %d, side: %d", identifier, eventType, side);
 	
 	//NSLog(@"Touch id: %d, event: %d, side: %d, rawPoint: %@, normalized: %@", identifier, eventType, side, NSStringFromCGPoint(rawPoint), NSStringFromCGPoint(normalizedPoint));
 
@@ -329,15 +328,15 @@ currently 5 touches. Setting 0 will disable the touch detection.
 	touch.normalizedLocation = normalizedPoint;
 	touch.location = [self.spaceMapper locationOnScreen:normalizedPoint fromSide:side];
 
-	// Log down/up events (but not moved).
-	if (eventType != 1)
-	{
+	// Debug log for down/up events (but not moved).
+	//if (eventType != 1)
+	//{
 		//if (0 == eventType) { ++NumberOfActiveTouches; }
 		//if (2 == eventType) { --NumberOfActiveTouches; }
 		//NSLog(@"Touch id: %d, event: %d, side: %d, rawcoord: %@, activeTouches: %i", identifier, eventType, side, NSStringFromCGPoint(rawPoint), NumberOfActiveTouches);
 		
 		//NSLog(@"Touch id: %d, event: %d, side: %d, rawcoord: %@", identifier, eventType, side, NSStringFromCGPoint(rawPoint));
-	}
+	//}
 
 	return touch;
 }

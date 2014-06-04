@@ -54,7 +54,7 @@
 		if (distance < self.maximumDistance &&
 			(endTime - self.startTime) < self.maximumDuration)
 		{
-			self.state = UIGestureRecognizerStateEnded;
+			self.state = FFRGestureRecognizerStateEnded;
 			[self performAction];
 		}
 		self.touch = nil;

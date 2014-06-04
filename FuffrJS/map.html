@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+<!-- Experimental demo of using gesture recognizers from JavaScript. -->
 <head>
     <meta charset="utf-8" />
 	<meta name="viewport" content="user-scalable=no, initial-scale=1"/>
@@ -21,14 +22,16 @@
 <script src="lib/fuffr.js"></script>
 
 <script>
-var map
+if (window.fuffr) { console.log = fuffr.log }
+
+window.map
 
 function initialize()
 {
 	var mapOptions =
 	{
 		zoom: 8,
-		center: new google.maps.LatLng(-34.397, 150.644)
+		center: new google.maps.LatLng(59.32095497872408, 18.065810419468495)
 	}
 
 	map = new google.maps.Map(
@@ -51,7 +54,7 @@ function onPan(state, panX, panY)
 		var deltaY = panY - prevPanY
 		prevPanX = panX
 		prevPanY = panY
-		map.panBy(deltaX * 2, -deltaY)
+		map.panBy(-deltaX * 2, -deltaY)
 	}
 
 	if (fuffr.FFRGestureRecognizerStateEnded == state)
@@ -61,7 +64,7 @@ function onPan(state, panX, panY)
 	}
 }
 
-// Zoom 1-21
+// Zoom steps for Google maps are 1-20, therefore zooming is not very smooth.
 var baseZoom = 0
 
 function onPinch(state, scale)
@@ -75,14 +78,41 @@ function onPinch(state, scale)
 
 	if (fuffr.FFRGestureRecognizerStateChanged == state)
 	{
-		var zoomStep = Math.round((2 * scale) - 2)
+		var zoomStep = Math.round((5 * scale) - 5)
 		console.log('zoomStep: ' + zoomStep)
+		var zoomLevel = baseZoom + zoomStep
+		zoomLevel = Math.max(1, zoomLevel)
+		zoomLevel = Math.min(20, zoomLevel)
 		map.setZoom(baseZoom + zoomStep)
 	}
 
 	if (fuffr.FFRGestureRecognizerStateEnded == state)
 	{
 		baseZoom = map.getZoom()
+	}
+}
+
+function onTap(state)
+{
+	console.log('Fuffr onTap: ' + state)
+
+	if (fuffr.FFRGestureRecognizerStateEnded == state)
+	{
+		type = (map.getMapTypeId() == google.maps.MapTypeId.ROADMAP) ?
+			google.maps.MapTypeId.HYBRID :
+			google.maps.MapTypeId.ROADMAP
+		console.log('MapTypeId: ' + type)
+		map.setMapTypeId(type)
+	}
+}
+
+function onLongPress(state)
+{
+	console.log('Fuffr onLongPress: ' + state)
+
+	if (fuffr.FFRGestureRecognizerStateEnded == state)
+	{
+		map.setCenter(new google.maps.LatLng(59.32095497872408, 18.065810419468495))
 	}
 }
 
@@ -100,8 +130,18 @@ fuffr.addGesture(
 	onPan)
 fuffr.addGesture(
 	fuffr.FFRGesturePinch,
-	fuffr.FFRSideLeft,
+	fuffr.FFRSideRight,
 	onPinch)
+fuffr.addGesture(
+	fuffr.FFRGestureTap,
+	fuffr.FFRSideLeft,
+	{ maximumDuration: 1.0 },
+	onTap)
+fuffr.addGesture(
+	fuffr.FFRGestureLongPress,
+	fuffr.FFRSideLeft,
+	{ minimumDuration: 1.25 },
+	onLongPress)
 </script>
 
 </body>
