@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width,user-scalable=no, initial-scale=1"/>
-    <title>Fuffr Box</title>
+    <title>FuffrBox</title>
 	<link rel="stylesheet" href="common.css"/>
 	<link rel="stylesheet" href="offline.css"/>
 	<script src="lib/jquery.js"></script>
@@ -22,11 +22,6 @@
 			duration: 200
 		});
 	});
-
-	function updateFirmware()
-	{
-		fuffr.internal.callNative('updateFirmware@')
-	}
 	</script>
 </head>
 <body>
@@ -37,9 +32,9 @@
 
 <div class="header-margin-proportional"></div>
 
-<h1>Welcome to Fuffr Box</h1>
-<p class="header-description">40 words / Short description on one-two rows about FuffrBox.
-Description on one-two rows about FuffrBox. Description on one-two rows about FuffrBox.</p>
+<h1>Welcome to FuffrBox</h1>
+<p class="header-description">FuffrBox is a development tool for easy creation of games and apps for the Fuffr sensor device. </p>
+<p class="header-description header-description-alert">You are currently not connected to the Internet. Please check your connection and then press "FuffrDemos".</p>
 
 <div class="vertical-list">
 
@@ -47,7 +42,6 @@ Description on one-two rows about FuffrBox. Description on one-two rows about Fu
 		<ul>
 			<li>
 				<a href="http://evomedia.evothings.com/fuffr/demo/">Fuffr Demos</a><br /><br />
-				<a href="#" onclick="updateFirmware()">Update Firmware</a>
 			</li>
 		</ul>
 	</div>

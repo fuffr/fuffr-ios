@@ -11,6 +11,8 @@
 #import "FFRFirmwareDownloader.h"
 #import "SVProgressHUD.h"
 
+extern NSString* FFRFirmwareDownloader_URL;
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 

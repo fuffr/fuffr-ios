@@ -22,8 +22,6 @@
 #define URL_START_PAGE @"http://evomedia.evothings.com/fuffr/demo/"
 #define URL_FIRMWARE_LIST @"http://evomedia.evothings.com/fuffr/firmware/firmware.lst"
 
-extern NSString* FFRFirmwareDownloader_URL;
-
 /**
  * Reference to the AppViewController instance.
  */
@@ -505,7 +503,7 @@ static void CreateSwipeGesture(
 	NSURL* testURL = [NSURL URLWithString: URL_ARE_YOU_THERE];
 	NSData* data = [NSData dataWithContentsOfURL: testURL];
 
-	if (data)
+	if (!data)
 	{
     	NSLog(@"Device is connected to the internet");
 
