@@ -5,7 +5,7 @@ var gfx = {}
 
 /* Called when document is loaded and ready. */
 $(function() {
-	setTimeout(fuffrHandler.checkConnection, fuffrHandler.connTimeoutMs)
+	//setTimeout(fuffrHandler.checkConnection, fuffrHandler.connTimeoutMs)
 
 	$('#restart-button').bind('click', function(event) {
 		game.restart()
