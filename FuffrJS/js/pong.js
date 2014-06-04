@@ -5,7 +5,7 @@ var gfx = {}
 
 /* Called when document is loaded and ready. */
 $(function() {
-	//setTimeout(fuffrHandler.checkConnection, fuffrHandler.connTimeoutMs)
+	setTimeout(fuffrHandler.checkConnection, fuffrHandler.connTimeoutMs)
 
 	$('#restart-button').bind('click', function(event) {
 		game.restart()
@@ -310,13 +310,13 @@ gfx.ball.checkWallCollision = function()
 	if (nextX < 0 && gfx.ball.dx < 0)
 	{
 		gfx.ball.dx = - gfx.ball.dx
-		game.increaseScore(game.player1)
+		game.increaseScore(game.player2)
 	}
 	// Right wall.
 	else if (nextX > game.playfieldWidth && gfx.ball.dx > 0)
 	{
 		gfx.ball.dx = - gfx.ball.dx
-		game.increaseScore(game.player2)
+		game.increaseScore(game.player1)
 	}
 	// Top wall.
 	else if (nextY < 0 && gfx.ball.dy < 0)

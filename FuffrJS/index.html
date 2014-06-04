@@ -3,20 +3,86 @@
 <head>
     <meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width,user-scalable=no, initial-scale=1"/>
-    <title>Fuffr WebView Demos</title>
+    <title>Fuffr Box</title>
 	<link rel="stylesheet" href="common.css"/>
-	<style>
-	</style>
 	<script src="lib/jquery.js"></script>
+	<script src="lib/jquery.scrollstop.js"></script>
+	<script src="lib/jquery.easing.min.js"></script>
+	<script src="lib/jquery.scrollsnap.js"></script>
+	<script type="text/javascript">
+	$(document).ready(function()
+	{
+		$('#categories-list').scrollsnap({
+			snaps: 'div',
+			direction: 'y',
+			proximity: 50,
+			latency: 200,
+			duration: 200
+		});
+		$('#demos-list, #demos-list2').scrollsnap({
+			snaps: 'li',
+			direction: 'x',
+			proximity: 50,
+			latency: 200,
+			duration: 200
+		});
+	});
+	</script>
 </head>
 <body>
 
-<h1>Fuffr Demos</h1>
+<div class="logo-container">
+	<img class="logo" src="gfx/logo.png" />
+</div>
 
-<div class="content">
-	<a href="dancing-squares.html">Dancing Squares</a>
-	<a href="vibrant-field.html">Vibrant Field</a>
-	<a href="pong.html">Pong</a>
+<div class="header-margin-proportional"></div>
+
+<h1>Welcome to Fuffr Box</h1>
+<p class="header-description">40 words / Short description on one-two rows about Fuffr Box.
+Description on one-two rows.</p>
+
+<div id="categories-list" class="vertical-list">
+
+	<div id="demos-list" class="horizontal-list">
+		<ul>
+			<li>
+				<img src="gfx/icon_sample1.png" alt="Pong" /><br />
+				<a href="pong.html">Pong</a><br />
+				Games
+			</li>
+			<li>
+				<img src="gfx/icon_sample2.png" alt="Pong" /><br />
+				<a href="dancing-squares.html">Dancing Squares</a><br />
+				Games
+			</li>
+			<li>
+				<img src="gfx/icon_sample3.png" alt="Pong" /><br />
+				<a href="vibrant-field.html">Vibrant Field</a><br />
+				Games
+			</li>
+		</ul>
+	</div>
+
+	<div id="demos-list2" class="horizontal-list">
+		<ul>
+			<li>
+				<img src="gfx/icon_sample4.png" alt="Pong" /><br />
+				<a href="pong.html">Fuffr DJ</a><br />
+				Music
+			</li>
+			<li>
+				<img src="gfx/icon_sample5.png" alt="Pong" /><br />
+				<a href="dancing-squares.html">Fuffr TV Remote</a><br />
+				Utilities
+			</li>
+			<li>
+				<img src="gfx/icon_sample3.png" alt="Pong" /><br />
+				<a href="vibrant-field.html">Fuffr Sketch</a><br />
+				Utilities
+			</li>
+		</ul>
+	</div>
+
 </div>
 
 </body>
