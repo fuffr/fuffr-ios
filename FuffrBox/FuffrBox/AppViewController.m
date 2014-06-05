@@ -768,7 +768,7 @@ static void CreateSwipeGesture(
 	}
 	else
 	{
-		self.urlField.text = @"http://demos.fuffr.com";
+		self.urlField.text = @"demo.fuffr.com";
 	}
 }
 
