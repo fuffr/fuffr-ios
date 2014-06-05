@@ -5,10 +5,12 @@
 	<meta name="viewport" content="width=device-width,user-scalable=no, initial-scale=1"/>
     <title>FuffrBox</title>
 	<link rel="stylesheet" href="common.css"/>
+	<script src="lib/fuffr.js"></script>
 	<script src="lib/jquery.js"></script>
 	<script src="lib/jquery.scrollstop.js"></script>
 	<script src="lib/jquery.easing.min.js"></script>
 	<script src="lib/jquery.scrollsnap.js"></script>
+	<script src="lib/fastclick.js"></script>
 	<script type="text/javascript">
 	$(document).ready(function()
 	{
@@ -26,6 +28,7 @@
 			latency: 200,
 			duration: 200
 		});
+		FastClick.attach(document.body);
 	});
 	</script>
 </head>
@@ -45,15 +48,15 @@
 	<div id="demos-list" class="horizontal-list">
 		<ul>
 			<li>
-				<img src="gfx/icon_sample1.png" alt="Pong" /><br />
+				<a href="pong.html"><img src="gfx/icon_sample1.png" alt="Pong" /></a><br />
 				<a href="pong.html">Pong</a>
 			</li>
 			<li>
-				<img src="gfx/icon_sample2.png" alt="Pong" /><br />
+				<a href="dancing-squares.html"><img src="gfx/icon_sample2.png" alt="Pong" /></a><br />
 				<a href="dancing-squares.html">Dancing Squares</a>
 			</li>
 			<li>
-				<img src="gfx/icon_sample3.png" alt="Pong" /><br />
+				<a href="vibrant-field.html"><img src="gfx/icon_sample3.png" alt="Pong" /></a><br />
 				<a href="vibrant-field.html">Vibrant Field</a>
 			</li>
 		</ul>

@@ -127,6 +127,19 @@ fuffr.log = function(message, win, fail)
 		fail)
 }
 
+/**
+* Perform firmware update process over the air.
+* @param win - optional success callback function that takes no parameters
+* @param fail - optional error callback function that takes no parameters
+*/
+fuffr.updateFirmware = function(win, fail)
+{
+	fuffr.internal.callNative(
+		'updateFirmware@' + message + '@',
+		win,
+		fail)
+}
+
 /** Add a gesture recognizer.
 * @param {number} gestureType - one of the FFRGesture constants.
 * @param {number} sides - one or more of the FFRSide constants.
