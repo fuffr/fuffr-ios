@@ -1,0 +1,585 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3840ED2D1947397700365D5E /* libFuffrLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3840ED281947395D00365D5E /* libFuffrLib.a */; };
+		38F04AA7193356D10046B447 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38F04AA6193356D10046B447 /* Foundation.framework */; };
+		38F04AA9193356D10046B447 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38F04AA8193356D10046B447 /* CoreGraphics.framework */; };
+		38F04AAB193356D10046B447 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38F04AAA193356D10046B447 /* UIKit.framework */; };
+		38F04AB1193356D10046B447 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 38F04AAF193356D10046B447 /* InfoPlist.strings */; };
+		38F04AB3193356D10046B447 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 38F04AB2193356D10046B447 /* main.m */; };
+		38F04AB7193356D10046B447 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 38F04AB6193356D10046B447 /* AppDelegate.m */; };
+		38F04ABF193356D10046B447 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 38F04ABE193356D10046B447 /* Images.xcassets */; };
+		38F04AC6193356D10046B447 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38F04AC5193356D10046B447 /* XCTest.framework */; };
+		38F04AC7193356D10046B447 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38F04AA6193356D10046B447 /* Foundation.framework */; };
+		38F04AC8193356D10046B447 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38F04AAA193356D10046B447 /* UIKit.framework */; };
+		38F04AD0193356D10046B447 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 38F04ACE193356D10046B447 /* InfoPlist.strings */; };
+		38F04AD2193356D10046B447 /* FuffrBirdTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 38F04AD1193356D10046B447 /* FuffrBirdTests.m */; };
+		38F04ADE1933575F0046B447 /* Game.m in Sources */ = {isa = PBXBuildFile; fileRef = 38F04ADD1933575F0046B447 /* Game.m */; };
+		38F04AE11933577D0046B447 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38F04AE01933577D0046B447 /* ViewController.m */; };
+		38F04AE3193357880046B447 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 38F04AE2193357880046B447 /* Main.storyboard */; };
+		38F04AED1933579C0046B447 /* BirdDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 38F04AE41933579C0046B447 /* BirdDown.png */; };
+		38F04AEE1933579C0046B447 /* fuffrBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 38F04AE51933579C0046B447 /* fuffrBackground.png */; };
+		38F04AEF1933579C0046B447 /* bomb.png in Resources */ = {isa = PBXBuildFile; fileRef = 38F04AE61933579C0046B447 /* bomb.png */; };
+		38F04AF01933579C0046B447 /* tunnelBottom.png in Resources */ = {isa = PBXBuildFile; fileRef = 38F04AE71933579C0046B447 /* tunnelBottom.png */; };
+		38F04AF11933579C0046B447 /* tunnelTop.png in Resources */ = {isa = PBXBuildFile; fileRef = 38F04AE81933579C0046B447 /* tunnelTop.png */; };
+		38F04AF21933579C0046B447 /* BirdUp.png in Resources */ = {isa = PBXBuildFile; fileRef = 38F04AE91933579C0046B447 /* BirdUp.png */; };
+		38F04AF41933579C0046B447 /* GameBack.png in Resources */ = {isa = PBXBuildFile; fileRef = 38F04AEB1933579C0046B447 /* GameBack.png */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		3840ED271947395D00365D5E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3840ED221947395D00365D5E /* FuffrLib.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 219718C518D60662007B6E84;
+			remoteInfo = FuffrLib;
+		};
+		3840ED291947395D00365D5E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3840ED221947395D00365D5E /* FuffrLib.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 219718D518D60662007B6E84;
+			remoteInfo = FuffrLibTests;
+		};
+		3840ED2B1947396F00365D5E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3840ED221947395D00365D5E /* FuffrLib.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 219718C418D60662007B6E84;
+			remoteInfo = FuffrLib;
+		};
+		38F04AC9193356D10046B447 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 38F04A9B193356D10046B447 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 38F04AA2193356D10046B447;
+			remoteInfo = FuffrBird;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		3840ED221947395D00365D5E /* FuffrLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FuffrLib.xcodeproj; path = ../FuffrLib/FuffrLib.xcodeproj; sourceTree = "<group>"; };
+		38F04AA3193356D10046B447 /* FuffrBird.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FuffrBird.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		38F04AA6193356D10046B447 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		38F04AA8193356D10046B447 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		38F04AAA193356D10046B447 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		38F04AAE193356D10046B447 /* FuffrBird-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "FuffrBird-Info.plist"; sourceTree = "<group>"; };
+		38F04AB0193356D10046B447 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		38F04AB2193356D10046B447 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		38F04AB4193356D10046B447 /* FuffrBird-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FuffrBird-Prefix.pch"; sourceTree = "<group>"; };
+		38F04AB5193356D10046B447 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		38F04AB6193356D10046B447 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		38F04ABE193356D10046B447 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		38F04AC4193356D10046B447 /* FuffrBirdTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FuffrBirdTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		38F04AC5193356D10046B447 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		38F04ACD193356D10046B447 /* FuffrBirdTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "FuffrBirdTests-Info.plist"; sourceTree = "<group>"; };
+		38F04ACF193356D10046B447 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		38F04AD1193356D10046B447 /* FuffrBirdTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FuffrBirdTests.m; sourceTree = "<group>"; };
+		38F04ADC1933575F0046B447 /* Game.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Game.h; sourceTree = "<group>"; };
+		38F04ADD1933575F0046B447 /* Game.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Game.m; sourceTree = "<group>"; };
+		38F04ADF1933577D0046B447 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		38F04AE01933577D0046B447 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		38F04AE2193357880046B447 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		38F04AE41933579C0046B447 /* BirdDown.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BirdDown.png; sourceTree = "<group>"; };
+		38F04AE51933579C0046B447 /* fuffrBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fuffrBackground.png; sourceTree = "<group>"; };
+		38F04AE61933579C0046B447 /* bomb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bomb.png; sourceTree = "<group>"; };
+		38F04AE71933579C0046B447 /* tunnelBottom.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tunnelBottom.png; sourceTree = "<group>"; };
+		38F04AE81933579C0046B447 /* tunnelTop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tunnelTop.png; sourceTree = "<group>"; };
+		38F04AE91933579C0046B447 /* BirdUp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BirdUp.png; sourceTree = "<group>"; };
+		38F04AEB1933579C0046B447 /* GameBack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GameBack.png; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		38F04AA0193356D10046B447 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3840ED2D1947397700365D5E /* libFuffrLib.a in Frameworks */,
+				38F04AA9193356D10046B447 /* CoreGraphics.framework in Frameworks */,
+				38F04AAB193356D10046B447 /* UIKit.framework in Frameworks */,
+				38F04AA7193356D10046B447 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		38F04AC1193356D10046B447 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				38F04AC6193356D10046B447 /* XCTest.framework in Frameworks */,
+				38F04AC8193356D10046B447 /* UIKit.framework in Frameworks */,
+				38F04AC7193356D10046B447 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		3840ED231947395D00365D5E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3840ED281947395D00365D5E /* libFuffrLib.a */,
+				3840ED2A1947395D00365D5E /* FuffrLibTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		38F04A9A193356D10046B447 = {
+			isa = PBXGroup;
+			children = (
+				38F04AAC193356D10046B447 /* FuffrBird */,
+				38F04ACB193356D10046B447 /* FuffrBirdTests */,
+				38F04AA5193356D10046B447 /* Frameworks */,
+				38F04AA4193356D10046B447 /* Products */,
+				3840ED221947395D00365D5E /* FuffrLib.xcodeproj */,
+			);
+			sourceTree = "<group>";
+		};
+		38F04AA4193356D10046B447 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				38F04AA3193356D10046B447 /* FuffrBird.app */,
+				38F04AC4193356D10046B447 /* FuffrBirdTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		38F04AA5193356D10046B447 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				38F04AA6193356D10046B447 /* Foundation.framework */,
+				38F04AA8193356D10046B447 /* CoreGraphics.framework */,
+				38F04AAA193356D10046B447 /* UIKit.framework */,
+				38F04AC5193356D10046B447 /* XCTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		38F04AAC193356D10046B447 /* FuffrBird */ = {
+			isa = PBXGroup;
+			children = (
+				38F04AB5193356D10046B447 /* AppDelegate.h */,
+				38F04AB6193356D10046B447 /* AppDelegate.m */,
+				38F04AE2193357880046B447 /* Main.storyboard */,
+				38F04ADF1933577D0046B447 /* ViewController.h */,
+				38F04AE01933577D0046B447 /* ViewController.m */,
+				38F04ADC1933575F0046B447 /* Game.h */,
+				38F04ADD1933575F0046B447 /* Game.m */,
+				38F04ABE193356D10046B447 /* Images.xcassets */,
+				38F04AAD193356D10046B447 /* Supporting Files */,
+			);
+			path = FuffrBird;
+			sourceTree = "<group>";
+		};
+		38F04AAD193356D10046B447 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				38F04AE41933579C0046B447 /* BirdDown.png */,
+				38F04AE51933579C0046B447 /* fuffrBackground.png */,
+				38F04AE61933579C0046B447 /* bomb.png */,
+				38F04AE71933579C0046B447 /* tunnelBottom.png */,
+				38F04AE81933579C0046B447 /* tunnelTop.png */,
+				38F04AE91933579C0046B447 /* BirdUp.png */,
+				38F04AEB1933579C0046B447 /* GameBack.png */,
+				38F04AAE193356D10046B447 /* FuffrBird-Info.plist */,
+				38F04AAF193356D10046B447 /* InfoPlist.strings */,
+				38F04AB2193356D10046B447 /* main.m */,
+				38F04AB4193356D10046B447 /* FuffrBird-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		38F04ACB193356D10046B447 /* FuffrBirdTests */ = {
+			isa = PBXGroup;
+			children = (
+				38F04AD1193356D10046B447 /* FuffrBirdTests.m */,
+				38F04ACC193356D10046B447 /* Supporting Files */,
+			);
+			path = FuffrBirdTests;
+			sourceTree = "<group>";
+		};
+		38F04ACC193356D10046B447 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				38F04ACD193356D10046B447 /* FuffrBirdTests-Info.plist */,
+				38F04ACE193356D10046B447 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		38F04AA2193356D10046B447 /* FuffrBird */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 38F04AD5193356D10046B447 /* Build configuration list for PBXNativeTarget "FuffrBird" */;
+			buildPhases = (
+				38F04A9F193356D10046B447 /* Sources */,
+				38F04AA0193356D10046B447 /* Frameworks */,
+				38F04AA1193356D10046B447 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3840ED2C1947396F00365D5E /* PBXTargetDependency */,
+			);
+			name = FuffrBird;
+			productName = FuffrBird;
+			productReference = 38F04AA3193356D10046B447 /* FuffrBird.app */;
+			productType = "com.apple.product-type.application";
+		};
+		38F04AC3193356D10046B447 /* FuffrBirdTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 38F04AD8193356D10046B447 /* Build configuration list for PBXNativeTarget "FuffrBirdTests" */;
+			buildPhases = (
+				38F04AC0193356D10046B447 /* Sources */,
+				38F04AC1193356D10046B447 /* Frameworks */,
+				38F04AC2193356D10046B447 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				38F04ACA193356D10046B447 /* PBXTargetDependency */,
+			);
+			name = FuffrBirdTests;
+			productName = FuffrBirdTests;
+			productReference = 38F04AC4193356D10046B447 /* FuffrBirdTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		38F04A9B193356D10046B447 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0510;
+				ORGANIZATIONNAME = BraidesAppHouse;
+				TargetAttributes = {
+					38F04AA2193356D10046B447 = {
+						DevelopmentTeam = 77V459AP52;
+					};
+					38F04AC3193356D10046B447 = {
+						TestTargetID = 38F04AA2193356D10046B447;
+					};
+				};
+			};
+			buildConfigurationList = 38F04A9E193356D10046B447 /* Build configuration list for PBXProject "FuffrBird" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 38F04A9A193356D10046B447;
+			productRefGroup = 38F04AA4193356D10046B447 /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 3840ED231947395D00365D5E /* Products */;
+					ProjectRef = 3840ED221947395D00365D5E /* FuffrLib.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				38F04AA2193356D10046B447 /* FuffrBird */,
+				38F04AC3193356D10046B447 /* FuffrBirdTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		3840ED281947395D00365D5E /* libFuffrLib.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libFuffrLib.a;
+			remoteRef = 3840ED271947395D00365D5E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		3840ED2A1947395D00365D5E /* FuffrLibTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = FuffrLibTests.xctest;
+			remoteRef = 3840ED291947395D00365D5E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		38F04AA1193356D10046B447 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				38F04AED1933579C0046B447 /* BirdDown.png in Resources */,
+				38F04AF41933579C0046B447 /* GameBack.png in Resources */,
+				38F04AF11933579C0046B447 /* tunnelTop.png in Resources */,
+				38F04AE3193357880046B447 /* Main.storyboard in Resources */,
+				38F04AEE1933579C0046B447 /* fuffrBackground.png in Resources */,
+				38F04AF01933579C0046B447 /* tunnelBottom.png in Resources */,
+				38F04ABF193356D10046B447 /* Images.xcassets in Resources */,
+				38F04AB1193356D10046B447 /* InfoPlist.strings in Resources */,
+				38F04AEF1933579C0046B447 /* bomb.png in Resources */,
+				38F04AF21933579C0046B447 /* BirdUp.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		38F04AC2193356D10046B447 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				38F04AD0193356D10046B447 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		38F04A9F193356D10046B447 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				38F04AB7193356D10046B447 /* AppDelegate.m in Sources */,
+				38F04AB3193356D10046B447 /* main.m in Sources */,
+				38F04AE11933577D0046B447 /* ViewController.m in Sources */,
+				38F04ADE1933575F0046B447 /* Game.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		38F04AC0193356D10046B447 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				38F04AD2193356D10046B447 /* FuffrBirdTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3840ED2C1947396F00365D5E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = FuffrLib;
+			targetProxy = 3840ED2B1947396F00365D5E /* PBXContainerItemProxy */;
+		};
+		38F04ACA193356D10046B447 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 38F04AA2193356D10046B447 /* FuffrBird */;
+			targetProxy = 38F04AC9193356D10046B447 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		38F04AAF193356D10046B447 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				38F04AB0193356D10046B447 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		38F04ACE193356D10046B447 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				38F04ACF193356D10046B447 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		38F04AD3193356D10046B447 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		38F04AD4193356D10046B447 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		38F04AD6193356D10046B447 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "FuffrBird/FuffrBird-Prefix.pch";
+				"HEADER_SEARCH_PATHS[arch=*]" = (
+					"\"$(TARGET_BUILD_DIR)/usr/local/lib/include\"",
+					"\"$(OBJROOT)/UninstalledProducts/include\"",
+					"\"$(BUILT_PRODUCTS_DIR)\"",
+				);
+				INFOPLIST_FILE = "FuffrBird/FuffrBird-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				"OTHER_LDFLAGS[arch=*]" = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		38F04AD7193356D10046B447 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "FuffrBird/FuffrBird-Prefix.pch";
+				"HEADER_SEARCH_PATHS[arch=*]" = (
+					"\"$(TARGET_BUILD_DIR)/usr/local/lib/include\"",
+					"\"$(OBJROOT)/UninstalledProducts/include\"",
+					"\"$(BUILT_PRODUCTS_DIR)\"",
+				);
+				INFOPLIST_FILE = "FuffrBird/FuffrBird-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				"OTHER_LDFLAGS[arch=*]" = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		38F04AD9193356D10046B447 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/FuffrBird.app/FuffrBird";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "FuffrBird/FuffrBird-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "FuffrBirdTests/FuffrBirdTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		38F04ADA193356D10046B447 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/FuffrBird.app/FuffrBird";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "FuffrBird/FuffrBird-Prefix.pch";
+				INFOPLIST_FILE = "FuffrBirdTests/FuffrBirdTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		38F04A9E193356D10046B447 /* Build configuration list for PBXProject "FuffrBird" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				38F04AD3193356D10046B447 /* Debug */,
+				38F04AD4193356D10046B447 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		38F04AD5193356D10046B447 /* Build configuration list for PBXNativeTarget "FuffrBird" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				38F04AD6193356D10046B447 /* Debug */,
+				38F04AD7193356D10046B447 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		38F04AD8193356D10046B447 /* Build configuration list for PBXNativeTarget "FuffrBirdTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				38F04AD9193356D10046B447 /* Debug */,
+				38F04ADA193356D10046B447 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 38F04A9B193356D10046B447 /* Project object */;
+}
