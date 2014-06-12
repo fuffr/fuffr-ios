@@ -134,7 +134,7 @@ Below follows example for how to use these gestures.
 
 ### Adding and removing gestures
 
-Multiple gestures can be enabled. Gestures are added by fuffr.addGesture:
+Multiple gestures can be enabled. Gestures are added by **fuffr.addGesture**:
 
     fuffr.addGesture(gestureType, side, callbackFunction)
 
@@ -142,13 +142,13 @@ Some gesture types accept a dictionary object of gesture parameters:
 
     fuffr.addGesture(gestureType, side, parameters, callbackFunction)
 
-The fuffr.addGesture function returns an id you can use to remove a gesture by calling fuffr.removeGesture:
+The fuffr.addGesture function returns an id you can use to remove a gesture by calling **fuffr.removeGesture**:
 
     var gestureId = fuffr.addGesture(...)
     ...
     fuffr.removeGesture(gestureId)
 
-Remove all gestures with fuffr.removeAllGestures:
+Remove all gestures with **fuffr.removeAllGestures**:
 
     fuffr.removeAllGestures()
 
