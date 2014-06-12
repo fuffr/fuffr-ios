@@ -44,7 +44,7 @@ The workflow when developing is:
 
 The API is based on a number of functions that are called when touch events and connection events occur.
 
-All of the Fuffr API is in the global object **fuff**.
+All of the Fuffr API is in the global object **fuffr**.
 
 The API is documented in the documentation comments in [fuffr.js](https://github.com/fuffr/fuffr-ios/blob/master/FuffrJS/lib/fuffr.js).
 
@@ -172,9 +172,9 @@ The onPan function looks like this (you give this function any name):
 
 Possible values of **state**:
 
-** fuffr.FFRGestureRecognizerStateBegan - gesture started
-** fuffr.FFRGestureRecognizerStateChanged - gesture value has been updated
-** fuffr.FFRGestureRecognizerStateEnded - gesture has ended
+* fuffr.FFRGestureRecognizerStateBegan - gesture started
+* fuffr.FFRGestureRecognizerStateChanged - gesture value has been updated
+* fuffr.FFRGestureRecognizerStateEnded - gesture has ended
 
 Note that the width and height of the translation is relative to the original touch point that started the gesture (they are not delta values).
 
@@ -199,9 +199,9 @@ The scale value is based on the distance between the original touch points that 
 
 Possible values of **state**:
 
-** fuffr.FFRGestureRecognizerStateBegan - gesture started
-** fuffr.FFRGestureRecognizerStateChanged - gesture value has been updated
-** fuffr.FFRGestureRecognizerStateEnded - gesture has ended
+* fuffr.FFRGestureRecognizerStateBegan - gesture started
+* fuffr.FFRGestureRecognizerStateChanged - gesture value has been updated
+* fuffr.FFRGestureRecognizerStateEnded - gesture has ended
 
 ### Example of fuffr.FFRGestureRotate
 
@@ -222,11 +222,11 @@ Callback function:
 
 The rotation value is based on the angle between the original touch points that started the gesture (it is not a delta value). The angle is given in radians.
 
-Possible values of **gesture.state**:
+Possible values of **state**:
 
-** fuffr.FFRGestureRecognizerStateBegan - gesture started
-** fuffr.FFRGestureRecognizerStateChanged - gesture value has been updated
-** fuffr.FFRGestureRecognizerStateEnded - gesture has ended
+* fuffr.FFRGestureRecognizerStateBegan - gesture started
+* fuffr.FFRGestureRecognizerStateChanged - gesture value has been updated
+* fuffr.FFRGestureRecognizerStateEnded - gesture has ended
 
 ### Example of fuffr.FFRGestureTap
 
@@ -312,14 +312,6 @@ This is an example of how to setup a swipe up gesture recognizer:
 		{ minimumDistance: 200.0,
 		  maximumDuration: 1.0 },
 		onSwipeUp)
-
-    FFRSwipeGestureRecognizer* swipeLeft = [FFRSwipeGestureRecognizer new];
-    swipeLeft.side = FFRSideLeft | FFRSideRight;
-    swipeLeft.direction = FFRSwipeGestureRecognizerDirectionLeft;
-    swipeLeft.minimumDistance = 200.0;
-    swipeLeft.maximumDuration = 1.0; // 1 second.
-    [swipeLeft addTarget: self action: @selector(onSwipeLeft:)];
-    [manager addGestureRecognizer: swipeLeft];
 
 Possible parameter values for Swipe gestures are:
 
