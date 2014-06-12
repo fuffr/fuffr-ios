@@ -11,24 +11,24 @@
 @interface FFRFirmwareDownloader : NSObject
 
 /*
-Format of firmware URL list file (file must follow this exact format):
+Format of firmware URL list file:
 
 <firmware-list>
 	<firmware-entry>
 		<firmware-key>CC2541-A</firmware-key>
-		<firmware-url>http://evomedia.evothings.com/fuffr/firmware/IPHONE_CASE_R04_CC2541_IMG_A_1_1_0_0.bin</firmware-url>
+		<firmware-url>http://demos.fuffr.com/firmware/IPHONE_CASE_R04_CC2541_IMG_A_1_2_0_0.bin</firmware-url>
 	</firmware-entry>
 	<firmware-entry>
 		<firmware-key>CC2541-B</firmware-key>
-		<firmware-url>http://evomedia.evothings.com/fuffr/firmware/IPHONE_CASE_R04_CC2541_IMG_B_1_1_0_0.bin</firmware-url>
+		<firmware-url>http://demos.fuffr.com/firmware/IPHONE_CASE_R04_CC2541_IMG_B_1_2_0_0.bin</firmware-url>
 	</firmware-entry>
 	<firmware-entry>
 		<firmware-key>MSP430-A</firmware-key>
-		<firmware-url>http://evomedia.evothings.com/fuffr/firmware/IPHONE_CASE_R04_MSP430_IMG_A_1_4_0_0.bin</firmware-url>
+		<firmware-url>http://demos.fuffr.com/firmware/IPHONE_CASE_R04_MSP430_IMG_A_1_5_1_0.bin</firmware-url>
 	</firmware-entry>
 	<firmware-entry>
 		<firmware-key>MSP430-B</firmware-key>
-		<firmware-url>http://evomedia.evothings.com/fuffr/firmware/IPHONE_CASE_R04_MSP430_IMG_B_1_4_0_0.bin</firmware-url>
+		<firmware-url>http://demos.fuffr.com/firmware/IPHONE_CASE_R04_MSP430_IMG_B_1_5_1_0.bin</firmware-url>
 	</firmware-entry>
 </firmware-list>
 */
