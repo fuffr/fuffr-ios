@@ -18,9 +18,10 @@
 #import <FuffrLib/FFROADHandler.h>
 #import <FuffrLib/UIView+Toast.h>
 
-#define URL_ARE_YOU_THERE @"http://demo.fuffr.com/AreYouThere.txt"
-#define URL_START_PAGE @"http://demo.fuffr.com/"
-#define URL_FIRMWARE_LIST @"http://evomedia.evothings.com/fuffr/firmware/firmware.lst"
+#define URL_ARE_YOU_THERE @"http://demos.fuffr.com/AreYouThere.txt"
+#define URL_START_PAGE @"http://demos.fuffr.com/"
+#define URL_FIRMWARE_LIST @"http://demos.fuffr.com/firmware/firmware.lst"
+#define URL_INITIAL_URL_FIELD @"demos.fuffr.com"
 
 /**
  * Reference to the AppViewController instance.
@@ -642,7 +643,7 @@ static void CreateSwipeGesture(
 
 - (void) executeJavaScriptCommand: (NSString*) command
 {
-	NSLog(@"executeJavaScriptCommand: %@", command);
+	//NSLog(@"executeJavaScriptCommand: %@", command);
 
 	NSArray* tokens = [command componentsSeparatedByString:@"@"];
 	NSString* commandName = [NSString stringWithString:[tokens objectAtIndex: 1]];
@@ -768,7 +769,7 @@ static void CreateSwipeGesture(
 	}
 	else
 	{
-		self.urlField.text = @"demo.fuffr.com";
+		self.urlField.text = URL_INITIAL_URL_FIELD;
 	}
 }
 
