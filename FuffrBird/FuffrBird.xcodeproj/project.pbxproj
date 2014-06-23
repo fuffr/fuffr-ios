@@ -261,7 +261,7 @@
 				ORGANIZATIONNAME = BraidesAppHouse;
 				TargetAttributes = {
 					38F04AA2193356D10046B447 = {
-						DevelopmentTeam = 77V459AP52;
+						DevelopmentTeam = LNZ46XBBR6;
 					};
 					38F04AC3193356D10046B447 = {
 						TestTargetID = 38F04AA2193356D10046B447;

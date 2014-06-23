@@ -74,7 +74,7 @@
 	[manager addGestureRecognizer:tapBottom];
 }
 
-- (IBAction)startGame:(id)sender
+- (void)startGame
 {
 	gameStarted = YES;
 	tunnelTop.hidden = NO;
@@ -123,6 +123,7 @@
 
 - (void)placeTunnels
 {
+    //place the tunnels outside the screen with the gap at a random height.
 	randomTopTunnelPosition = arc4random() % (int)(self.view.bounds.size.height-tunnelGap);
 	randomBottomTunnelPosition = randomTopTunnelPosition + tunnelGap;
 	[tunnelTop setFrame:CGRectMake(
@@ -139,6 +140,7 @@
 
 -(void)tunnelMoving
 {
+    //move the tunnels
 	tunnelTop.center = CGPointMake(tunnelTop.center.x - 1, tunnelTop.center.y);
 	tunnelBottom.center = CGPointMake(tunnelBottom.center.x - 1, tunnelBottom.center.y);
 	
@@ -177,7 +179,7 @@
 	}
 }
 
--(void) onTap: (FFRTapGestureRecognizer*)gesture
+-(void)onTap: (FFRTapGestureRecognizer*)gesture
 {
 	// Tap on the left side, dismiss the viewcontroller if the game
 	// is over or start the game if it hasn't started.
@@ -189,7 +191,7 @@
 	}
 	else if (!gameStarted)
 	{
-		[self startGame:self];
+		[self startGame];
 	}
 }
 

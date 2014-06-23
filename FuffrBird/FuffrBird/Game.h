@@ -36,7 +36,7 @@ NSInteger highScoreNumber;
 	NSTimer *tunnelMovement;
 }
 
-- (IBAction)startGame:(id)sender;
+- (void)startGame;
 - (void)birdMoving;
 - (void)tunnelMoving;
 - (void)placeTunnels;
