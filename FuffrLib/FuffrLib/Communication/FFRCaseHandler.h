@@ -59,6 +59,8 @@ extern NSString* const FFRBatteryCharacteristicUUID;
     FFRTrackingManager* _trackingManager;
 	
     dispatch_queue_t _backgroundQueue;
+    
+    bool _previousTouchDown[32];
 }
 
 /**
