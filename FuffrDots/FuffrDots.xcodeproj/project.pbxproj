@@ -21,6 +21,7 @@
 		213C70CF18D86F90001A7430 /* FuffrDotsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 213C70CE18D86F90001A7430 /* FuffrDotsTests.m */; };
 		213C70DB18D89E35001A7430 /* AppViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 213C70DA18D89E35001A7430 /* AppViewController.m */; };
 		219F1BAC18D89F8700F2CF5A /* libFuffrLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 213C70E218D89E97001A7430 /* libFuffrLib.a */; };
+		29C5F28F19656EB0009F1A39 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29C5F28E19656EB0009F1A39 /* CoreText.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,6 +75,7 @@
 		213C70D918D89E35001A7430 /* AppViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppViewController.h; sourceTree = "<group>"; };
 		213C70DA18D89E35001A7430 /* AppViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppViewController.m; sourceTree = "<group>"; };
 		213C70DC18D89E97001A7430 /* FuffrLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FuffrLib.xcodeproj; path = ../FuffrLib/FuffrLib.xcodeproj; sourceTree = "<group>"; };
+		29C5F28E19656EB0009F1A39 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +85,7 @@
 			files = (
 				219F1BAC18D89F8700F2CF5A /* libFuffrLib.a in Frameworks */,
 				213C70AC18D86F90001A7430 /* CoreGraphics.framework in Frameworks */,
+				29C5F28F19656EB0009F1A39 /* CoreText.framework in Frameworks */,
 				213C70AE18D86F90001A7430 /* UIKit.framework in Frameworks */,
 				213C70AA18D86F90001A7430 /* Foundation.framework in Frameworks */,
 			);
@@ -124,6 +127,7 @@
 		213C70A818D86F90001A7430 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				29C5F28E19656EB0009F1A39 /* CoreText.framework */,
 				213C70A918D86F90001A7430 /* Foundation.framework */,
 				213C70AB18D86F90001A7430 /* CoreGraphics.framework */,
 				213C70AD18D86F90001A7430 /* UIKit.framework */,

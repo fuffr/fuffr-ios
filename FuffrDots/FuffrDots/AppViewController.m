@@ -7,6 +7,9 @@
 //
 
 #import "AppViewController.h"
+#import <CoreText/CTLine.h>
+#import <CoreText/CTFont.h>
+#import <CoreText/CTStringAttributes.h>
 
 @interface DotColor : NSObject
 @property (nonatomic, assign) CGFloat red;
@@ -18,6 +21,9 @@
 @end
 
 @implementation AppViewController
+
+static uint sFrameCount = 0, sFrameCountLastSecond = 0, sFPS;
+static time_t sLastSecondTimestamp = 0;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -347,6 +353,46 @@
 
 		}
 	}
+	
+	// fps counter
+	sFrameCount++;
+	uint fps = sFrameCount - sFrameCountLastSecond;
+	time_t now = time(NULL);
+	if(now != sLastSecondTimestamp) {
+		sLastSecondTimestamp = now;
+		sFrameCountLastSecond = sFrameCount;
+		sFPS = fps;
+	}
+	fps = sFPS;
+	
+	// draw text (horrendously complex)
+	CTFontRef sysUIFont = CTFontCreateUIFontForLanguage(kCTFontSystemFontType, 12.0, NULL);
+	
+	// create a naked string
+	NSString *string = [NSString stringWithFormat:@"FPS: %u", fps];
+	
+	// blue
+	CGColorRef color = [UIColor blackColor].CGColor;
+	
+	// pack it into attributes dictionary
+	NSDictionary *attributesDict = [NSDictionary dictionaryWithObjectsAndKeys:
+		(__bridge id)sysUIFont, (id)kCTFontAttributeName,
+		color, (id)kCTForegroundColorAttributeName,
+		nil];
+
+	// make the attributed string
+	NSAttributedString *attString = [[NSAttributedString alloc] initWithString:string
+		attributes:attributesDict];
+	
+	CTLineRef line = CTLineCreateWithAttributedString((CFAttributedStringRef)attString); // 5-1
+	
+	// Set text position and draw the line into the graphic context
+	CGContextSetTextMatrix(context, CGAffineTransformIdentity);
+	CGContextTranslateCTM(context, 0, CGContextGetClipBoundingBox(context).size.height);
+	CGContextScaleCTM(context, 1.0, -1.0);
+	CGContextSetTextPosition(context, 10, 10); // 6-1
+	CTLineDraw(line, context); // 7-1
+	CFRelease(line); // 8-1
 
     self.imageView.image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
