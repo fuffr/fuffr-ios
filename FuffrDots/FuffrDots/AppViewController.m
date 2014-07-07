@@ -11,15 +11,6 @@
 #import <CoreText/CTFont.h>
 #import <CoreText/CTStringAttributes.h>
 
-@interface DotColor : NSObject
-@property (nonatomic, assign) CGFloat red;
-@property (nonatomic, assign) CGFloat green;
-@property (nonatomic, assign) CGFloat blue;
-@end
-
-@implementation DotColor
-@end
-
 @implementation AppViewController
 
 static uint sFrameCount = 0, sFrameCountLastSecond = 0, sFPS;
@@ -278,6 +269,8 @@ static time_t sLastSecondTimestamp = 0;
 	{
 		self.glView.clearsContextBeforeDrawing = NO;
 	}
+	
+	[self.glView drawViewWithTouches:self.touches paintMode:self.paintModeOn dotColors:self.dotColors];
 
 	int nTouches = 0;
 
@@ -394,7 +387,7 @@ static time_t sLastSecondTimestamp = 0;
 	CFRelease(line); // 8-1
 
     //self.imageView.image = UIGraphicsGetImageFromCurrentImageContext();
-	[self.glView drawView];
+	//[self.glView drawView];
     UIGraphicsEndImageContext();
 
 	NSString* message = [NSString stringWithFormat: @"Number of touches: %i", nTouches];

@@ -10,6 +10,7 @@
 
 #import <QuartzCore/QuartzCore.h>
 #import <OpenGLES/EAGLDrawable.h>
+#import <FuffrLib/FFRTouchManager.h>
 
 #import "EAGLView.h"
 
@@ -19,6 +20,9 @@
 #import "Constants.h" 
 
 #define USE_DEPTH_BUFFER 0
+
+@implementation DotColor
+@end
 
 // A class extension to declare private methods
 @interface EAGLView ()
@@ -86,7 +90,7 @@
 
 
 - (void)drawView {
-	
+	NSLog(@"drawView");
 	[EAGLContext setCurrentContext:context];
 	
 	glBindFramebufferOES(GL_FRAMEBUFFER_OES, viewFramebuffer);
@@ -118,12 +122,76 @@
 	[context presentRenderbuffer:GL_RENDERBUFFER_OES];
 }
 
+- (void)drawViewWithTouches:(NSSet*)touches paintMode:(BOOL)paintModeOn dotColors:(NSMutableDictionary*)dotColors {
+	//NSLog(@"drawViewWithTouches");
+	[EAGLContext setCurrentContext:context];
+	
+	glBindFramebufferOES(GL_FRAMEBUFFER_OES, viewFramebuffer);
+	glViewport(0, 0, backingWidth, backingHeight);
+	
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrthof(-1.0f, 1.0f, -1.5f, 1.5f, -1.0f, 1.0f);
+	glMatrixMode(GL_MODELVIEW);
+	
+	//if(paintModeOn) {
+		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+	//}
+	
+	// Set up vertices for circle.
+	GLfloat vertices[72];
+	
+	for (int i = 0; i < 72; i += 2) {
+		vertices[i]   = (cos(DEGREES_TO_RADIANS(i*10)) * 1);
+		vertices[i+1] = (sin(DEGREES_TO_RADIANS(i*10)) * 1);
+	}
+	
+	glVertexPointer(2, GL_FLOAT, 0, vertices);
+	glEnableClientState(GL_VERTEX_ARRAY);
+	
+	for (FFRTouch* touch in touches)
+	{
+		if (touch.phase != FFRTouchPhaseEnded)
+		{
+			//++nTouches;
+			
+			DotColor* color = [dotColors objectForKey:
+							   [NSNumber numberWithInt: (int)touch.identifier]];
+			if (color)
+			{
+				glColor4f(color.red, color.green, color.blue, 1.0f);
+			}
+			else
+			{
+    			glColor4f(0,0,0,1);
+			}
+			
+			if (paintModeOn)
+			{
+            }
+			else
+			{
+				// Draw a single circle.
+				glPushMatrix();
+				glTranslatef(touch.normalizedLocation.x, touch.normalizedLocation.y, 0);
+				glScalef(0.1f, 0.1f, 0.1f);	//circleSize
+				glDrawArrays(GL_TRIANGLE_FAN, 0, 36);
+				glPopMatrix();
+			}
+		}
+	}
+	
+	glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer);
+	[context presentRenderbuffer:GL_RENDERBUFFER_OES];
+}
+
 
 - (void)layoutSubviews {
 	[EAGLContext setCurrentContext:context];
 	[self destroyFramebuffer];
 	[self createFramebuffer];
-	[self drawView];
+	//[self drawView];
 }
 
 

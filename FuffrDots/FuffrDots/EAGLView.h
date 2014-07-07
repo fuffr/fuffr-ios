@@ -12,6 +12,12 @@
 #import <OpenGLES/ES1/gl.h>
 #import <OpenGLES/ES1/glext.h>
 
+@interface DotColor : NSObject
+@property (nonatomic, assign) CGFloat red;
+@property (nonatomic, assign) CGFloat green;
+@property (nonatomic, assign) CGFloat blue;
+@end
+
 /*
 This class wraps the CAEAGLLayer from CoreAnimation into a convenient UIView subclass.
 The view content is basically an EAGL surface you render your OpenGL scene into.
@@ -34,5 +40,6 @@ Note that setting the view non-opaque will only work if the EAGL surface has an 
 }
 
 - (void)drawView;
+- (void)drawViewWithTouches:(NSSet*)touches paintMode:(BOOL)paintMode dotColors:(NSMutableDictionary*)dotColors;
 
 @end
