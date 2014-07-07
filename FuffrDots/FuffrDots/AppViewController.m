@@ -39,14 +39,13 @@ static time_t sLastSecondTimestamp = 0;
 {
     [super viewDidLoad];
 
-	// Create an image view for drawing.
-	self.imageView = [[UIImageView alloc] initWithFrame: self.view.bounds];
-    self.imageView.autoresizingMask =
-		UIViewAutoresizingFlexibleHeight |
-		UIViewAutoresizingFlexibleWidth;
-    [self.view addSubview: self.imageView];
+	// Create a GL view for drawing.
+	self.glView = [[EAGLView alloc] initWithFrame:self.view.bounds];
+	self.glView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	self.glView.userInteractionEnabled = YES;
+	
+	[self.view addSubview:self.glView];
 
-    self.imageView.backgroundColor = UIColor.whiteColor;
 
 	// Create view that displays messages.
 	[self createMessageView];
@@ -277,7 +276,7 @@ static time_t sLastSecondTimestamp = 0;
 
 	if (self.paintModeOn)
 	{
-		[self.imageView.layer renderInContext: context];
+		self.glView.clearsContextBeforeDrawing = NO;
 	}
 
 	int nTouches = 0;
@@ -394,7 +393,8 @@ static time_t sLastSecondTimestamp = 0;
 	CTLineDraw(line, context); // 7-1
 	CFRelease(line); // 8-1
 
-    self.imageView.image = UIGraphicsGetImageFromCurrentImageContext();
+    //self.imageView.image = UIGraphicsGetImageFromCurrentImageContext();
+	[self.glView drawView];
     UIGraphicsEndImageContext();
 
 	NSString* message = [NSString stringWithFormat: @"Number of touches: %i", nTouches];

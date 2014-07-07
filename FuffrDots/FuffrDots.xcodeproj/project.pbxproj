@@ -22,6 +22,7 @@
 		213C70DB18D89E35001A7430 /* AppViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 213C70DA18D89E35001A7430 /* AppViewController.m */; };
 		219F1BAC18D89F8700F2CF5A /* libFuffrLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 213C70E218D89E97001A7430 /* libFuffrLib.a */; };
 		29C5F28F19656EB0009F1A39 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29C5F28E19656EB0009F1A39 /* CoreText.framework */; };
+		29D9F21E196AD018002E288E /* EAGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 29D9F21D196AD018002E288E /* EAGLView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,6 +77,9 @@
 		213C70DA18D89E35001A7430 /* AppViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppViewController.m; sourceTree = "<group>"; };
 		213C70DC18D89E97001A7430 /* FuffrLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FuffrLib.xcodeproj; path = ../FuffrLib/FuffrLib.xcodeproj; sourceTree = "<group>"; };
 		29C5F28E19656EB0009F1A39 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
+		29D9F21B196AD00D002E288E /* EAGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EAGLView.h; sourceTree = "<group>"; };
+		29D9F21D196AD018002E288E /* EAGLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EAGLView.m; sourceTree = "<group>"; };
+		29D9F21F196AD02F002E288E /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -139,6 +143,9 @@
 		213C70AF18D86F90001A7430 /* FuffrDots */ = {
 			isa = PBXGroup;
 			children = (
+				29D9F21F196AD02F002E288E /* Constants.h */,
+				29D9F21D196AD018002E288E /* EAGLView.m */,
+				29D9F21B196AD00D002E288E /* EAGLView.h */,
 				213C70B818D86F90001A7430 /* AppDelegate.h */,
 				213C70B918D86F90001A7430 /* AppDelegate.m */,
 				213C70D918D89E35001A7430 /* AppViewController.h */,
@@ -307,6 +314,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				213C70BA18D86F90001A7430 /* AppDelegate.m in Sources */,
+				29D9F21E196AD018002E288E /* EAGLView.m in Sources */,
 				213C70DB18D89E35001A7430 /* AppViewController.m in Sources */,
 				213C70B618D86F90001A7430 /* main.m in Sources */,
 			);
