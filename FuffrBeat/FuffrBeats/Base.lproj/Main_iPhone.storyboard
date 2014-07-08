@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6154.17" systemVersion="13D65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="vXZ-lx-hvc">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6153.11"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="ufC-wZ-h7g">
+            <objects>
+                <viewController autoresizesArchivedViewToFullSize="NO" automaticallyAdjustsScrollViewInsets="NO" id="vXZ-lx-hvc" customClass="ViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
+                        <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background.png" translatesAutoresizingMaskIntoConstraints="NO" id="NW4-qE-qMl">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                            </imageView>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Tji-7u-xcx">
+                                <rect key="frame" x="0.0" y="44" width="320" height="451"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="center" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qjj-Yh-h9l">
+                                        <rect key="frame" x="0.0" y="164" width="80" height="80"/>
+                                        <color key="backgroundColor" red="1" green="0.78271346644985218" blue="0.97732237883722561" alpha="1" colorSpace="calibratedRGB"/>
+                                        <state key="normal" title="0">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="drum0Clicked:" destination="vXZ-lx-hvc" eventType="touchDown" id="buu-c4-H1C"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="center" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EBX-dJ-o0T">
+                                        <rect key="frame" x="80" y="164" width="80" height="80"/>
+                                        <color key="backgroundColor" red="1" green="0.78271346639999995" blue="0.97732237879999995" alpha="1" colorSpace="calibratedRGB"/>
+                                        <state key="normal" title="1">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="drum1Clicked:" destination="vXZ-lx-hvc" eventType="touchDown" id="dWF-hq-r8K"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="center" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zD2-ap-awy">
+                                        <rect key="frame" x="160" y="164" width="80" height="80"/>
+                                        <color key="backgroundColor" red="1" green="0.78271346639999995" blue="0.97732237879999995" alpha="1" colorSpace="calibratedRGB"/>
+                                        <state key="normal" title="2">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="drum2Clicked:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="4Nm-nS-qYM"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="center" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EY4-wh-PIb">
+                                        <rect key="frame" x="0.0" y="287" width="80" height="80"/>
+                                        <color key="backgroundColor" red="1" green="0.78271346639999995" blue="0.97732237879999995" alpha="1" colorSpace="calibratedRGB"/>
+                                        <state key="normal" title="4">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="drum4Clicked:" destination="vXZ-lx-hvc" eventType="touchDown" id="82n-0s-KWa"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="center" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zgY-Ue-b6E">
+                                        <rect key="frame" x="80" y="287" width="80" height="80"/>
+                                        <color key="backgroundColor" red="1" green="0.78271346639999995" blue="0.97732237879999995" alpha="1" colorSpace="calibratedRGB"/>
+                                        <state key="normal" title="5">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="drum5Clicked:" destination="vXZ-lx-hvc" eventType="touchDown" id="mbu-N1-y0R"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="center" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M68-q3-A3r">
+                                        <rect key="frame" x="160" y="287" width="80" height="80"/>
+                                        <color key="backgroundColor" red="1" green="0.78271346639999995" blue="0.97732237879999995" alpha="1" colorSpace="calibratedRGB"/>
+                                        <state key="normal" title="6">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="drum6Clicked:" destination="vXZ-lx-hvc" eventType="touchDown" id="smx-MH-J0t"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="center" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SZv-pt-jjW">
+                                        <rect key="frame" x="240" y="287" width="80" height="80"/>
+                                        <color key="backgroundColor" red="1" green="0.78271346639999995" blue="0.97732237879999995" alpha="1" colorSpace="calibratedRGB"/>
+                                        <state key="normal" title="7">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="drum7Clicked:" destination="vXZ-lx-hvc" eventType="touchDown" id="FYs-4V-Qrl"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="center" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8ox-hf-O5f">
+                                        <rect key="frame" x="240" y="164" width="80" height="80"/>
+                                        <color key="backgroundColor" red="1" green="0.78271346639999995" blue="0.97732237879999995" alpha="1" colorSpace="calibratedRGB"/>
+                                        <state key="normal" title="3">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="drum3Clicked:" destination="vXZ-lx-hvc" eventType="touchDown" id="Y4K-bV-ddQ"/>
+                                        </connections>
+                                    </button>
+                                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="numberline1.png" translatesAutoresizingMaskIntoConstraints="NO" id="3tb-eA-y5Y">
+                                        <rect key="frame" x="0.0" y="134" width="320" height="30"/>
+                                    </imageView>
+                                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="numberline2.png" translatesAutoresizingMaskIntoConstraints="NO" id="cKM-Wm-FZy">
+                                        <rect key="frame" x="0.0" y="259" width="320" height="30"/>
+                                    </imageView>
+                                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="display.png" translatesAutoresizingMaskIntoConstraints="NO" id="7of-p7-Pey">
+                                        <rect key="frame" x="0.0" y="61" width="320" height="60"/>
+                                    </imageView>
+                                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="GzD-hB-lqm">
+                                        <rect key="frame" x="80" y="-5" width="160" height="60"/>
+                                    </imageView>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Status" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZtY-vp-Xs0">
+                                        <rect key="frame" x="28" y="77" width="264" height="29"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" red="0.58431375026702881" green="0.76078438758850098" blue="0.4901961088180542" alpha="1" colorSpace="deviceRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="usage.png" translatesAutoresizingMaskIntoConstraints="NO" id="ULp-Iu-v5v">
+                                        <rect key="frame" x="80" y="382" width="160" height="81"/>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="0.39737802583192627" blue="0.21400912796551508" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="NW4-qE-qMl" secondAttribute="bottom" id="30E-Rd-PNx"/>
+                            <constraint firstAttribute="trailing" secondItem="NW4-qE-qMl" secondAttribute="trailing" id="5b1-IR-4HQ"/>
+                            <constraint firstItem="NW4-qE-qMl" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="RVi-pK-Rnj"/>
+                        </constraints>
+                    </view>
+                    <extendedEdge key="edgesForExtendedLayout"/>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <connections>
+                        <outlet property="button0" destination="Qjj-Yh-h9l" id="GTC-cW-VCf"/>
+                        <outlet property="button1" destination="EBX-dJ-o0T" id="hDk-ai-XKR"/>
+                        <outlet property="button2" destination="zD2-ap-awy" id="wsV-CY-08K"/>
+                        <outlet property="button3" destination="8ox-hf-O5f" id="Igt-sh-xMU"/>
+                        <outlet property="button4" destination="EY4-wh-PIb" id="dm8-Dp-YiO"/>
+                        <outlet property="button5" destination="zgY-Ue-b6E" id="cYL-QF-ZfU"/>
+                        <outlet property="button6" destination="M68-q3-A3r" id="fhW-Ys-RFt"/>
+                        <outlet property="button7" destination="SZv-pt-jjW" id="SEE-R9-nWn"/>
+                        <outlet property="statusText" destination="ZtY-vp-Xs0" id="ska-qd-cy6"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="296" y="289"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="background.png" width="320" height="568"/>
+        <image name="display.png" width="320" height="50"/>
+        <image name="logo.png" width="160" height="50"/>
+        <image name="numberline1.png" width="320" height="15"/>
+        <image name="numberline2.png" width="320" height="15"/>
+        <image name="usage.png" width="160" height="80"/>
+    </resources>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
+</document>
