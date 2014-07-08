@@ -13,9 +13,6 @@
 
 @implementation AppViewController
 
-static uint sFrameCount = 0, sFrameCountLastSecond = 0, sFPS;
-static time_t sLastSecondTimestamp = 0;
-
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -246,9 +243,6 @@ static time_t sLastSecondTimestamp = 0;
 
 - (void)drawImageView
 {
-	//CGFloat width = self.imageView.bounds.size.width;
-	//CGFloat height = self.imageView.bounds.size.height;
-
 	CGFloat circleSize;
 
 	if (self.paintModeOn)
@@ -260,11 +254,6 @@ static time_t sLastSecondTimestamp = 0;
 		circleSize = 100;
 	}
 
-    UIGraphicsBeginImageContext(self.view.frame.size);
-	//UIGraphicsBeginImageContextWithOptions(self.view.frame.size, self.view.opaque, 0.0);
-
-    CGContextRef context = UIGraphicsGetCurrentContext();
-
 	if (self.paintModeOn)
 	{
 		self.glView.clearsContextBeforeDrawing = NO;
@@ -272,125 +261,7 @@ static time_t sLastSecondTimestamp = 0;
 	
 	[self.glView drawViewWithTouches:self.touches paintMode:self.paintModeOn dotColors:self.dotColors];
 
-	int nTouches = 0;
-
-	for (FFRTouch* touch in self.touches)
-	{
-		if (touch.phase != FFRTouchPhaseEnded)
-		{
-			++nTouches;
-
-			DotColor* color = [self.dotColors objectForKey:
-				[NSNumber numberWithInt: (int)touch.identifier]];
-			if (color)
-			{
-    			CGContextSetRGBFillColor(
-					context,
-					color.red,
-					color.green,
-					color.blue,
-					1.0);
-    			CGContextSetRGBStrokeColor(
-					context,
-					color.red,
-					color.green,
-					color.blue,
-					1.0);
-			}
-			else
-			{
-    			CGContextSetRGBFillColor(
-					context,
-					0.0,
-					0.0,
-					0.0,
-					1.0);
-    			CGContextSetRGBStrokeColor(
-					context,
-					0.0,
-					0.0,
-					0.0,
-					1.0);
-			}
-
-			if (self.paintModeOn)
-			{
-				CGFloat x1 = touch.previousLocation.x - (circleSize / 2);
-				CGFloat y1 = touch.previousLocation.y - (circleSize / 2);
-				CGFloat x2 = touch.location.x - (circleSize / 2);
-				CGFloat y2 = touch.location.y - (circleSize / 2);
-				if (x1 < 0) { x1 = x2; }
-				if (y1 < 0) { y1 = y2; }
-            	CGContextMoveToPoint(context, x1, y1);
-				CGContextAddLineToPoint(context, x2, y2);
-    			CGContextSetLineCap(context, kCGLineCapRound);
-    			CGContextSetLineWidth(context, circleSize);
-				CGContextSetBlendMode(context, kCGBlendModeNormal);
-    			CGContextStrokePath(context);
-            }
-			else
-			{
-				//CGFloat x = touch.normalizedLocation.x * width;
-				//CGFloat y = touch.normalizedLocation.y * height;
-				CGFloat x = touch.location.x;
-				CGFloat y = touch.location.y;
-				CGContextFillEllipseInRect(
-					context,
-					CGRectMake(
-						x - (circleSize / 2),
-						y - (circleSize / 2),
-						circleSize,
-						circleSize));
-			}
-
-		}
-	}
-	
-	// fps counter
-	sFrameCount++;
-	uint fps = sFrameCount - sFrameCountLastSecond;
-	time_t now = time(NULL);
-	if(now != sLastSecondTimestamp) {
-		sLastSecondTimestamp = now;
-		sFrameCountLastSecond = sFrameCount;
-		sFPS = fps;
-	}
-	fps = sFPS;
-	
-	// draw text (horrendously complex)
-	CTFontRef sysUIFont = CTFontCreateUIFontForLanguage(kCTFontSystemFontType, 12.0, NULL);
-	
-	// create a naked string
-	NSString *string = [NSString stringWithFormat:@"FPS: %u", fps];
-	
-	// blue
-	CGColorRef color = [UIColor blackColor].CGColor;
-	
-	// pack it into attributes dictionary
-	NSDictionary *attributesDict = [NSDictionary dictionaryWithObjectsAndKeys:
-		(__bridge id)sysUIFont, (id)kCTFontAttributeName,
-		color, (id)kCTForegroundColorAttributeName,
-		nil];
-
-	// make the attributed string
-	NSAttributedString *attString = [[NSAttributedString alloc] initWithString:string
-		attributes:attributesDict];
-	
-	CTLineRef line = CTLineCreateWithAttributedString((CFAttributedStringRef)attString); // 5-1
-	
-	// Set text position and draw the line into the graphic context
-	CGContextSetTextMatrix(context, CGAffineTransformIdentity);
-	CGContextTranslateCTM(context, 0, CGContextGetClipBoundingBox(context).size.height);
-	CGContextScaleCTM(context, 1.0, -1.0);
-	CGContextSetTextPosition(context, 10, 10); // 6-1
-	CTLineDraw(line, context); // 7-1
-	CFRelease(line); // 8-1
-
-    //self.imageView.image = UIGraphicsGetImageFromCurrentImageContext();
-	//[self.glView drawView];
-    UIGraphicsEndImageContext();
-
-	NSString* message = [NSString stringWithFormat: @"Number of touches: %i", nTouches];
+	NSString* message = [NSString stringWithFormat: @"Number of touches: %i", self.touches.count];
 	[self showMessage: message];
 }
 

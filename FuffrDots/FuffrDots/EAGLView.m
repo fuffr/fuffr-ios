@@ -50,7 +50,7 @@
 {
 	if (self = [super initWithFrame:frame])
 	{
-		CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.layer;// JPS - WARNING: this does not work on iOS 3.2!!!
+		CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.layer;
 		
 		self.contentScaleFactor = [UIScreen mainScreen].scale;
 		//CGSize displaySize = [[UIScreen mainScreen]currentMode].size;
@@ -131,7 +131,7 @@
 	
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrthof(-1.0f, 1.0f, -1.5f, 1.5f, -1.0f, 1.0f);
+	glOrthof(0, backingWidth/2, 0, backingHeight/2, -1.0f, 1.0f);
 	glMatrixMode(GL_MODELVIEW);
 	
 	//if(paintModeOn) {
@@ -157,7 +157,7 @@
 			//++nTouches;
 			
 			DotColor* color = [dotColors objectForKey:
-							   [NSNumber numberWithInt: (int)touch.identifier]];
+				[NSNumber numberWithInt: (int)touch.identifier]];
 			if (color)
 			{
 				glColor4f(color.red, color.green, color.blue, 1.0f);
@@ -174,14 +174,29 @@
 			{
 				// Draw a single circle.
 				glPushMatrix();
-				glTranslatef(touch.normalizedLocation.x, touch.normalizedLocation.y, 0);
-				glScalef(0.1f, 0.1f, 0.1f);	//circleSize
+				glTranslatef(touch.location.x, backingHeight/2 - touch.location.y, 0);
+				glScalef(40, 40, 1);	//circleSize
 				glDrawArrays(GL_TRIANGLE_FAN, 0, 36);
 				glPopMatrix();
 			}
 		}
 	}
 	
+	// fps counter
+	static uint sFrameCount = 0, sFrameCountLastSecond = 0, sFPS;
+	static time_t sLastSecondTimestamp = 0;
+
+	sFrameCount++;
+	uint fps = sFrameCount - sFrameCountLastSecond;
+	time_t now = time(NULL);
+	if(now != sLastSecondTimestamp) {
+		sLastSecondTimestamp = now;
+		sFrameCountLastSecond = sFrameCount;
+		sFPS = fps;
+		NSLog(@"FPS: %i", fps);
+	}
+	fps = sFPS;
+
 	glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer);
 	[context presentRenderbuffer:GL_RENDERBUFFER_OES];
 }
