@@ -39,6 +39,7 @@
 
 @synthesize context;
 
+GLfloat vertices[72];
 
 // You must implement this method
 + (Class)layerClass {
@@ -84,6 +85,12 @@
 		glBindRenderbufferOES(GL_RENDERBUFFER_OES, depthRenderbuffer);
 		glRenderbufferStorageOES(GL_RENDERBUFFER_OES, GL_DEPTH_COMPONENT16_OES, backingWidth, backingHeight);
 		glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_DEPTH_ATTACHMENT_OES, GL_RENDERBUFFER_OES, depthRenderbuffer);
+		
+		// Set up vertices for a circle.
+		for (int i = 0; i < 72; i += 2) {
+			vertices[i]   = (cos(DEGREES_TO_RADIANS(i*10)) * 1);
+			vertices[i+1] = (sin(DEGREES_TO_RADIANS(i*10)) * 1);
+		}
 	}
 	return self;
 }
@@ -103,13 +110,6 @@
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
-	
-	GLfloat vertices[720];
-	
-	for (int i = 0; i < 720; i += 2) {
-		vertices[i]   = (cos(DEGREES_TO_RADIANS(i)) * 1);
-		vertices[i+1] = (sin(DEGREES_TO_RADIANS(i)) * 1);
-	}
 	
 	glVertexPointer(2, GL_FLOAT, 0, vertices);
 	glEnableClientState(GL_VERTEX_ARRAY);
@@ -138,14 +138,6 @@
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 	//}
-	
-	// Set up vertices for circle.
-	GLfloat vertices[72];
-	
-	for (int i = 0; i < 72; i += 2) {
-		vertices[i]   = (cos(DEGREES_TO_RADIANS(i*10)) * 1);
-		vertices[i+1] = (sin(DEGREES_TO_RADIANS(i*10)) * 1);
-	}
 	
 	glVertexPointer(2, GL_FLOAT, 0, vertices);
 	glEnableClientState(GL_VERTEX_ARRAY);
