@@ -13,6 +13,9 @@
 
 @implementation AppViewController
 
+dispatch_semaphore_t frameRenderingSemaphore;
+dispatch_queue_t openGLESContextQueue;
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -34,6 +37,8 @@
 	
 	[self.view addSubview:self.glView];
 
+	frameRenderingSemaphore = dispatch_semaphore_create(1);
+	openGLESContextQueue = dispatch_get_main_queue();
 
 	// Create view that displays messages.
 	[self createMessageView];
@@ -238,7 +243,17 @@
 
 - (void) redrawView
 {
-	[self drawImageView];
+	// render asynchronously, only one frame at a time.
+	if (dispatch_semaphore_wait(frameRenderingSemaphore, DISPATCH_TIME_NOW) != 0)
+	{
+		return;
+	}
+	
+	dispatch_async(openGLESContextQueue, ^{
+		[self drawImageView];
+		dispatch_semaphore_signal(frameRenderingSemaphore);
+	});
+	
 }
 
 - (void)drawImageView
