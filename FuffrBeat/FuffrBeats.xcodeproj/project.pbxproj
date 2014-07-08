@@ -1,0 +1,597 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		CEA42F1C1966823900232C24 /* button.png in Resources */ = {isa = PBXBuildFile; fileRef = CEA42F1A1966823900232C24 /* button.png */; };
+		CEA42F1D1966823900232C24 /* buttonhighlight.png in Resources */ = {isa = PBXBuildFile; fileRef = CEA42F1B1966823900232C24 /* buttonhighlight.png */; };
+		CEA42F2619668B3100232C24 /* sound0.wav in Resources */ = {isa = PBXBuildFile; fileRef = CEA42F1E19668B3100232C24 /* sound0.wav */; };
+		CEA42F2719668B3100232C24 /* sound1.wav in Resources */ = {isa = PBXBuildFile; fileRef = CEA42F1F19668B3100232C24 /* sound1.wav */; };
+		CEA42F2819668B3100232C24 /* sound2.wav in Resources */ = {isa = PBXBuildFile; fileRef = CEA42F2019668B3100232C24 /* sound2.wav */; };
+		CEA42F2919668B3100232C24 /* sound3.aif in Resources */ = {isa = PBXBuildFile; fileRef = CEA42F2119668B3100232C24 /* sound3.aif */; };
+		CEA42F2A19668B3100232C24 /* sound4.wav in Resources */ = {isa = PBXBuildFile; fileRef = CEA42F2219668B3100232C24 /* sound4.wav */; };
+		CEA42F2B19668B3100232C24 /* sound5.aif in Resources */ = {isa = PBXBuildFile; fileRef = CEA42F2319668B3100232C24 /* sound5.aif */; };
+		CEA42F2C19668B3100232C24 /* sound6.wav in Resources */ = {isa = PBXBuildFile; fileRef = CEA42F2419668B3100232C24 /* sound6.wav */; };
+		CEA42F2D19668B3100232C24 /* sound7.wav in Resources */ = {isa = PBXBuildFile; fileRef = CEA42F2519668B3100232C24 /* sound7.wav */; };
+		CEA42F2F19668C9200232C24 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEA42F2E19668C9200232C24 /* AVFoundation.framework */; };
+		CECDF2F0196BACF200850A5B /* libFuffrLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CECDF2ED196BACCE00850A5B /* libFuffrLib.a */; };
+		CECDF2F9196BB9EC00850A5B /* display.png in Resources */ = {isa = PBXBuildFile; fileRef = CECDF2F1196BB9EC00850A5B /* display.png */; };
+		CECDF2FA196BB9EC00850A5B /* display@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CECDF2F2196BB9EC00850A5B /* display@2x.png */; };
+		CECDF2FB196BB9EC00850A5B /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = CECDF2F3196BB9EC00850A5B /* logo.png */; };
+		CECDF2FC196BB9EC00850A5B /* logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CECDF2F4196BB9EC00850A5B /* logo@2x.png */; };
+		CECDF2FD196BB9EC00850A5B /* numberline1.png in Resources */ = {isa = PBXBuildFile; fileRef = CECDF2F5196BB9EC00850A5B /* numberline1.png */; };
+		CECDF2FE196BB9EC00850A5B /* numberline1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CECDF2F6196BB9EC00850A5B /* numberline1@2x.png */; };
+		CECDF2FF196BB9EC00850A5B /* numberline2.png in Resources */ = {isa = PBXBuildFile; fileRef = CECDF2F7196BB9EC00850A5B /* numberline2.png */; };
+		CECDF300196BB9EC00850A5B /* numberline2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CECDF2F8196BB9EC00850A5B /* numberline2@2x.png */; };
+		CECDF303196BBC9500850A5B /* usage.png in Resources */ = {isa = PBXBuildFile; fileRef = CECDF301196BBC9500850A5B /* usage.png */; };
+		CECDF304196BBC9500850A5B /* usage@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CECDF302196BBC9500850A5B /* usage@2x.png */; };
+		CEF8433C19666CA1002DF0DF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF8433B19666CA1002DF0DF /* Foundation.framework */; };
+		CEF8433E19666CA1002DF0DF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF8433D19666CA1002DF0DF /* CoreGraphics.framework */; };
+		CEF8434019666CA1002DF0DF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF8433F19666CA1002DF0DF /* UIKit.framework */; };
+		CEF8434619666CA1002DF0DF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CEF8434419666CA1002DF0DF /* InfoPlist.strings */; };
+		CEF8434819666CA1002DF0DF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CEF8434719666CA1002DF0DF /* main.m */; };
+		CEF8434C19666CA1002DF0DF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CEF8434B19666CA1002DF0DF /* AppDelegate.m */; };
+		CEF8434F19666CA1002DF0DF /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CEF8434D19666CA1002DF0DF /* Main_iPhone.storyboard */; };
+		CEF8435519666CA1002DF0DF /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CEF8435419666CA1002DF0DF /* ViewController.m */; };
+		CEF8435719666CA1002DF0DF /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEF8435619666CA1002DF0DF /* Images.xcassets */; };
+		CEF8435E19666CA1002DF0DF /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF8435D19666CA1002DF0DF /* XCTest.framework */; };
+		CEF8435F19666CA1002DF0DF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF8433B19666CA1002DF0DF /* Foundation.framework */; };
+		CEF8436019666CA1002DF0DF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF8433F19666CA1002DF0DF /* UIKit.framework */; };
+		CEF843741966714C002DF0DF /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = CEF843731966714C002DF0DF /* background.png */; };
+		CEF843761966729B002DF0DF /* background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CEF843751966729B002DF0DF /* background@2x.png */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		CECDF2EC196BACCE00850A5B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CEF843771966747A002DF0DF /* FuffrLib.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 219718C518D60662007B6E84;
+			remoteInfo = FuffrLib;
+		};
+		CECDF2EE196BACCE00850A5B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CEF843771966747A002DF0DF /* FuffrLib.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 219718D518D60662007B6E84;
+			remoteInfo = FuffrLibTests;
+		};
+		CEF8436119666CA1002DF0DF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CEF8433019666CA1002DF0DF /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CEF8433719666CA1002DF0DF;
+			remoteInfo = "FR-808";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		CEA42F1A1966823900232C24 /* button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button.png; sourceTree = "<group>"; };
+		CEA42F1B1966823900232C24 /* buttonhighlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonhighlight.png; sourceTree = "<group>"; };
+		CEA42F1E19668B3100232C24 /* sound0.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sound0.wav; sourceTree = "<group>"; };
+		CEA42F1F19668B3100232C24 /* sound1.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sound1.wav; sourceTree = "<group>"; };
+		CEA42F2019668B3100232C24 /* sound2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sound2.wav; sourceTree = "<group>"; };
+		CEA42F2119668B3100232C24 /* sound3.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = sound3.aif; sourceTree = "<group>"; };
+		CEA42F2219668B3100232C24 /* sound4.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sound4.wav; sourceTree = "<group>"; };
+		CEA42F2319668B3100232C24 /* sound5.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = sound5.aif; sourceTree = "<group>"; };
+		CEA42F2419668B3100232C24 /* sound6.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sound6.wav; sourceTree = "<group>"; };
+		CEA42F2519668B3100232C24 /* sound7.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sound7.wav; sourceTree = "<group>"; };
+		CEA42F2E19668C9200232C24 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		CECDF2F1196BB9EC00850A5B /* display.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = display.png; sourceTree = "<group>"; };
+		CECDF2F2196BB9EC00850A5B /* display@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "display@2x.png"; sourceTree = "<group>"; };
+		CECDF2F3196BB9EC00850A5B /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
+		CECDF2F4196BB9EC00850A5B /* logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo@2x.png"; sourceTree = "<group>"; };
+		CECDF2F5196BB9EC00850A5B /* numberline1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = numberline1.png; sourceTree = "<group>"; };
+		CECDF2F6196BB9EC00850A5B /* numberline1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "numberline1@2x.png"; sourceTree = "<group>"; };
+		CECDF2F7196BB9EC00850A5B /* numberline2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = numberline2.png; sourceTree = "<group>"; };
+		CECDF2F8196BB9EC00850A5B /* numberline2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "numberline2@2x.png"; sourceTree = "<group>"; };
+		CECDF301196BBC9500850A5B /* usage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = usage.png; sourceTree = "<group>"; };
+		CECDF302196BBC9500850A5B /* usage@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "usage@2x.png"; sourceTree = "<group>"; };
+		CEF8433819666CA1002DF0DF /* FuffrBeats.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FuffrBeats.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CEF8433B19666CA1002DF0DF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		CEF8433D19666CA1002DF0DF /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		CEF8433F19666CA1002DF0DF /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		CEF8434319666CA1002DF0DF /* FuffrBeats-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "FuffrBeats-Info.plist"; sourceTree = "<group>"; };
+		CEF8434519666CA1002DF0DF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		CEF8434719666CA1002DF0DF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		CEF8434919666CA1002DF0DF /* FuffrBeats-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FuffrBeats-Prefix.pch"; sourceTree = "<group>"; };
+		CEF8434A19666CA1002DF0DF /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		CEF8434B19666CA1002DF0DF /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		CEF8434E19666CA1002DF0DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
+		CEF8435319666CA1002DF0DF /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		CEF8435419666CA1002DF0DF /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		CEF8435619666CA1002DF0DF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		CEF8435C19666CA1002DF0DF /* FuffrBeatsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FuffrBeatsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CEF8435D19666CA1002DF0DF /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		CEF843731966714C002DF0DF /* background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background.png; sourceTree = "<group>"; };
+		CEF843751966729B002DF0DF /* background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "background@2x.png"; sourceTree = "<group>"; };
+		CEF843771966747A002DF0DF /* FuffrLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FuffrLib.xcodeproj; path = ../FuffrLib/FuffrLib.xcodeproj; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		CEF8433519666CA1002DF0DF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CECDF2F0196BACF200850A5B /* libFuffrLib.a in Frameworks */,
+				CEA42F2F19668C9200232C24 /* AVFoundation.framework in Frameworks */,
+				CEF8433E19666CA1002DF0DF /* CoreGraphics.framework in Frameworks */,
+				CEF8434019666CA1002DF0DF /* UIKit.framework in Frameworks */,
+				CEF8433C19666CA1002DF0DF /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CEF8435919666CA1002DF0DF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CEF8435E19666CA1002DF0DF /* XCTest.framework in Frameworks */,
+				CEF8436019666CA1002DF0DF /* UIKit.framework in Frameworks */,
+				CEF8435F19666CA1002DF0DF /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		CECDF2E8196BACCE00850A5B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CECDF2ED196BACCE00850A5B /* libFuffrLib.a */,
+				CECDF2EF196BACCE00850A5B /* FuffrLibTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CEF8432F19666CA1002DF0DF = {
+			isa = PBXGroup;
+			children = (
+				CEF8434119666CA1002DF0DF /* FuffrBeats */,
+				CEF8433A19666CA1002DF0DF /* Frameworks */,
+				CEF8433919666CA1002DF0DF /* Products */,
+				CEF843771966747A002DF0DF /* FuffrLib.xcodeproj */,
+			);
+			sourceTree = "<group>";
+		};
+		CEF8433919666CA1002DF0DF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CEF8433819666CA1002DF0DF /* FuffrBeats.app */,
+				CEF8435C19666CA1002DF0DF /* FuffrBeatsTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CEF8433A19666CA1002DF0DF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CEA42F2E19668C9200232C24 /* AVFoundation.framework */,
+				CEF8433B19666CA1002DF0DF /* Foundation.framework */,
+				CEF8433D19666CA1002DF0DF /* CoreGraphics.framework */,
+				CEF8433F19666CA1002DF0DF /* UIKit.framework */,
+				CEF8435D19666CA1002DF0DF /* XCTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		CEF8434119666CA1002DF0DF /* FuffrBeats */ = {
+			isa = PBXGroup;
+			children = (
+				CECDF301196BBC9500850A5B /* usage.png */,
+				CECDF302196BBC9500850A5B /* usage@2x.png */,
+				CECDF2F1196BB9EC00850A5B /* display.png */,
+				CECDF2F2196BB9EC00850A5B /* display@2x.png */,
+				CECDF2F3196BB9EC00850A5B /* logo.png */,
+				CECDF2F4196BB9EC00850A5B /* logo@2x.png */,
+				CECDF2F5196BB9EC00850A5B /* numberline1.png */,
+				CECDF2F6196BB9EC00850A5B /* numberline1@2x.png */,
+				CECDF2F7196BB9EC00850A5B /* numberline2.png */,
+				CECDF2F8196BB9EC00850A5B /* numberline2@2x.png */,
+				CEA42F1E19668B3100232C24 /* sound0.wav */,
+				CEA42F1F19668B3100232C24 /* sound1.wav */,
+				CEA42F2019668B3100232C24 /* sound2.wav */,
+				CEA42F2119668B3100232C24 /* sound3.aif */,
+				CEA42F2219668B3100232C24 /* sound4.wav */,
+				CEA42F2319668B3100232C24 /* sound5.aif */,
+				CEA42F2419668B3100232C24 /* sound6.wav */,
+				CEA42F2519668B3100232C24 /* sound7.wav */,
+				CEA42F1A1966823900232C24 /* button.png */,
+				CEA42F1B1966823900232C24 /* buttonhighlight.png */,
+				CEF843751966729B002DF0DF /* background@2x.png */,
+				CEF843731966714C002DF0DF /* background.png */,
+				CEF8434A19666CA1002DF0DF /* AppDelegate.h */,
+				CEF8434B19666CA1002DF0DF /* AppDelegate.m */,
+				CEF8434D19666CA1002DF0DF /* Main_iPhone.storyboard */,
+				CEF8435319666CA1002DF0DF /* ViewController.h */,
+				CEF8435419666CA1002DF0DF /* ViewController.m */,
+				CEF8435619666CA1002DF0DF /* Images.xcassets */,
+				CEF8434219666CA1002DF0DF /* Supporting Files */,
+			);
+			path = FuffrBeats;
+			sourceTree = "<group>";
+		};
+		CEF8434219666CA1002DF0DF /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				CEF8434319666CA1002DF0DF /* FuffrBeats-Info.plist */,
+				CEF8434419666CA1002DF0DF /* InfoPlist.strings */,
+				CEF8434719666CA1002DF0DF /* main.m */,
+				CEF8434919666CA1002DF0DF /* FuffrBeats-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		CEF8433719666CA1002DF0DF /* FuffrBeats */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CEF8436D19666CA1002DF0DF /* Build configuration list for PBXNativeTarget "FuffrBeats" */;
+			buildPhases = (
+				CEF8433419666CA1002DF0DF /* Sources */,
+				CEF8433519666CA1002DF0DF /* Frameworks */,
+				CEF8433619666CA1002DF0DF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FuffrBeats;
+			productName = "FR-808";
+			productReference = CEF8433819666CA1002DF0DF /* FuffrBeats.app */;
+			productType = "com.apple.product-type.application";
+		};
+		CEF8435B19666CA1002DF0DF /* FuffrBeatsTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CEF8437019666CA1002DF0DF /* Build configuration list for PBXNativeTarget "FuffrBeatsTests" */;
+			buildPhases = (
+				CEF8435819666CA1002DF0DF /* Sources */,
+				CEF8435919666CA1002DF0DF /* Frameworks */,
+				CEF8435A19666CA1002DF0DF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CEF8436219666CA1002DF0DF /* PBXTargetDependency */,
+			);
+			name = FuffrBeatsTests;
+			productName = "FR-808Tests";
+			productReference = CEF8435C19666CA1002DF0DF /* FuffrBeatsTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		CEF8433019666CA1002DF0DF /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0510;
+				ORGANIZATIONNAME = "Per-Olov Jernberg";
+				TargetAttributes = {
+					CEF8435B19666CA1002DF0DF = {
+						TestTargetID = CEF8433719666CA1002DF0DF;
+					};
+				};
+			};
+			buildConfigurationList = CEF8433319666CA1002DF0DF /* Build configuration list for PBXProject "FuffrBeats" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = CEF8432F19666CA1002DF0DF;
+			productRefGroup = CEF8433919666CA1002DF0DF /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = CECDF2E8196BACCE00850A5B /* Products */;
+					ProjectRef = CEF843771966747A002DF0DF /* FuffrLib.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				CEF8433719666CA1002DF0DF /* FuffrBeats */,
+				CEF8435B19666CA1002DF0DF /* FuffrBeatsTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		CECDF2ED196BACCE00850A5B /* libFuffrLib.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libFuffrLib.a;
+			remoteRef = CECDF2EC196BACCE00850A5B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		CECDF2EF196BACCE00850A5B /* FuffrLibTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = FuffrLibTests.xctest;
+			remoteRef = CECDF2EE196BACCE00850A5B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		CEF8433619666CA1002DF0DF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CEF8435719666CA1002DF0DF /* Images.xcassets in Resources */,
+				CECDF300196BB9EC00850A5B /* numberline2@2x.png in Resources */,
+				CEA42F2B19668B3100232C24 /* sound5.aif in Resources */,
+				CECDF2FB196BB9EC00850A5B /* logo.png in Resources */,
+				CECDF2FA196BB9EC00850A5B /* display@2x.png in Resources */,
+				CEA42F2719668B3100232C24 /* sound1.wav in Resources */,
+				CEA42F1C1966823900232C24 /* button.png in Resources */,
+				CECDF2F9196BB9EC00850A5B /* display.png in Resources */,
+				CECDF2FF196BB9EC00850A5B /* numberline2.png in Resources */,
+				CECDF303196BBC9500850A5B /* usage.png in Resources */,
+				CEF843741966714C002DF0DF /* background.png in Resources */,
+				CEA42F1D1966823900232C24 /* buttonhighlight.png in Resources */,
+				CEA42F2819668B3100232C24 /* sound2.wav in Resources */,
+				CECDF304196BBC9500850A5B /* usage@2x.png in Resources */,
+				CEA42F2C19668B3100232C24 /* sound6.wav in Resources */,
+				CEF8434F19666CA1002DF0DF /* Main_iPhone.storyboard in Resources */,
+				CEA42F2A19668B3100232C24 /* sound4.wav in Resources */,
+				CECDF2FE196BB9EC00850A5B /* numberline1@2x.png in Resources */,
+				CEA42F2D19668B3100232C24 /* sound7.wav in Resources */,
+				CEF843761966729B002DF0DF /* background@2x.png in Resources */,
+				CEF8434619666CA1002DF0DF /* InfoPlist.strings in Resources */,
+				CECDF2FD196BB9EC00850A5B /* numberline1.png in Resources */,
+				CECDF2FC196BB9EC00850A5B /* logo@2x.png in Resources */,
+				CEA42F2619668B3100232C24 /* sound0.wav in Resources */,
+				CEA42F2919668B3100232C24 /* sound3.aif in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CEF8435A19666CA1002DF0DF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		CEF8433419666CA1002DF0DF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CEF8435519666CA1002DF0DF /* ViewController.m in Sources */,
+				CEF8434C19666CA1002DF0DF /* AppDelegate.m in Sources */,
+				CEF8434819666CA1002DF0DF /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CEF8435819666CA1002DF0DF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		CEF8436219666CA1002DF0DF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CEF8433719666CA1002DF0DF /* FuffrBeats */;
+			targetProxy = CEF8436119666CA1002DF0DF /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		CEF8434419666CA1002DF0DF /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CEF8434519666CA1002DF0DF /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		CEF8434D19666CA1002DF0DF /* Main_iPhone.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CEF8434E19666CA1002DF0DF /* Base */,
+			);
+			name = Main_iPhone.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		CEF8436B19666CA1002DF0DF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		CEF8436C19666CA1002DF0DF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		CEF8436E19666CA1002DF0DF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "FuffrBeats/FuffrBeats-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"\"$(TARGET_BUILD_DIR)/usr/local/lib/include\"",
+					"\"$(OBJROOT)/UninstalledProducts/include\"",
+					"\"$(BUILT_PRODUCTS_DIR)\"",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/FuffrBeats/FuffrBeats-Info.plist";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = FuffrBeats;
+				TARGETED_DEVICE_FAMILY = 1;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		CEF8436F19666CA1002DF0DF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "FuffrBeats/FuffrBeats-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"\"$(TARGET_BUILD_DIR)/usr/local/lib/include\"",
+					"\"$(OBJROOT)/UninstalledProducts/include\"",
+					"\"$(BUILT_PRODUCTS_DIR)\"",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/FuffrBeats/FuffrBeats-Info.plist";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = FuffrBeats;
+				TARGETED_DEVICE_FAMILY = 1;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		CEF8437119666CA1002DF0DF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/FR-808.app/FR-808";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "FR-808/FR-808-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "FR-808Tests/FR-808Tests-Info.plist";
+				PRODUCT_NAME = FuffrBeatsTests;
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		CEF8437219666CA1002DF0DF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/FR-808.app/FR-808";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "FR-808/FR-808-Prefix.pch";
+				INFOPLIST_FILE = "FR-808Tests/FR-808Tests-Info.plist";
+				PRODUCT_NAME = FuffrBeatsTests;
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		CEF8433319666CA1002DF0DF /* Build configuration list for PBXProject "FuffrBeats" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CEF8436B19666CA1002DF0DF /* Debug */,
+				CEF8436C19666CA1002DF0DF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CEF8436D19666CA1002DF0DF /* Build configuration list for PBXNativeTarget "FuffrBeats" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CEF8436E19666CA1002DF0DF /* Debug */,
+				CEF8436F19666CA1002DF0DF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CEF8437019666CA1002DF0DF /* Build configuration list for PBXNativeTarget "FuffrBeatsTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CEF8437119666CA1002DF0DF /* Debug */,
+				CEF8437219666CA1002DF0DF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = CEF8433019666CA1002DF0DF /* Project object */;
+}
