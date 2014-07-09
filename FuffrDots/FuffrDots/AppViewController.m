@@ -258,17 +258,6 @@ dispatch_queue_t openGLESContextQueue;
 
 - (void)drawImageView
 {
-	CGFloat circleSize;
-
-	if (self.paintModeOn)
-	{
-		circleSize = 60;
-	}
-	else
-	{
-		circleSize = 100;
-	}
-
 	if (self.paintModeOn)
 	{
 		self.glView.clearsContextBeforeDrawing = NO;

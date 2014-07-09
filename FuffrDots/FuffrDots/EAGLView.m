@@ -35,17 +35,24 @@
 @end
 
 
-@implementation EAGLView
+@implementation EAGLView {
+	GLfloat vertices[72];
+}
 
 @synthesize context;
-
-GLfloat vertices[72];
 
 // You must implement this method
 + (Class)layerClass {
 	return [CAEAGLLayer class];
 }
 
+- (NSDictionary*)propsWithPaintOn:(bool)paintOn
+{
+	return [NSDictionary dictionaryWithObjectsAndKeys :
+		[NSNumber numberWithBool : paintOn], kEAGLDrawablePropertyRetainedBacking,
+		kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat,
+		nil];
+}
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -54,37 +61,16 @@ GLfloat vertices[72];
 		CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.layer;
 		
 		self.contentScaleFactor = [UIScreen mainScreen].scale;
-		//CGSize displaySize = [[UIScreen mainScreen]currentMode].size;
 		CGRect displayRect = [UIScreen mainScreen].bounds;
 		
 		eaglLayer.frame = displayRect;
 		eaglLayer.opaque = YES;
-		eaglLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys : [NSNumber numberWithBool : NO],
-										kEAGLDrawablePropertyRetainedBacking,
-										kEAGLColorFormatRGBA8,
-										kEAGLDrawablePropertyColorFormat, nil];
-		
+		eaglLayer.drawableProperties = [self propsWithPaintOn:NO];
 		context = [[EAGLContext alloc] initWithAPI : kEAGLRenderingAPIOpenGLES1];
 		
 		if (!context || ![EAGLContext setCurrentContext : context]) {
 			return nil;
 		}
-		
-		glGenFramebuffersOES(1, &viewFramebuffer);
-		glGenRenderbuffersOES(1, &viewRenderbuffer);
-		
-		glBindFramebufferOES(GL_FRAMEBUFFER_OES, viewFramebuffer);
-		glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer);
-		[context renderbufferStorage:GL_RENDERBUFFER_OES fromDrawable:(CAEAGLLayer *)self.layer];
-		glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_RENDERBUFFER_OES, viewRenderbuffer);
-		
-		glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &backingWidth);
-		glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &backingHeight);
-		
-		glGenRenderbuffersOES(1, &depthRenderbuffer);
-		glBindRenderbufferOES(GL_RENDERBUFFER_OES, depthRenderbuffer);
-		glRenderbufferStorageOES(GL_RENDERBUFFER_OES, GL_DEPTH_COMPONENT16_OES, backingWidth, backingHeight);
-		glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_DEPTH_ATTACHMENT_OES, GL_RENDERBUFFER_OES, depthRenderbuffer);
 		
 		// Set up vertices for a circle.
 		for (int i = 0; i < 72; i += 2) {
@@ -123,6 +109,18 @@ GLfloat vertices[72];
 }
 
 - (void)drawViewWithTouches:(NSSet*)touches paintMode:(BOOL)paintModeOn dotColors:(NSMutableDictionary*)dotColors {
+	static bool previousPaintMode = NO;
+	
+	if(paintModeOn != previousPaintMode) {
+		CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.layer;
+		// set property.
+		// NSMutableDictionary doesn't work; the entire set must be replaced.
+		eaglLayer.drawableProperties = [self propsWithPaintOn:paintModeOn];
+		
+		// update renderbufferStorage so the property takes effect.
+		[context renderbufferStorage:GL_RENDERBUFFER_OES fromDrawable:eaglLayer];
+	}
+	
 	//NSLog(@"drawViewWithTouches");
 	[EAGLContext setCurrentContext:context];
 	
@@ -133,12 +131,23 @@ GLfloat vertices[72];
 	glLoadIdentity();
 	glOrthof(0, backingWidth/2, 0, backingHeight/2, -1.0f, 1.0f);
 	glMatrixMode(GL_MODELVIEW);
-	
-	//if(paintModeOn) {
+
+	if(!paintModeOn || (paintModeOn && !previousPaintMode)) {
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-	//}
+	}
+	previousPaintMode = paintModeOn;
 	
+	CGFloat circleSize;
+	if (paintModeOn)
+	{
+		circleSize = 30;
+	}
+	else
+	{
+		circleSize = 50;
+	}
+
 	glVertexPointer(2, GL_FLOAT, 0, vertices);
 	glEnableClientState(GL_VERTEX_ARRAY);
 	
@@ -159,18 +168,12 @@ GLfloat vertices[72];
     			glColor4f(0,0,0,1);
 			}
 			
-			if (paintModeOn)
-			{
-            }
-			else
-			{
-				// Draw a single circle.
-				glPushMatrix();
-				glTranslatef(touch.location.x, backingHeight/2 - touch.location.y, 0);
-				glScalef(40, 40, 1);	//circleSize
-				glDrawArrays(GL_TRIANGLE_FAN, 0, 36);
-				glPopMatrix();
-			}
+			// Draw a single circle.
+			glPushMatrix();
+			glTranslatef(touch.location.x, backingHeight/2 - touch.location.y, 0);
+			glScalef(circleSize, circleSize, 1);
+			glDrawArrays(GL_TRIANGLE_FAN, 0, 36);
+			glPopMatrix();
 		}
 	}
 	
@@ -203,7 +206,6 @@ GLfloat vertices[72];
 
 
 - (BOOL)createFramebuffer {
-	
 	glGenFramebuffersOES(1, &viewFramebuffer);
 	glGenRenderbuffersOES(1, &viewRenderbuffer);
 	
@@ -232,7 +234,6 @@ GLfloat vertices[72];
 
 
 - (void)destroyFramebuffer {
-	
 	glDeleteFramebuffersOES(1, &viewFramebuffer);
 	viewFramebuffer = 0;
 	glDeleteRenderbuffersOES(1, &viewRenderbuffer);
