@@ -20,7 +20,7 @@
 
 #define URL_ARE_YOU_THERE @"http://demos.fuffr.com/AreYouThere.txt"
 #define URL_START_PAGE @"http://demos.fuffr.com/"
-#define URL_FIRMWARE_LIST @"http://demos.fuffr.com/firmware/firmware.lst"
+#define URL_FIRMWARE_LIST @"http://demos.fuffr.com/firmware-1.3/firmware.lst"
 #define URL_INITIAL_URL_FIELD @"demos.fuffr.com"
 
 /**

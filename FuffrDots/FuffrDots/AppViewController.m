@@ -7,17 +7,14 @@
 //
 
 #import "AppViewController.h"
-
-@interface DotColor : NSObject
-@property (nonatomic, assign) CGFloat red;
-@property (nonatomic, assign) CGFloat green;
-@property (nonatomic, assign) CGFloat blue;
-@end
-
-@implementation DotColor
-@end
+#import <CoreText/CTLine.h>
+#import <CoreText/CTFont.h>
+#import <CoreText/CTStringAttributes.h>
 
 @implementation AppViewController
+
+dispatch_semaphore_t frameRenderingSemaphore;
+dispatch_queue_t openGLESContextQueue;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -33,14 +30,15 @@
 {
     [super viewDidLoad];
 
-	// Create an image view for drawing.
-	self.imageView = [[UIImageView alloc] initWithFrame: self.view.bounds];
-    self.imageView.autoresizingMask =
-		UIViewAutoresizingFlexibleHeight |
-		UIViewAutoresizingFlexibleWidth;
-    [self.view addSubview: self.imageView];
+	// Create a GL view for drawing.
+	self.glView = [[EAGLView alloc] initWithFrame:self.view.bounds];
+	self.glView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	self.glView.userInteractionEnabled = YES;
+	
+	[self.view addSubview:self.glView];
 
-    self.imageView.backgroundColor = UIColor.whiteColor;
+	frameRenderingSemaphore = dispatch_semaphore_create(1);
+	openGLESContextQueue = dispatch_get_main_queue();
 
 	// Create view that displays messages.
 	[self createMessageView];
@@ -245,113 +243,29 @@
 
 - (void) redrawView
 {
-	[self drawImageView];
+	// render asynchronously, only one frame at a time.
+	if (dispatch_semaphore_wait(frameRenderingSemaphore, DISPATCH_TIME_NOW) != 0)
+	{
+		return;
+	}
+	
+	dispatch_async(openGLESContextQueue, ^{
+		[self drawImageView];
+		dispatch_semaphore_signal(frameRenderingSemaphore);
+	});
+	
 }
 
 - (void)drawImageView
 {
-	//CGFloat width = self.imageView.bounds.size.width;
-	//CGFloat height = self.imageView.bounds.size.height;
-
-	CGFloat circleSize;
-
 	if (self.paintModeOn)
 	{
-		circleSize = 60;
+		self.glView.clearsContextBeforeDrawing = NO;
 	}
-	else
-	{
-		circleSize = 100;
-	}
+	
+	[self.glView drawViewWithTouches:self.touches paintMode:self.paintModeOn dotColors:self.dotColors];
 
-    UIGraphicsBeginImageContext(self.view.frame.size);
-	//UIGraphicsBeginImageContextWithOptions(self.view.frame.size, self.view.opaque, 0.0);
-
-    CGContextRef context = UIGraphicsGetCurrentContext();
-
-	if (self.paintModeOn)
-	{
-		[self.imageView.layer renderInContext: context];
-	}
-
-	int nTouches = 0;
-
-	for (FFRTouch* touch in self.touches)
-	{
-		if (touch.phase != FFRTouchPhaseEnded)
-		{
-			++nTouches;
-
-			DotColor* color = [self.dotColors objectForKey:
-				[NSNumber numberWithInt: (int)touch.identifier]];
-			if (color)
-			{
-    			CGContextSetRGBFillColor(
-					context,
-					color.red,
-					color.green,
-					color.blue,
-					1.0);
-    			CGContextSetRGBStrokeColor(
-					context,
-					color.red,
-					color.green,
-					color.blue,
-					1.0);
-			}
-			else
-			{
-    			CGContextSetRGBFillColor(
-					context,
-					0.0,
-					0.0,
-					0.0,
-					1.0);
-    			CGContextSetRGBStrokeColor(
-					context,
-					0.0,
-					0.0,
-					0.0,
-					1.0);
-			}
-
-			if (self.paintModeOn)
-			{
-				CGFloat x1 = touch.previousLocation.x - (circleSize / 2);
-				CGFloat y1 = touch.previousLocation.y - (circleSize / 2);
-				CGFloat x2 = touch.location.x - (circleSize / 2);
-				CGFloat y2 = touch.location.y - (circleSize / 2);
-				if (x1 < 0) { x1 = x2; }
-				if (y1 < 0) { y1 = y2; }
-            	CGContextMoveToPoint(context, x1, y1);
-				CGContextAddLineToPoint(context, x2, y2);
-    			CGContextSetLineCap(context, kCGLineCapRound);
-    			CGContextSetLineWidth(context, circleSize);
-				CGContextSetBlendMode(context, kCGBlendModeNormal);
-    			CGContextStrokePath(context);
-            }
-			else
-			{
-				//CGFloat x = touch.normalizedLocation.x * width;
-				//CGFloat y = touch.normalizedLocation.y * height;
-				CGFloat x = touch.location.x;
-				CGFloat y = touch.location.y;
-				CGContextFillEllipseInRect(
-					context,
-					CGRectMake(
-						x - (circleSize / 2),
-						y - (circleSize / 2),
-						circleSize,
-						circleSize));
-			}
-
-		}
-	}
-
-    self.imageView.image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-
-	NSString* message = [NSString stringWithFormat: @"Number of touches: %i", nTouches];
+	NSString* message = [NSString stringWithFormat: @"Number of touches: %i", self.touches.count];
 	[self showMessage: message];
 }
 

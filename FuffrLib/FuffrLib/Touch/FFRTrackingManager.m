@@ -46,6 +46,7 @@ static void logTouches(NSString* label, NSSet* touches)
 	if (self = [super init])
 	{
 		self.trackedObjects = [[NSMutableArray alloc] init];
+		// This timer should no longer be needed, but we'll leave it in for a while just in case.
 		self.touchRemoveTimeout = 0.20;
 		_timer = [NSTimer
 			scheduledTimerWithTimeInterval: self.touchRemoveTimeout / 3.0

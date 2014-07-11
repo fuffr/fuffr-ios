@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <FuffrLib/FFRTouchManager.h>
+#import "EAGLView.h"
 
 /**
  * This view controller paints circles for each touch instance.
@@ -15,7 +16,7 @@
 @interface AppViewController : UIViewController<UIActionSheetDelegate>
 
 /** View where touches are drawn. */
-@property UIImageView* imageView;
+@property EAGLView* glView;
 
 @property UILabel* messageView;
 

@@ -20,13 +20,11 @@ typedef struct
 	Byte identifier : 5;
 
 	/**
-	 * Type of event:
-	 * 0 for touch_down_event;
-	 * 1 for touch_move_event;
-	 * 2 for touch_up_event;
-	 * 3 or higher are invalid values.
+	 * Touch status:
+	 * 0 for up;
+	 * 1 for down;
 	 */
-	Byte eventType : 3;
+	Byte down : 1;
 
 	//Byte typeAndIdentifier;
 
