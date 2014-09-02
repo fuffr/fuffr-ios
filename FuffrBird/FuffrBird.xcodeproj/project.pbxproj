@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		380BEAF419AC7DAE00E3F409 /* fuffrBackgroundRed.png in Resources */ = {isa = PBXBuildFile; fileRef = 380BEAF319AC7DAE00E3F409 /* fuffrBackgroundRed.png */; };
+		380BEAF719AC83A800E3F409 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 380BEAF619AC83A800E3F409 /* AVFoundation.framework */; };
+		380BEAF919AC862100E3F409 /* I_Like_Jump_Rope.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 380BEAF819AC862100E3F409 /* I_Like_Jump_Rope.mp3 */; };
+		380BEAFD19AC889300E3F409 /* beep.wav in Resources */ = {isa = PBXBuildFile; fileRef = 380BEAFC19AC889300E3F409 /* beep.wav */; };
 		3840ED2D1947397700365D5E /* libFuffrLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3840ED281947395D00365D5E /* libFuffrLib.a */; };
 		38F04AA7193356D10046B447 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38F04AA6193356D10046B447 /* Foundation.framework */; };
 		38F04AA9193356D10046B447 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38F04AA8193356D10046B447 /* CoreGraphics.framework */; };
@@ -64,6 +68,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		380BEAF319AC7DAE00E3F409 /* fuffrBackgroundRed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fuffrBackgroundRed.png; sourceTree = "<group>"; };
+		380BEAF619AC83A800E3F409 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		380BEAF819AC862100E3F409 /* I_Like_Jump_Rope.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = I_Like_Jump_Rope.mp3; sourceTree = "<group>"; };
+		380BEAFC19AC889300E3F409 /* beep.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = beep.wav; sourceTree = "<group>"; };
 		3840ED221947395D00365D5E /* FuffrLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FuffrLib.xcodeproj; path = ../FuffrLib/FuffrLib.xcodeproj; sourceTree = "<group>"; };
 		38F04AA3193356D10046B447 /* FuffrBird.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FuffrBird.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		38F04AA6193356D10046B447 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -100,6 +108,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				380BEAF719AC83A800E3F409 /* AVFoundation.framework in Frameworks */,
 				3840ED2D1947397700365D5E /* libFuffrLib.a in Frameworks */,
 				38F04AA9193356D10046B447 /* CoreGraphics.framework in Frameworks */,
 				38F04AAB193356D10046B447 /* UIKit.framework in Frameworks */,
@@ -152,6 +161,7 @@
 		38F04AA5193356D10046B447 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				380BEAF619AC83A800E3F409 /* AVFoundation.framework */,
 				38F04AA6193356D10046B447 /* Foundation.framework */,
 				38F04AA8193356D10046B447 /* CoreGraphics.framework */,
 				38F04AAA193356D10046B447 /* UIKit.framework */,
@@ -179,7 +189,10 @@
 		38F04AAD193356D10046B447 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				380BEAFC19AC889300E3F409 /* beep.wav */,
+				380BEAF819AC862100E3F409 /* I_Like_Jump_Rope.mp3 */,
 				38F04AE41933579C0046B447 /* BirdDown.png */,
+				380BEAF319AC7DAE00E3F409 /* fuffrBackgroundRed.png */,
 				38F04AE51933579C0046B447 /* fuffrBackground.png */,
 				38F04AE61933579C0046B447 /* bomb.png */,
 				38F04AE71933579C0046B447 /* tunnelBottom.png */,
@@ -318,13 +331,16 @@
 				38F04AED1933579C0046B447 /* BirdDown.png in Resources */,
 				38F04AF41933579C0046B447 /* GameBack.png in Resources */,
 				38F04AF11933579C0046B447 /* tunnelTop.png in Resources */,
+				380BEAF919AC862100E3F409 /* I_Like_Jump_Rope.mp3 in Resources */,
 				38F04AE3193357880046B447 /* Main.storyboard in Resources */,
 				38F04AEE1933579C0046B447 /* fuffrBackground.png in Resources */,
+				380BEAF419AC7DAE00E3F409 /* fuffrBackgroundRed.png in Resources */,
 				38F04AF01933579C0046B447 /* tunnelBottom.png in Resources */,
 				38F04ABF193356D10046B447 /* Images.xcassets in Resources */,
 				38F04AB1193356D10046B447 /* InfoPlist.strings in Resources */,
 				38F04AEF1933579C0046B447 /* bomb.png in Resources */,
 				38F04AF21933579C0046B447 /* BirdUp.png in Resources */,
+				380BEAFD19AC889300E3F409 /* beep.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -481,7 +497,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				"OTHER_LDFLAGS[arch=*]" = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "F737CA4D-24C2-45CB-82F3-0AEDDF7A0E90";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -504,7 +520,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				"OTHER_LDFLAGS[arch=*]" = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "F737CA4D-24C2-45CB-82F3-0AEDDF7A0E90";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

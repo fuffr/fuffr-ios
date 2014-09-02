@@ -2,12 +2,14 @@
 //  ViewController.m
 //  FuffrBird
 //
-//  Created by Fuffr2 on 22/05/14.
-//  Copyright (c) 2014 BraidesAppHouse. All rights reserved.
+//  Created by Emil Braide on 22/05/14.
 //
 //  App based on Flappy Bird from Matt Heaney Apps channel on youtube.
 //  Link: https://www.youtube.com/channel/UCQkn7EImMp5sHtFbALgYrsA
 //
+//  Background music composer: Ozzed
+//  Link: http://ozzed.net/
+
 
 #import "ViewController.h"
 
@@ -39,6 +41,7 @@
 {
 	[super viewDidLoad];
 	fuffrLabel.text = [NSString stringWithFormat:@"Searching for Fuffr Device..."];
+    backGroundImageView.image = [UIImage imageNamed:@"fuffrBackgroundRed.png"];
 }
 
 - (void)fuffrSetup
@@ -52,6 +55,7 @@
 		 [manager useSensorService:
 		  ^{
 			  fuffrLabel.text = [NSString stringWithFormat:@"Fuffr Connected!"];
+              backGroundImageView.image = [UIImage imageNamed:@"fuffrBackground.png"];
 				// Set active sides.
 				[[FFRTouchManager sharedManager]
 					enableSides: FFRSideLeft | FFRSideRight | FFRSideBottom
@@ -62,6 +66,7 @@
 	 onFuffrDisconnected:
 	 ^{
 		 fuffrLabel.text = [NSString stringWithFormat:@"Fuffr Disconnected! Attempting To Reconnect"];
+         backGroundImageView.image = [UIImage imageNamed:@"fuffrBackgroundRed.png"];
 	 }];
 
 	// Register gesture handler.
@@ -88,6 +93,7 @@
 - (void)receivedNotification:(id)sender
 {
 	fuffrLabel.text = [NSString stringWithFormat:@"Fuffr Disconnected during gameplay. Reconnect and try again"];
+    backGroundImageView.image = [UIImage imageNamed:@"fuffrBackgroundRed.png"];
 }
 
 @end

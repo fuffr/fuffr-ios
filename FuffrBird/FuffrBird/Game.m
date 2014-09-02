@@ -2,12 +2,13 @@
 //  Game.m
 //  FuffrBird
 //
-//  Created by Fuffr2 on 22/05/14.
-//  Copyright (c) 2014 BraidesAppHouse. All rights reserved.
+//  Created by Emil Braide on 22/05/14.
 //
 //  App based on Flappy Bird from Matt Heaney Apps channel on youtube.
 //  Link: https://www.youtube.com/channel/UCQkn7EImMp5sHtFbALgYrsA
 //
+//  Background music composer: Ozzed
+//  Link: http://ozzed.net/
 
 #import "Game.h"
 
@@ -20,22 +21,37 @@
 - (void)viewWillAppear:(BOOL)animated
 {
 	[super viewWillAppear:animated];
-
 	// Setup the visable variables and the gap between the tunnels.
 	gameStarted = NO;
 	gameOver = NO;
 	tunnelTop.hidden = YES;
 	tunnelBottom.hidden = YES;
+    bomb.hidden = YES;
 	scoreNumber = 0;
 	birdFlight = 0;
-	tunnelGap = 220;
+	tunnelGap = 215;
 	highScoreNumber = [[NSUserDefaults standardUserDefaults] integerForKey:@"highScoreSaved"];
 }
 
 -(void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
+    [self playBackgroundMusic];
 	[self fuffrSetup];
+    [self startGame];
+}
+
+- (void)playBackgroundMusic
+{
+    NSURL* url = [[NSBundle mainBundle] URLForResource:@"I_Like_Jump_Rope" withExtension:@"mp3"];
+	NSError *error;
+	backgroundPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
+	backgroundPlayer.numberOfLoops = -1;
+    [backgroundPlayer play];
+    
+    url = [[NSBundle mainBundle] URLForResource:@"beep" withExtension:@"wav"];
+    scoreSoundPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
+    scoreSoundPlayer.numberOfLoops = 0;
 }
 
 - (void)fuffrSetup
@@ -80,7 +96,6 @@
 	tunnelTop.hidden = NO;
 	tunnelBottom.hidden = NO;
 	startLabel.hidden = YES;
-	bomb.hidden = NO;
 	birdMovement = [NSTimer
 		scheduledTimerWithTimeInterval:0.05
 		target:self
@@ -117,6 +132,7 @@
 
 - (void)score
 {
+    [scoreSoundPlayer play];
 	scoreNumber++;
 	scoreLabel.text = [NSString stringWithFormat:@"%i", scoreNumber];
 }
@@ -181,17 +197,12 @@
 
 -(void)onTap: (FFRTapGestureRecognizer*)gesture
 {
-	// Tap on the left side, dismiss the viewcontroller if the game
-	// is over or start the game if it hasn't started.
+	// Tap on the left side, dismiss the viewcontroller if the game is over
 	if(gameOver)
 	{
 		FFRTouchManager* manager = [FFRTouchManager sharedManager];
 		[manager removeAllGestureRecognizers];
 		[self dismissViewControllerAnimated:YES completion:nil];
-	}
-	else if (!gameStarted)
-	{
-		[self startGame];
 	}
 }
 

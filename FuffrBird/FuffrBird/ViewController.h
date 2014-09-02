@@ -2,12 +2,14 @@
 //  ViewController.h
 //  FuffrBird
 //
-//  Created by Fuffr2 on 22/05/14.
-//  Copyright (c) 2014 BraidesAppHouse. All rights reserved.
+//  Created by Emil Braide on 22/05/14.
 //
 //  App based on Flappy Bird from Matt Heaney Apps channel on youtube.
 //  Link: https://www.youtube.com/channel/UCQkn7EImMp5sHtFbALgYrsA
 //
+//  Background music composer: Ozzed
+//  Link: http://ozzed.net/
+
 
 #import <UIKit/UIKit.h>
 #import <FuffrLib/FFRTouchManager.h>
@@ -20,6 +22,7 @@ NSString *fuffrStatusString;
 {
 	IBOutlet UILabel *highScore;
 	IBOutlet UILabel *fuffrLabel;
+    __weak IBOutlet UIImageView *backGroundImageView;
 }
 
 @end
