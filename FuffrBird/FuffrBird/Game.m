@@ -38,6 +38,7 @@
 	[super viewDidAppear:animated];
     [self playBackgroundMusic];
 	[self fuffrSetup];
+    [self placeTunnels];
     [self startGame];
 }
 
@@ -102,7 +103,6 @@
 		selector:@selector(birdMoving)
 		userInfo:nil
 		repeats:YES];
-	[self placeTunnels];
 	tunnelMovement = [NSTimer
 		scheduledTimerWithTimeInterval:0.01
 		target:self
@@ -141,6 +141,7 @@
 {
     //place the tunnels outside the screen with the gap at a random height.
 	randomTopTunnelPosition = arc4random() % (int)(self.view.bounds.size.height-tunnelGap);
+    NSLog(@"Random Pos = %d", randomTopTunnelPosition);
 	randomBottomTunnelPosition = randomTopTunnelPosition + tunnelGap;
 	[tunnelTop setFrame:CGRectMake(
 		self.view.bounds.size.width,
