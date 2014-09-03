@@ -14,37 +14,32 @@
 #import "FFRExternalSpaceMapper.h"
 
 /**
- The identifier of the Fuffr BLE service
+ * Sensor service (used for touch events).
  */
 extern NSString* const FFRCaseSensorServiceUUID;
 
 /**
- Characteristic to enable Fuffr
+ * Characteristic used to enable sides and set number of touches.
  */
 extern NSString* const FFRProximityEnablerCharacteristic;
 
 /**
- Characteristic to receive notifications of values from left side
+ * Characteristics that receive notifications.
  */
-extern NSString* const FFRSideLeftUUID;
+extern NSString* const FFRTouchCharacteristicUUID1;
+extern NSString* const FFRTouchCharacteristicUUID2;
+extern NSString* const FFRTouchCharacteristicUUID3;
+extern NSString* const FFRTouchCharacteristicUUID4;
+extern NSString* const FFRTouchCharacteristicUUID5;
 
 /**
- Characteristic to receive notifications of values from bottom side
+ * Battry service.
  */
-extern NSString* const FFRSideBottomUUID;
-
-/**
- Characteristic to receive notifications of values from right side
- */
-extern NSString* const FFRSideRightUUID;
-
-/**
- Characteristic to receive notifications of values from top side
- */
-extern NSString* const FFRSideTopUUID;
-
 extern NSString* const FFRBatteryServiceUUID;
 
+/**
+ * Battry characteristic.
+ */
 extern NSString* const FFRBatteryCharacteristicUUID;
 
 /**
@@ -57,6 +52,8 @@ extern NSString* const FFRBatteryCharacteristicUUID;
 
     // tracks touch data to be able to supply began/ended events
     FFRTrackingManager* _trackingManager;
+
+	int _numTouchesPerSide;
 	
     dispatch_queue_t _backgroundQueue;
     

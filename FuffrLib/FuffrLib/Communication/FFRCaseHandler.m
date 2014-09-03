@@ -11,12 +11,32 @@
 #import "FFRBLEExtensions.h"
 #import "FFRBLEManager.h"
 
+/**
+ * Enable data.
+ */
+typedef struct
+{
+	union {
+		Byte sides;
+		struct {
+			Byte left : 1;
+			Byte bottom : 1;
+			Byte right : 1;
+			Byte top : 1;
+			// other bits are ignored.
+		};
+	};
+	// values 0 to 5 are valid.
+	// values higher than 5 are changed to 0.
+	Byte pointsPerSide;
+} FFREnableData;
+
 @interface FFRCaseHandler ()
 
 /**
-	Unpacks the bluetooth packet and converts it into a touch object
+ * Unpacks the bluetooth packet and converts it into a touch object.
  */
--(FFRTouch*) unpackData:(FFRRawTrackingData)raw fromSide:(FFRSide)side;
+-(FFRTouch*) unpackData:(FFRRawTrackingData)raw;
 
 @end
 
@@ -24,19 +44,29 @@
 
 NSString* const FFRCaseSensorServiceUUID = @"fff0";
 NSString* const FFRProximityEnablerCharacteristic = @"fff1";
-NSString* const FFRSideLeftUUID = @"fff4";
-NSString* const FFRSideBottomUUID = @"fff3";
-NSString* const FFRSideRightUUID = @"fff2";
-NSString* const FFRSideTopUUID = @"fff5";
-
+NSString* const FFRTouchCharacteristicUUID1 = @"fff2";
+NSString* const FFRTouchCharacteristicUUID2 = @"fff3";
+NSString* const FFRTouchCharacteristicUUID3 = @"fff4";
+NSString* const FFRTouchCharacteristicUUID4 = @"fff5";
+NSString* const FFRTouchCharacteristicUUID5 = @"fff6";
 NSString* const FFRBatteryServiceUUID = @"180f";
 NSString* const FFRBatteryCharacteristicUUID = @"2a19";
+
+static const FFRSide SideLookupTable[4] =
+{
+	FFRSideRight,
+	FFRSideBottom,
+	FFRSideLeft,
+	FFRSideTop
+};
 
 #pragma mark - init/dealloc
 
 -(instancetype) init
 {
-	if (self = [super init]) {
+	if (self = [super init])
+	{
+		_numTouchesPerSide = 0;
 		_backgroundQueue = dispatch_queue_create("com.fuffr.background", nil);
 		self.spaceMapper = [[FFROverlaySpaceMapper alloc] init];
 		_trackingManager = [[FFRTrackingManager alloc] init];
@@ -98,14 +128,14 @@ NSString* const FFRBatteryCharacteristicUUID = @"2a19";
 
 /*
 From release notes document 2014-03-28:
-Implemented MSP430 power saving features. If no active side 
+"Implemented MSP430 power saving features. If no active side
 (select side BitMap = 0x00) is selected MSP430 goes into 
 sleep mode. This is a very low power mode in which the MSP430 
 will halt all CPU operation and scanning and wait for command 
 from the CC2541 until then continuing operation again. This 
 LowPowerMode is also implemented when MSP430 is waiting for 
 NN1001 ASIC scan to be completed and also waiting for CC2541 
-to read data from MSP430.
+to read data from MSP430."
 */
 -(void) enableSides:(FFRSide)sides touchesPerSide: (NSNumber*)numberOfTouches
 {
@@ -117,129 +147,111 @@ to read data from MSP430.
 	// Turn off touch handling by setting number of touches to zero.
 	// This is to fix a bug that crashes the case when there are touch
 	// events coming while enabling sides.
-	[self
-		performSelector: @selector(enablePeripheral:)
-		withObject: @0
-		afterDelay: 0.0];
+	[self setActiveSides: FFRSideNotSet touchesPerSide: 0];
 
-	// Enabling the sensor sides is spread out in time to prevent connection timeouts,
-	// probably because the case becomes busy processing the commands.
-	// TODO: Is there an alternative to rely on timing?! What about queueing write
-	// requests, and perform them as soon as the previous write is done?
-	// Does the sensor case confirm updates?
-	if (sides & FFRSideTop)
+	// Enable touch notifications. All notification charactertistics
+	// are enabled regardsless of number of touches/sides set.
+	// Touches are updated data is received.
+
+	// Alternative call not used.
+	//[self
+	//	performSelector:@selector(enableTouchNotificationsForCharacteristic:)
+	//	withObject:FFRSideTopUUID
+	//	afterDelay:0.0];
+
+	if (numberOfTouches > 0)
 	{
-		[self performSelector:@selector(enableTopSide:) withObject:@TRUE afterDelay:0.0];
-		//[_peripheral setNotificationForCharacteristicWithIdentifier:FFRSideTopUUID enabled:on];
+		[self enableTouchNotificationsForCharacteristic: FFRTouchCharacteristicUUID1];
+		[self enableTouchNotificationsForCharacteristic: FFRTouchCharacteristicUUID2];
+		[self enableTouchNotificationsForCharacteristic: FFRTouchCharacteristicUUID3];
+		[self enableTouchNotificationsForCharacteristic: FFRTouchCharacteristicUUID4];
+		[self enableTouchNotificationsForCharacteristic: FFRTouchCharacteristicUUID5];
 	}
 	else
 	{
-		[self performSelector:@selector(enableTopSide:) withObject:@FALSE afterDelay:0.0];
+		[self disableTouchNotificationsForCharacteristic: FFRTouchCharacteristicUUID1];
+		[self disableTouchNotificationsForCharacteristic: FFRTouchCharacteristicUUID2];
+		[self disableTouchNotificationsForCharacteristic: FFRTouchCharacteristicUUID3];
+		[self disableTouchNotificationsForCharacteristic: FFRTouchCharacteristicUUID4];
+		[self disableTouchNotificationsForCharacteristic: FFRTouchCharacteristicUUID5];
 	}
 
-	if (sides & FFRSideLeft)
-	{
-		[self performSelector:@selector(enableLeftSide:) withObject:@TRUE afterDelay:0.0];
-		//[_peripheral setNotificationForCharacteristicWithIdentifier:FFRSideLeftUUID enabled:on];
-	}
-	else
-	{
-		[self performSelector:@selector(enableLeftSide:) withObject:@FALSE afterDelay:0.0];
-	}
-
-	if (sides & FFRSideRight)
-	{
-		[self performSelector:@selector(enableRightSide:) withObject:@TRUE afterDelay:0.0];
-		//[_peripheral setNotificationForCharacteristicWithIdentifier:FFRSideRightUUID enabled:on];
-	}
-	else
-	{
-		[self performSelector:@selector(enableRightSide:) withObject:@FALSE afterDelay:0.0];
-	}
-
-	if (sides & FFRSideBottom)
-	{
-		[self performSelector:@selector(enableBottomSide:) withObject:@TRUE afterDelay:0.0];
-		//[_peripheral setNotificationForCharacteristicWithIdentifier:FFRSideBottomUUID enabled:on];
-	}
-	else
-	{
-		[self performSelector:@selector(enableBottomSide:) withObject:@FALSE afterDelay:0.0];
-	}
-
-	// Set number of touches per side (this is a global value for all sides).
-	[self
-		performSelector: @selector(enablePeripheral:)
-		withObject: numberOfTouches
-		afterDelay: 0.0];
+	// Set active sides and number of touches per side (this is a global value for all sides).
+	[self setActiveSides: (FFRSide)sides touchesPerSide: numberOfTouches.intValue];
 }
 
--(void) enableTopSide:(NSNumber*)on {
+-(void) enableTouchNotificationsForCharacteristic:(NSString*)uuidString
+{
 	dispatch_async(dispatch_get_main_queue(), ^{
-		[_peripheral setNotificationForCharacteristicWithIdentifier:FFRSideTopUUID enabled:on.boolValue];
+		[_peripheral
+			setNotificationForCharacteristicWithIdentifier: uuidString
+			enabled: YES];
 	});
-	NSLog(@"FFRCaseHandler: top enabled: %d", on.boolValue);
+	NSLog(@"FFRCaseHandler: enabled touch characteristic: %@", uuidString);
 }
 
--(void) enableLeftSide:(NSNumber*)on {
+-(void) disableTouchNotificationsForCharacteristic:(NSString*)uuidString
+{
 	dispatch_async(dispatch_get_main_queue(), ^{
-		[_peripheral setNotificationForCharacteristicWithIdentifier:FFRSideLeftUUID enabled:on.boolValue];
+		[_peripheral
+			setNotificationForCharacteristicWithIdentifier: uuidString
+			enabled: NO];
 	});
-	NSLog(@"FFRCaseHandler: left enabled: %d", on.boolValue);
-}
-
--(void) enableRightSide:(NSNumber*)on {
-	dispatch_async(dispatch_get_main_queue(), ^{
-		[_peripheral setNotificationForCharacteristicWithIdentifier:FFRSideRightUUID enabled:on.boolValue];
-	});
-	NSLog(@"FFRCaseHandler: right enabled: %d", on.boolValue);
-}
-
--(void) enableBottomSide:(NSNumber*)on {
-	dispatch_async(dispatch_get_main_queue(), ^{
-		[_peripheral setNotificationForCharacteristicWithIdentifier:FFRSideBottomUUID enabled:on.boolValue];
-	});
-	NSLog(@"FFRCaseHandler: bottom enabled: %d", on.boolValue);
+	NSLog(@"FFRCaseHandler: disabled touch characteristic: %@", uuidString);
 }
 
 /*
 From release notes document 2014-03-28:
-Implemented selectable amount of touches by using the 
+"Implemented selectable amount of touches by using the
 Enabler byte (0xFFF1 GATT attribute). Setting Enabler 
 byte to 1 gives 1 reported touch coordinate per selected
 side. Setting 2 gives 2 and so on. Maximum selectable is
-currently 5 touches. Setting 0 will disable the touch detection.
+currently 5 touches. Setting 0 will disable the touch detection."
 */
--(void) enablePeripheral: (NSNumber*)touchesPerSide
+-(void) setActiveSides: (FFRSide)sides touchesPerSide: (int)numTouchesPerSide
 {
-	const int DataLength = 1;
+	// Save number of touches per side.
+	_numTouchesPerSide = numTouchesPerSide;
 
-	// enable sensors
+	const int DataLength = 2;
+
 	Byte value[DataLength];
 	memset(value, 0, DataLength);
 
-	// Origical code:
-	//value[0] = 1;
+	FFREnableData enableData;
+	enableData.left = (sides & FFRSideLeft) ? 1 : 0;
+	enableData.right = (sides & FFRSideRight) ? 1 : 0;
+	enableData.top = (sides & FFRSideTop) ? 1 : 0;
+	enableData.bottom = (sides & FFRSideBottom) ? 1 : 0;
+	enableData.pointsPerSide = (Byte) numTouchesPerSide;
 
-	// New code:
-	value[0] = (Byte) touchesPerSide.intValue;
+	value[0] = (Byte) enableData.sides;
+	value[1] = (Byte) enableData.pointsPerSide;
 
 	NSData* data = [NSData dataWithBytes:&value length:DataLength];
 	__weak CBPeripheral* p = _peripheral;
 	//TODO: Why is try/catch needed? And why are not any errors handled?
-	@try {
+	@try
+	{
 		dispatch_async(dispatch_get_main_queue(), ^{
 			[p writeCharacteristicWithIdentifier:FFRProximityEnablerCharacteristic data:data];
 		});
 	}
-	@catch (NSException *exception) {
+	@catch (NSException *exception)
+	{
 	}
-	@finally {
+	@finally
+	{
 	}
 
 	//[_peripheral writeCharacteristicWithoutResponseForIdentifier:FFRProximityServiceUUID data:data];
 
-	NSLog(@"FFRCaseHandler: num sensor(s) activated per side: %d", touchesPerSide.intValue);
+	NSLog(@"FFRCaseHandler: touches: %d left: %d right: %d top: %d bottom: %d",
+		enableData.pointsPerSide,
+		enableData.left,
+		enableData.right,
+		enableData.top,
+		enableData.bottom);
 }
 
 #pragma mark - BLE notifications
@@ -247,45 +259,39 @@ currently 5 touches. Setting 0 will disable the touch detection.
 -(void) didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
 {
 	dispatch_async(_backgroundQueue, ^{
-		FFRSide side = FFRSideNotSet;
+		// Do we have touch updates?
+		if ([characteristic.UUID isEqualToString:FFRTouchCharacteristicUUID1] ||
+			[characteristic.UUID isEqualToString:FFRTouchCharacteristicUUID2] ||
+			[characteristic.UUID isEqualToString:FFRTouchCharacteristicUUID3] ||
+			[characteristic.UUID isEqualToString:FFRTouchCharacteristicUUID4] ||
+			[characteristic.UUID isEqualToString:FFRTouchCharacteristicUUID5])
+		{
+			size_t count = characteristic.value.length / sizeof(FFRRawTrackingData);
 
-		if ([characteristic.UUID isEqualToString:FFRSideLeftUUID]) {
-			//NSLog(@"reading left side data");
-			side = FFRSideLeft;
-		}
-		else if ([characteristic.UUID isEqualToString:FFRSideRightUUID]) {
-			//NSLog(@"reading right side data");
-			side = FFRSideRight;
-		}
-		else if ([characteristic.UUID isEqualToString:FFRSideTopUUID]) {
-			//NSLog(@"reading top side data");
-			side = FFRSideTop;
-		}
-		else if ([characteristic.UUID isEqualToString:FFRSideBottomUUID]) {
-			//NSLog(@"reading bottom side data");
-			side = FFRSideBottom;
-		}
-
-		if (side != FFRSideNotSet) {
-			// ensure correct length.
-			if(characteristic.value.length % sizeof(FFRRawTrackingData) != 0) {
-				NSLog(@"Bad characteristic length!");
+			// Ensure correct length.
+			if (characteristic.value.length % sizeof(FFRRawTrackingData) != 0)
+			{
+				NSLog(@"Bad touch count length!");
 				return;
 			}
-			// extract raw data.
-			size_t count = characteristic.value.length / sizeof(FFRRawTrackingData);
+
+			// Copy data to touch buffer.
 			FFRRawTrackingData raw[count];
 			[characteristic.value getBytes:raw length:characteristic.value.length];
-			// unpack data.
-			for(size_t i=0; i<count; i++) {
-				FFRTouch* touch = [self unpackData:raw[i] fromSide:side];
-				if(touch) {
-					[_trackingManager handleNewOrChangedTrackingObject:touch];
+
+			// Unpack data.
+			for (size_t i = 0; i < count; i++)
+			{
+				FFRRawTrackingData data = raw[i];
+				if (data.identifier > 0)
+				{
+					FFRTouch* touch = [self unpackData: data];
+					if (touch)
+					{
+						[_trackingManager handleNewOrChangedTrackingObject: touch];
+					}
 				}
 			}
-		}
-		else {
-			NSLog(@"FFRSideNotSet - this should not happen, aborting");
 		}
 	});
 }
@@ -317,23 +323,25 @@ currently 5 touches. Setting 0 will disable the touch detection.
 // For debugging.
 //static int NumberOfActiveTouches = 0;
 
--(FFRTouch*) unpackData:(FFRRawTrackingData)raw fromSide:(FFRSide)side
+-(FFRTouch*) unpackData:(FFRRawTrackingData)raw
 {
+
+	Byte identifier = raw.identifier;
+
+	int sideIndex = (identifier - 1) / _numTouchesPerSide;
+	FFRSide side = SideLookupTable[sideIndex];
 	CGPoint rawPoint = CGPointMake((raw.highX << 8) | raw.lowX, (raw.highY << 8) | raw.lowY);
 	CGPoint normalizedPoint = [self normalizePoint:rawPoint onSide:side];
 
-	Byte identifier = raw.identifier;
 	bool down = raw.down;
 	bool previousDown = _previousTouchDown[identifier];
 	_previousTouchDown[identifier] = down;
-	
-	//if (eventType != 1) NSLog(@"Touch id: %d, event: %d, side: %d", identifier, eventType, side);
-	
-	//NSLog(@"Touch id: %d, event: %d, side: %d, rawPoint: %@, normalized: %@", identifier, eventType, side, NSStringFromCGPoint(rawPoint), NSStringFromCGPoint(normalizedPoint));
-	
+
 	// if touch remains inactive, return nil.
-	if(!down && !previousDown)
+	if (!down && !previousDown)
+	{
 		return nil;
+	}
 
 	FFRTouch* touch = [[FFRTouch alloc] init];
 	touch.identifier = identifier;
@@ -345,7 +353,7 @@ currently 5 touches. Setting 0 will disable the touch detection.
 	touch.rawPoint = rawPoint;
 	touch.normalizedLocation = normalizedPoint;
 	touch.location = [self.spaceMapper locationOnScreen:normalizedPoint fromSide:side];
-	
+
 #if 0
 	if(touch.phase != FFRTouchPhaseMoved) {
 		NSLog(@"Touch id: %d, down: %d, phase: %d, side: %d, rawcoord: %@", identifier, down, touch.phase, side, NSStringFromCGPoint(rawPoint));

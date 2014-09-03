@@ -228,12 +228,13 @@ static void logTouches(NSString* label, NSSet* touches)
 
 -(void) removeTrackingObject: (FFRTouch*) touch
 {
-//NSLog(@"removeTrackingObject queue: %s", dispatch_queue_get_label(dispatch_get_current_queue()));
+	//NSLog(@"removeTrackingObject queue: %s", dispatch_queue_get_label(dispatch_get_current_queue()));
+
 	// Get index of the touch to be removed.
 	NSUInteger index = [self indexForTouch: touch.identifier];
 	if (index == INT_MAX)
 	{
-		NSLog(@"Did not find touch to remove");
+		//NSLog(@"Did not find touch to remove");
 		return;
 	}
 

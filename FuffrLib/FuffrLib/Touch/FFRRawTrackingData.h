@@ -10,7 +10,7 @@
 #define FFRRawTrackingData_h
 
 /**
-	Data struct as delivered from Fuffr
+ * Touch data.
  */
 typedef struct
 {
