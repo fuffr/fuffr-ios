@@ -208,27 +208,20 @@ byte to 1 gives 1 reported touch coordinate per selected
 side. Setting 2 gives 2 and so on. Maximum selectable is
 currently 5 touches. Setting 0 will disable the touch detection."
 */
--(void) setActiveSides: (FFRSide)sides touchesPerSide: (int)numTouchesPerSide
+-(void) setActiveSides: (FFRSide)sides touchesPerSide: (Byte)numTouchesPerSide
 {
 	// Save number of touches per side.
 	_numTouchesPerSide = numTouchesPerSide;
 
-	const int DataLength = 2;
-
-	Byte value[DataLength];
-	memset(value, 0, DataLength);
-
 	FFREnableData enableData;
+	enableData.sides = 0;
 	enableData.left = (sides & FFRSideLeft) ? 1 : 0;
 	enableData.right = (sides & FFRSideRight) ? 1 : 0;
 	enableData.top = (sides & FFRSideTop) ? 1 : 0;
 	enableData.bottom = (sides & FFRSideBottom) ? 1 : 0;
-	enableData.pointsPerSide = (Byte) numTouchesPerSide;
+	enableData.pointsPerSide = numTouchesPerSide;
 
-	value[0] = (Byte) enableData.sides;
-	value[1] = (Byte) enableData.pointsPerSide;
-
-	NSData* data = [NSData dataWithBytes:&value length:DataLength];
+	NSData* data = [NSData dataWithBytes:&enableData length:sizeof(enableData)];
 	__weak CBPeripheral* p = _peripheral;
 	//TODO: Why is try/catch needed? And why are not any errors handled?
 	@try
