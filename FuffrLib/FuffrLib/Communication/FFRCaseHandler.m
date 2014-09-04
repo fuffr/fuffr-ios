@@ -19,9 +19,9 @@ typedef struct
 	union {
 		Byte sides;
 		struct {
-			Byte left : 1;
-			Byte bottom : 1;
 			Byte right : 1;
+			Byte bottom : 1;
+			Byte left : 1;
 			Byte top : 1;
 			// other bits are ignored.
 		};
