@@ -11,6 +11,7 @@
 		3839F82E198B9C5B0069BB5C /* Seal.m in Sources */ = {isa = PBXBuildFile; fileRef = 3839F82D198B9C5B0069BB5C /* Seal.m */; };
 		3839F840198BB0230069BB5C /* Gameplay.m in Sources */ = {isa = PBXBuildFile; fileRef = 3839F83F198BB0230069BB5C /* Gameplay.m */; };
 		3839F84F198BD9380069BB5C /* SlingshotLaunchPower.m in Sources */ = {isa = PBXBuildFile; fileRef = 3839F84E198BD9380069BB5C /* SlingshotLaunchPower.m */; };
+		384DFD6B19C208EF00B25D05 /* libFuffrLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 384DFD6619C208E000B25D05 /* libFuffrLib.a */; };
 		38F230BB198FB36900AC661F /* Player.m in Sources */ = {isa = PBXBuildFile; fileRef = 38F230BA198FB36900AC661F /* Player.m */; };
 		38F6662619A7487300BD2F4D /* IceBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 38F6662519A7487300BD2F4D /* IceBlock.m */; };
 		38F6662D19A7978F00BD2F4D /* Background.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 38F6662C19A7978F00BD2F4D /* Background.mp3 */; };
@@ -46,6 +47,27 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		384DFD6519C208E000B25D05 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 384DFD5F19C208DF00B25D05 /* FuffrLib.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 219718C518D60662007B6E84;
+			remoteInfo = FuffrLib;
+		};
+		384DFD6719C208E000B25D05 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 384DFD5F19C208DF00B25D05 /* FuffrLib.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 219718D518D60662007B6E84;
+			remoteInfo = FuffrLibTests;
+		};
+		384DFD6919C208EA00B25D05 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 384DFD5F19C208DF00B25D05 /* FuffrLib.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 219718C418D60662007B6E84;
+			remoteInfo = FuffrLib;
+		};
 		B737894A180761A90076A88C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B7378940180761A80076A88C /* cocos2d-ios.xcodeproj */;
@@ -71,6 +93,7 @@
 		3839F83F198BB0230069BB5C /* Gameplay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Gameplay.m; path = Source/Gameplay.m; sourceTree = "<group>"; };
 		3839F84D198BD9380069BB5C /* SlingshotLaunchPower.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SlingshotLaunchPower.h; path = Source/SlingshotLaunchPower.h; sourceTree = "<group>"; };
 		3839F84E198BD9380069BB5C /* SlingshotLaunchPower.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SlingshotLaunchPower.m; path = Source/SlingshotLaunchPower.m; sourceTree = "<group>"; };
+		384DFD5F19C208DF00B25D05 /* FuffrLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FuffrLib.xcodeproj; path = ../../FuffrLib/FuffrLib.xcodeproj; sourceTree = "<group>"; };
 		38F230B9198FB36900AC661F /* Player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Player.h; path = Source/Player.h; sourceTree = "<group>"; };
 		38F230BA198FB36900AC661F /* Player.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Player.m; path = Source/Player.m; sourceTree = "<group>"; };
 		38F6662419A7487300BD2F4D /* IceBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IceBlock.h; path = Source/IceBlock.h; sourceTree = "<group>"; };
@@ -117,6 +140,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				384DFD6B19C208EF00B25D05 /* libFuffrLib.a in Frameworks */,
 				8392007A18EE8E3300B6C429 /* GLKit.framework in Frameworks */,
 				B737898A1807642B0076A88C /* libcocos2d.a in Frameworks */,
 				B77F1B3217B978D7009739AE /* QuartzCore.framework in Frameworks */,
@@ -134,6 +158,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		384DFD6019C208DF00B25D05 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				384DFD6619C208E000B25D05 /* libFuffrLib.a */,
+				384DFD6819C208E000B25D05 /* FuffrLibTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		9222E2B918734FF800A246C7 /* libs */ = {
 			isa = PBXGroup;
 			children = (
@@ -203,6 +236,7 @@
 				B77F1CCF17B978D8009739AE /* Supporting Files */,
 				B77F1B3017B978D7009739AE /* Frameworks */,
 				B77F1B2F17B978D7009739AE /* Products */,
+				384DFD5F19C208DF00B25D05 /* FuffrLib.xcodeproj */,
 			);
 			sourceTree = "<group>";
 		};
@@ -267,6 +301,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				384DFD6A19C208EA00B25D05 /* PBXTargetDependency */,
 				B7378989180764180076A88C /* PBXTargetDependency */,
 			);
 			name = FuffrPenguins;
@@ -308,6 +343,10 @@
 					ProductGroup = B7378941180761A80076A88C /* Products */;
 					ProjectRef = B7378940180761A80076A88C /* cocos2d-ios.xcodeproj */;
 				},
+				{
+					ProductGroup = 384DFD6019C208DF00B25D05 /* Products */;
+					ProjectRef = 384DFD5F19C208DF00B25D05 /* FuffrLib.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -317,6 +356,20 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		384DFD6619C208E000B25D05 /* libFuffrLib.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libFuffrLib.a;
+			remoteRef = 384DFD6519C208E000B25D05 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		384DFD6819C208E000B25D05 /* FuffrLibTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = FuffrLibTests.xctest;
+			remoteRef = 384DFD6719C208E000B25D05 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		B737894B180761A90076A88C /* libcocos2d.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -389,6 +442,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		384DFD6A19C208EA00B25D05 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = FuffrLib;
+			targetProxy = 384DFD6919C208EA00B25D05 /* PBXContainerItemProxy */;
+		};
 		B7378989180764180076A88C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = cocos2d;
