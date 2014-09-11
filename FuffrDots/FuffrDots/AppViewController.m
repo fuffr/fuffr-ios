@@ -110,34 +110,75 @@ dispatch_queue_t openGLESContextQueue;
 
 - (void) createColors
 {
+    CGFloat redBaseColor, greenBaseColor, blueBaseColor, redColor, blueColor, greenColor;
 	// Set up colors for touches. Max touch id should
 	// be 20 in the current case implementation (5 touches,
 	// 4 sides, touch ids starting at 1).
 	self.dotColors = [NSMutableDictionary new];
-
-	[self addColorAtIndex: 1  red: 1.0 green: 0.0 blue: 0.0];
-	[self addColorAtIndex: 2  red: 0.8 green: 0.0 blue: 0.0];
-	[self addColorAtIndex: 3  red: 0.6 green: 0.0 blue: 0.0];
-	[self addColorAtIndex: 4  red: 0.4 green: 0.0 blue: 0.0];
-	[self addColorAtIndex: 5  red: 0.2 green: 0.0 blue: 0.0];
-
-	[self addColorAtIndex: 6  red: 0.0 green: 1.0 blue: 0.0];
-	[self addColorAtIndex: 7  red: 0.0 green: 0.8 blue: 0.0];
-	[self addColorAtIndex: 8  red: 0.0 green: 0.6 blue: 0.0];
-	[self addColorAtIndex: 9  red: 0.0 green: 0.4 blue: 0.0];
-	[self addColorAtIndex: 10 red: 0.0 green: 0.2 blue: 0.0];
-
-	[self addColorAtIndex: 11 red: 0.0 green: 0.0 blue: 1.0];
-	[self addColorAtIndex: 12 red: 0.0 green: 0.0 blue: 0.8];
-	[self addColorAtIndex: 13 red: 0.0 green: 0.0 blue: 0.6];
-	[self addColorAtIndex: 14 red: 0.0 green: 0.0 blue: 0.4];
-	[self addColorAtIndex: 15 red: 0.0 green: 0.0 blue: 0.2];
-
-	[self addColorAtIndex: 16 red: 1.0 green: 1.0 blue: 0.0];
-	[self addColorAtIndex: 17 red: 0.8 green: 0.8 blue: 0.0];
-	[self addColorAtIndex: 18 red: 0.6 green: 0.6 blue: 0.0];
-	[self addColorAtIndex: 19 red: 0.4 green: 0.4 blue: 0.0];
-	[self addColorAtIndex: 20 red: 0.2 green: 0.2 blue: 0.0];
+    
+    // Yellow
+    redBaseColor = 248;
+    greenBaseColor = 231;
+    blueBaseColor = 28;
+    redColor = redBaseColor;
+    greenColor = greenBaseColor;
+    blueColor = blueBaseColor;
+    
+    for (int i = 1; i < 6; i++)
+    {
+        [self addColorAtIndex:i red:redColor/255.0 green:greenColor/255.0 blue:blueColor/255.0];
+        redColor = redBaseColor - (redBaseColor * (0.15*i));
+        greenColor = greenBaseColor - (greenBaseColor * (0.15*i));
+        blueColor = blueBaseColor - (blueBaseColor * (0.15*i));
+    }
+    
+    // Blue
+    redBaseColor = 33;
+    greenBaseColor = 115;
+    blueBaseColor = 188;
+    redColor = redBaseColor;
+    greenColor = greenBaseColor;
+    blueColor = blueBaseColor;
+    
+    for (int i = 6; i < 11; i++)
+    {
+        [self addColorAtIndex:i red:redColor/255.0 green:greenColor/255.0 blue:blueColor/255.0];
+        redColor = redBaseColor - (redBaseColor * (0.15*(i-5)));
+        greenColor = greenBaseColor - (greenBaseColor * (0.15*(i-5)));
+        blueColor = blueBaseColor - (blueBaseColor * (0.15*(i-5)));
+    }
+    
+    // Green
+    redBaseColor = 122;
+    greenBaseColor = 207;
+    blueBaseColor = 66;
+    redColor = redBaseColor;
+    greenColor = greenBaseColor;
+    blueColor = blueBaseColor;
+    
+    for (int i = 11; i < 16; i++)
+    {
+        [self addColorAtIndex:i red:redColor/255.0 green:greenColor/255.0 blue:blueColor/255.0];
+        redColor = redBaseColor - (redBaseColor * (0.15*(i-10)));
+        greenColor = greenBaseColor - (greenBaseColor * (0.15*(i-10)));
+        blueColor = blueBaseColor - (blueBaseColor * (0.15*(i-10)));
+    }
+    
+    // Red
+    redBaseColor = 238;
+    greenBaseColor = 74;
+    blueBaseColor = 45;
+    redColor = redBaseColor;
+    greenColor = greenBaseColor;
+    blueColor = blueBaseColor;
+    
+    for (int i = 16; i < 21; i++)
+    {
+        [self addColorAtIndex:i red:redColor/255.0 green:greenColor/255.0 blue:blueColor/255.0];
+        redColor = redBaseColor - (redBaseColor * (0.15*(i-15)));
+        greenColor = greenBaseColor - (greenBaseColor * (0.15*(i-15)));
+        blueColor = blueBaseColor - (blueBaseColor * (0.15*(i-15)));
+    }
 }
 
 -(void) showMessage:(NSString*)message

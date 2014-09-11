@@ -133,7 +133,7 @@
 	glMatrixMode(GL_MODELVIEW);
 
 	if(!paintModeOn || (paintModeOn && !previousPaintMode)) {
-		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		glClearColor(48/255.0, 48/255.0, 48/255.0, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
 	previousPaintMode = paintModeOn;
