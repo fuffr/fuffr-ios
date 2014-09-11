@@ -34,6 +34,7 @@ dispatch_queue_t openGLESContextQueue;
 	self.glView = [[EAGLView alloc] initWithFrame:self.view.bounds];
 	self.glView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	self.glView.userInteractionEnabled = YES;
+    self.glView.backgroundColor = [UIColor colorWithRed:48/255.0 green:48/255.0 blue:48/255.0 alpha:1];
 	
 	[self.view addSubview:self.glView];
 
@@ -306,7 +307,7 @@ dispatch_queue_t openGLESContextQueue;
 	
 	[self.glView drawViewWithTouches:self.touches paintMode:self.paintModeOn dotColors:self.dotColors];
 
-	NSString* message = [NSString stringWithFormat: @"Number of touches: %i", self.touches.count];
+	NSString* message = [NSString stringWithFormat: @"Number of touches: %lu", self.touches.count];
 	[self showMessage: message];
 }
 
