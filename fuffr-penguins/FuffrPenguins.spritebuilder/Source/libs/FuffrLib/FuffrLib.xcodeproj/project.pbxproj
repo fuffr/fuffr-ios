@@ -1,0 +1,746 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		215E0B3218DC67CF00484E43 /* FFRGestureRecognizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 215E0B1E18DC67CF00484E43 /* FFRGestureRecognizer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		215E0B3318DC67CF00484E43 /* FFRGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 215E0B1F18DC67CF00484E43 /* FFRGestureRecognizer.m */; };
+		215E0B3418DC67CF00484E43 /* FFRLongPressGestureRecognizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 215E0B2018DC67CF00484E43 /* FFRLongPressGestureRecognizer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		215E0B3518DC67CF00484E43 /* FFRLongPressGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 215E0B2118DC67CF00484E43 /* FFRLongPressGestureRecognizer.m */; };
+		215E0B3618DC67CF00484E43 /* FFRPanGestureRecognizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 215E0B2218DC67CF00484E43 /* FFRPanGestureRecognizer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		215E0B3718DC67CF00484E43 /* FFRPanGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 215E0B2318DC67CF00484E43 /* FFRPanGestureRecognizer.m */; };
+		215E0B3818DC67CF00484E43 /* FFRPinchGestureRecognizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 215E0B2418DC67CF00484E43 /* FFRPinchGestureRecognizer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		215E0B3918DC67CF00484E43 /* FFRPinchGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 215E0B2518DC67CF00484E43 /* FFRPinchGestureRecognizer.m */; };
+		215E0B3A18DC67CF00484E43 /* FFRRotationGestureRecognizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 215E0B2618DC67CF00484E43 /* FFRRotationGestureRecognizer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		215E0B3B18DC67CF00484E43 /* FFRRotationGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 215E0B2718DC67CF00484E43 /* FFRRotationGestureRecognizer.m */; };
+		215E0B3C18DC67CF00484E43 /* FFRSwipeGestureRecognizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 215E0B2818DC67CF00484E43 /* FFRSwipeGestureRecognizer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		215E0B3D18DC67CF00484E43 /* FFRSwipeGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 215E0B2918DC67CF00484E43 /* FFRSwipeGestureRecognizer.m */; };
+		215E0B3E18DC67CF00484E43 /* FFRTapGestureRecognizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 215E0B2A18DC67CF00484E43 /* FFRTapGestureRecognizer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		215E0B3F18DC67CF00484E43 /* FFRTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 215E0B2B18DC67CF00484E43 /* FFRTapGestureRecognizer.m */; };
+		21916D8D191BA23300A36F04 /* FFRFirmwareDownloader.h in Headers */ = {isa = PBXBuildFile; fileRef = 21916D8B191BA23300A36F04 /* FFRFirmwareDownloader.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		21916D8E191BA23300A36F04 /* FFRFirmwareDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 21916D8C191BA23300A36F04 /* FFRFirmwareDownloader.m */; };
+		219718C918D60662007B6E84 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 219718C818D60662007B6E84 /* Foundation.framework */; };
+		219718D718D60662007B6E84 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 219718D618D60662007B6E84 /* XCTest.framework */; };
+		219718D818D60662007B6E84 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 219718C818D60662007B6E84 /* Foundation.framework */; };
+		219718DD18D60662007B6E84 /* libFuffrLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 219718C518D60662007B6E84 /* libFuffrLib.a */; };
+		219718E318D60662007B6E84 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 219718E118D60662007B6E84 /* InfoPlist.strings */; };
+		219718E518D60662007B6E84 /* FuffrLibTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 219718E418D60662007B6E84 /* FuffrLibTests.m */; };
+		2197194018D60711007B6E84 /* FFRLeftRightSpaceMapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 219718F218D60711007B6E84 /* FFRLeftRightSpaceMapper.m */; };
+		2197194118D60711007B6E84 /* FFROverlaySpaceMapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 219718F418D60711007B6E84 /* FFROverlaySpaceMapper.m */; };
+		2197194218D60711007B6E84 /* FFRQuadrantSpaceMapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 219718F618D60711007B6E84 /* FFRQuadrantSpaceMapper.m */; };
+		2197194318D60711007B6E84 /* FFRTopBottomSpaceMapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 219718F818D60711007B6E84 /* FFRTopBottomSpaceMapper.m */; };
+		2197194418D60711007B6E84 /* FFRBLEExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 219718FA18D60711007B6E84 /* FFRBLEExtensions.m */; };
+		2197194518D60711007B6E84 /* FFRBLEManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 219718FC18D60711007B6E84 /* FFRBLEManager.m */; };
+		2197194618D60711007B6E84 /* FFRCaseHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 219718FE18D60711007B6E84 /* FFRCaseHandler.m */; };
+		2197194718D60711007B6E84 /* FFROADHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 2197190018D60711007B6E84 /* FFROADHandler.m */; };
+		2197195A18D60711007B6E84 /* FFRTouch.m in Sources */ = {isa = PBXBuildFile; fileRef = 2197193418D60711007B6E84 /* FFRTouch.m */; };
+		2197195B18D60711007B6E84 /* FFRTouchManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2197193618D60711007B6E84 /* FFRTouchManager.m */; };
+		2197195C18D60711007B6E84 /* FFRTrackingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2197193918D60711007B6E84 /* FFRTrackingManager.m */; };
+		2197195D18D60711007B6E84 /* FFRFirmwareMetaData.m in Sources */ = {isa = PBXBuildFile; fileRef = 2197193D18D60711007B6E84 /* FFRFirmwareMetaData.m */; };
+		2197195E18D60711007B6E84 /* FFRFirmwareUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 2197193F18D60711007B6E84 /* FFRFirmwareUtility.m */; };
+		2197196018D60B25007B6E84 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2197195F18D60B25007B6E84 /* CoreBluetooth.framework */; };
+		2197196218D60B32007B6E84 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2197196118D60B32007B6E84 /* CoreGraphics.framework */; };
+		2197196318D60B3F007B6E84 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2197195F18D60B25007B6E84 /* CoreBluetooth.framework */; };
+		2197196418D60B42007B6E84 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2197196118D60B32007B6E84 /* CoreGraphics.framework */; };
+		2197196718D60EA1007B6E84 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2197196618D60EA1007B6E84 /* UIKit.framework */; };
+		21BCD6C118EF21D900944ACC /* FFRLowPassFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 21BCD6BF18EF21D900944ACC /* FFRLowPassFilter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		21BCD6C218EF21D900944ACC /* FFRLowPassFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 21BCD6C018EF21D900944ACC /* FFRLowPassFilter.m */; };
+		21C8CCD918D6634000E70941 /* FFRoad.h in Headers */ = {isa = PBXBuildFile; fileRef = 2197196818D6138D007B6E84 /* FFRoad.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		21C8CCDA18D6634000E70941 /* FFRExternalSpaceMapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 219718F018D60711007B6E84 /* FFRExternalSpaceMapper.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		21C8CCDB18D6634000E70941 /* FFRLeftRightSpaceMapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 219718F118D60711007B6E84 /* FFRLeftRightSpaceMapper.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		21C8CCDC18D6634000E70941 /* FFROverlaySpaceMapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 219718F318D60711007B6E84 /* FFROverlaySpaceMapper.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		21C8CCDD18D6634000E70941 /* FFRQuadrantSpaceMapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 219718F518D60711007B6E84 /* FFRQuadrantSpaceMapper.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		21C8CCDE18D6634000E70941 /* FFRTopBottomSpaceMapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 219718F718D60711007B6E84 /* FFRTopBottomSpaceMapper.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		21C8CCDF18D6634000E70941 /* FFRBLEExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 219718F918D60711007B6E84 /* FFRBLEExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		21C8CCE018D6634000E70941 /* FFRBLEManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 219718FB18D60711007B6E84 /* FFRBLEManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		21C8CCE118D6634000E70941 /* FFRCaseHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 219718FD18D60711007B6E84 /* FFRCaseHandler.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		21C8CCE218D6634000E70941 /* FFROADHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 219718FF18D60711007B6E84 /* FFROADHandler.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		21C8CCE318D6634000E70941 /* FFRPeripheralHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 2197190118D60711007B6E84 /* FFRPeripheralHandler.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		21C8CCE418D6634000E70941 /* FFRDebug.h in Headers */ = {isa = PBXBuildFile; fileRef = 2197190518D60711007B6E84 /* FFRDebug.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		21C8CCE518D6634000E70941 /* FFRTouch.h in Headers */ = {isa = PBXBuildFile; fileRef = 2197193318D60711007B6E84 /* FFRTouch.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		21C8CCE618D6634000E70941 /* FFRTouchManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 2197193518D60711007B6E84 /* FFRTouchManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		21C8CCE718D6634000E70941 /* FFRTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 2197193718D60711007B6E84 /* FFRTracker.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		21C8CCE818D6634000E70941 /* FFRTrackingManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 2197193818D60711007B6E84 /* FFRTrackingManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		21C8CCE918D6634000E70941 /* FFRRawTrackingData.h in Headers */ = {isa = PBXBuildFile; fileRef = 2197193A18D60711007B6E84 /* FFRRawTrackingData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		21C8CCEA18D6634000E70941 /* FFRFirmwareMetaData.h in Headers */ = {isa = PBXBuildFile; fileRef = 2197193C18D60711007B6E84 /* FFRFirmwareMetaData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		21C8CCEB18D6634000E70941 /* FFRFirmwareUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = 2197193E18D60711007B6E84 /* FFRFirmwareUtility.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		21E640AE19387DB000EFDC1A /* UIView+Toast.h in Headers */ = {isa = PBXBuildFile; fileRef = 21E640A819387DB000EFDC1A /* UIView+Toast.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		21E640AF19387DB000EFDC1A /* UIView+Toast.m in Sources */ = {isa = PBXBuildFile; fileRef = 21E640A919387DB000EFDC1A /* UIView+Toast.m */; };
+		21E640B719387E9D00EFDC1A /* SVProgressHUD-Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 21E640B319387E9D00EFDC1A /* SVProgressHUD-Prefix.pch */; settings = {ATTRIBUTES = (Public, ); }; };
+		21E640B819387E9D00EFDC1A /* SVProgressHUD.h in Headers */ = {isa = PBXBuildFile; fileRef = 21E640B519387E9D00EFDC1A /* SVProgressHUD.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		21E640B919387E9D00EFDC1A /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 21E640B619387E9D00EFDC1A /* SVProgressHUD.m */; };
+		29923FF81907BD7D00D945EB /* FFRDoubleTapGestureRecognizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 29923FF61907BD7D00D945EB /* FFRDoubleTapGestureRecognizer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		29923FF91907BD7D00D945EB /* FFRDoubleTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 29923FF71907BD7D00D945EB /* FFRDoubleTapGestureRecognizer.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		219718DB18D60662007B6E84 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 219718BD18D60662007B6E84 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 219718C418D60662007B6E84;
+			remoteInfo = FuffrLib;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		215E0B1E18DC67CF00484E43 /* FFRGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFRGestureRecognizer.h; sourceTree = "<group>"; };
+		215E0B1F18DC67CF00484E43 /* FFRGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFRGestureRecognizer.m; sourceTree = "<group>"; };
+		215E0B2018DC67CF00484E43 /* FFRLongPressGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFRLongPressGestureRecognizer.h; sourceTree = "<group>"; };
+		215E0B2118DC67CF00484E43 /* FFRLongPressGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFRLongPressGestureRecognizer.m; sourceTree = "<group>"; };
+		215E0B2218DC67CF00484E43 /* FFRPanGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFRPanGestureRecognizer.h; sourceTree = "<group>"; };
+		215E0B2318DC67CF00484E43 /* FFRPanGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFRPanGestureRecognizer.m; sourceTree = "<group>"; };
+		215E0B2418DC67CF00484E43 /* FFRPinchGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFRPinchGestureRecognizer.h; sourceTree = "<group>"; };
+		215E0B2518DC67CF00484E43 /* FFRPinchGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFRPinchGestureRecognizer.m; sourceTree = "<group>"; };
+		215E0B2618DC67CF00484E43 /* FFRRotationGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFRRotationGestureRecognizer.h; sourceTree = "<group>"; };
+		215E0B2718DC67CF00484E43 /* FFRRotationGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFRRotationGestureRecognizer.m; sourceTree = "<group>"; };
+		215E0B2818DC67CF00484E43 /* FFRSwipeGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFRSwipeGestureRecognizer.h; sourceTree = "<group>"; };
+		215E0B2918DC67CF00484E43 /* FFRSwipeGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFRSwipeGestureRecognizer.m; sourceTree = "<group>"; };
+		215E0B2A18DC67CF00484E43 /* FFRTapGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFRTapGestureRecognizer.h; sourceTree = "<group>"; };
+		215E0B2B18DC67CF00484E43 /* FFRTapGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFRTapGestureRecognizer.m; sourceTree = "<group>"; };
+		21916D8B191BA23300A36F04 /* FFRFirmwareDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFRFirmwareDownloader.h; sourceTree = "<group>"; };
+		21916D8C191BA23300A36F04 /* FFRFirmwareDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFRFirmwareDownloader.m; sourceTree = "<group>"; };
+		219718C518D60662007B6E84 /* libFuffrLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libFuffrLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		219718C818D60662007B6E84 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		219718CC18D60662007B6E84 /* FuffrLib-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FuffrLib-Prefix.pch"; sourceTree = "<group>"; };
+		219718D518D60662007B6E84 /* FuffrLibTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FuffrLibTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		219718D618D60662007B6E84 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		219718E018D60662007B6E84 /* FuffrLibTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "FuffrLibTests-Info.plist"; sourceTree = "<group>"; };
+		219718E218D60662007B6E84 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		219718E418D60662007B6E84 /* FuffrLibTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FuffrLibTests.m; sourceTree = "<group>"; };
+		219718F018D60711007B6E84 /* FFRExternalSpaceMapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FFRExternalSpaceMapper.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		219718F118D60711007B6E84 /* FFRLeftRightSpaceMapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FFRLeftRightSpaceMapper.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		219718F218D60711007B6E84 /* FFRLeftRightSpaceMapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = FFRLeftRightSpaceMapper.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		219718F318D60711007B6E84 /* FFROverlaySpaceMapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FFROverlaySpaceMapper.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		219718F418D60711007B6E84 /* FFROverlaySpaceMapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = FFROverlaySpaceMapper.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		219718F518D60711007B6E84 /* FFRQuadrantSpaceMapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FFRQuadrantSpaceMapper.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		219718F618D60711007B6E84 /* FFRQuadrantSpaceMapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = FFRQuadrantSpaceMapper.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		219718F718D60711007B6E84 /* FFRTopBottomSpaceMapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FFRTopBottomSpaceMapper.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		219718F818D60711007B6E84 /* FFRTopBottomSpaceMapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = FFRTopBottomSpaceMapper.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		219718F918D60711007B6E84 /* FFRBLEExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FFRBLEExtensions.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		219718FA18D60711007B6E84 /* FFRBLEExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = FFRBLEExtensions.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		219718FB18D60711007B6E84 /* FFRBLEManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FFRBLEManager.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		219718FC18D60711007B6E84 /* FFRBLEManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = FFRBLEManager.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		219718FD18D60711007B6E84 /* FFRCaseHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FFRCaseHandler.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		219718FE18D60711007B6E84 /* FFRCaseHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = FFRCaseHandler.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		219718FF18D60711007B6E84 /* FFROADHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FFROADHandler.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		2197190018D60711007B6E84 /* FFROADHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = FFROADHandler.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		2197190118D60711007B6E84 /* FFRPeripheralHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FFRPeripheralHandler.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		2197190518D60711007B6E84 /* FFRDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFRDebug.h; sourceTree = "<group>"; };
+		2197190718D60711007B6E84 /* ReadMe.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ReadMe.txt; sourceTree = "<group>"; };
+		2197193318D60711007B6E84 /* FFRTouch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FFRTouch.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		2197193418D60711007B6E84 /* FFRTouch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFRTouch.m; sourceTree = "<group>"; };
+		2197193518D60711007B6E84 /* FFRTouchManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFRTouchManager.h; sourceTree = "<group>"; };
+		2197193618D60711007B6E84 /* FFRTouchManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = FFRTouchManager.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		2197193718D60711007B6E84 /* FFRTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FFRTracker.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		2197193818D60711007B6E84 /* FFRTrackingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FFRTrackingManager.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		2197193918D60711007B6E84 /* FFRTrackingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = FFRTrackingManager.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		2197193A18D60711007B6E84 /* FFRRawTrackingData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFRRawTrackingData.h; sourceTree = "<group>"; };
+		2197193C18D60711007B6E84 /* FFRFirmwareMetaData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FFRFirmwareMetaData.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		2197193D18D60711007B6E84 /* FFRFirmwareMetaData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = FFRFirmwareMetaData.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		2197193E18D60711007B6E84 /* FFRFirmwareUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FFRFirmwareUtility.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		2197193F18D60711007B6E84 /* FFRFirmwareUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = FFRFirmwareUtility.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		2197195F18D60B25007B6E84 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
+		2197196118D60B32007B6E84 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		2197196618D60EA1007B6E84 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		2197196818D6138D007B6E84 /* FFRoad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFRoad.h; sourceTree = "<group>"; };
+		21BCD6BF18EF21D900944ACC /* FFRLowPassFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFRLowPassFilter.h; sourceTree = "<group>"; };
+		21BCD6C018EF21D900944ACC /* FFRLowPassFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFRLowPassFilter.m; sourceTree = "<group>"; };
+		21E640A819387DB000EFDC1A /* UIView+Toast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Toast.h"; sourceTree = "<group>"; };
+		21E640A919387DB000EFDC1A /* UIView+Toast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Toast.m"; sourceTree = "<group>"; };
+		21E640B319387E9D00EFDC1A /* SVProgressHUD-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SVProgressHUD-Prefix.pch"; sourceTree = "<group>"; };
+		21E640B419387E9D00EFDC1A /* SVProgressHUD.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = SVProgressHUD.bundle; sourceTree = "<group>"; };
+		21E640B519387E9D00EFDC1A /* SVProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVProgressHUD.h; sourceTree = "<group>"; };
+		21E640B619387E9D00EFDC1A /* SVProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVProgressHUD.m; sourceTree = "<group>"; };
+		29923FF61907BD7D00D945EB /* FFRDoubleTapGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFRDoubleTapGestureRecognizer.h; sourceTree = "<group>"; };
+		29923FF71907BD7D00D945EB /* FFRDoubleTapGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFRDoubleTapGestureRecognizer.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		219718C218D60662007B6E84 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2197196718D60EA1007B6E84 /* UIKit.framework in Frameworks */,
+				2197196218D60B32007B6E84 /* CoreGraphics.framework in Frameworks */,
+				2197196018D60B25007B6E84 /* CoreBluetooth.framework in Frameworks */,
+				219718C918D60662007B6E84 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		219718D218D60662007B6E84 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2197196418D60B42007B6E84 /* CoreGraphics.framework in Frameworks */,
+				219718D718D60662007B6E84 /* XCTest.framework in Frameworks */,
+				219718D818D60662007B6E84 /* Foundation.framework in Frameworks */,
+				2197196318D60B3F007B6E84 /* CoreBluetooth.framework in Frameworks */,
+				219718DD18D60662007B6E84 /* libFuffrLib.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		215E0B1B18DC67CF00484E43 /* Gestures */ = {
+			isa = PBXGroup;
+			children = (
+				215E0B2018DC67CF00484E43 /* FFRLongPressGestureRecognizer.h */,
+				215E0B2118DC67CF00484E43 /* FFRLongPressGestureRecognizer.m */,
+				215E0B1E18DC67CF00484E43 /* FFRGestureRecognizer.h */,
+				215E0B1F18DC67CF00484E43 /* FFRGestureRecognizer.m */,
+				215E0B2218DC67CF00484E43 /* FFRPanGestureRecognizer.h */,
+				215E0B2318DC67CF00484E43 /* FFRPanGestureRecognizer.m */,
+				215E0B2418DC67CF00484E43 /* FFRPinchGestureRecognizer.h */,
+				215E0B2518DC67CF00484E43 /* FFRPinchGestureRecognizer.m */,
+				215E0B2618DC67CF00484E43 /* FFRRotationGestureRecognizer.h */,
+				215E0B2718DC67CF00484E43 /* FFRRotationGestureRecognizer.m */,
+				215E0B2818DC67CF00484E43 /* FFRSwipeGestureRecognizer.h */,
+				215E0B2918DC67CF00484E43 /* FFRSwipeGestureRecognizer.m */,
+				29923FF61907BD7D00D945EB /* FFRDoubleTapGestureRecognizer.h */,
+				29923FF71907BD7D00D945EB /* FFRDoubleTapGestureRecognizer.m */,
+				215E0B2A18DC67CF00484E43 /* FFRTapGestureRecognizer.h */,
+				215E0B2B18DC67CF00484E43 /* FFRTapGestureRecognizer.m */,
+			);
+			path = Gestures;
+			sourceTree = "<group>";
+		};
+		219718BC18D60662007B6E84 = {
+			isa = PBXGroup;
+			children = (
+				219718CA18D60662007B6E84 /* FuffrLib */,
+				219718DE18D60662007B6E84 /* FuffrLibTests */,
+				219718C718D60662007B6E84 /* Frameworks */,
+				219718C618D60662007B6E84 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		219718C618D60662007B6E84 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				219718C518D60662007B6E84 /* libFuffrLib.a */,
+				219718D518D60662007B6E84 /* FuffrLibTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		219718C718D60662007B6E84 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2197196618D60EA1007B6E84 /* UIKit.framework */,
+				2197196118D60B32007B6E84 /* CoreGraphics.framework */,
+				2197195F18D60B25007B6E84 /* CoreBluetooth.framework */,
+				219718C818D60662007B6E84 /* Foundation.framework */,
+				219718D618D60662007B6E84 /* XCTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		219718CA18D60662007B6E84 /* FuffrLib */ = {
+			isa = PBXGroup;
+			children = (
+				21AC5C0E191A44E80018A1E3 /* UI */,
+				215E0B1B18DC67CF00484E43 /* Gestures */,
+				219718EE18D60711007B6E84 /* Communication */,
+				2197190518D60711007B6E84 /* FFRDebug.h */,
+				2197190618D60711007B6E84 /* Firmware */,
+				2197193218D60711007B6E84 /* Touch */,
+				2197193B18D60711007B6E84 /* Utilities */,
+				219718CB18D60662007B6E84 /* Supporting Files */,
+			);
+			path = FuffrLib;
+			sourceTree = "<group>";
+		};
+		219718CB18D60662007B6E84 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				219718CC18D60662007B6E84 /* FuffrLib-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		219718DE18D60662007B6E84 /* FuffrLibTests */ = {
+			isa = PBXGroup;
+			children = (
+				219718E418D60662007B6E84 /* FuffrLibTests.m */,
+				219718DF18D60662007B6E84 /* Supporting Files */,
+			);
+			path = FuffrLibTests;
+			sourceTree = "<group>";
+		};
+		219718DF18D60662007B6E84 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				219718E018D60662007B6E84 /* FuffrLibTests-Info.plist */,
+				219718E118D60662007B6E84 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		219718EE18D60711007B6E84 /* Communication */ = {
+			isa = PBXGroup;
+			children = (
+				219718EF18D60711007B6E84 /* Mapping */,
+				219718F918D60711007B6E84 /* FFRBLEExtensions.h */,
+				219718FA18D60711007B6E84 /* FFRBLEExtensions.m */,
+				219718FB18D60711007B6E84 /* FFRBLEManager.h */,
+				219718FC18D60711007B6E84 /* FFRBLEManager.m */,
+				219718FD18D60711007B6E84 /* FFRCaseHandler.h */,
+				219718FE18D60711007B6E84 /* FFRCaseHandler.m */,
+				219718FF18D60711007B6E84 /* FFROADHandler.h */,
+				2197190018D60711007B6E84 /* FFROADHandler.m */,
+				2197196818D6138D007B6E84 /* FFRoad.h */,
+				2197190118D60711007B6E84 /* FFRPeripheralHandler.h */,
+			);
+			path = Communication;
+			sourceTree = "<group>";
+		};
+		219718EF18D60711007B6E84 /* Mapping */ = {
+			isa = PBXGroup;
+			children = (
+				219718F018D60711007B6E84 /* FFRExternalSpaceMapper.h */,
+				219718F118D60711007B6E84 /* FFRLeftRightSpaceMapper.h */,
+				219718F218D60711007B6E84 /* FFRLeftRightSpaceMapper.m */,
+				219718F318D60711007B6E84 /* FFROverlaySpaceMapper.h */,
+				219718F418D60711007B6E84 /* FFROverlaySpaceMapper.m */,
+				219718F518D60711007B6E84 /* FFRQuadrantSpaceMapper.h */,
+				219718F618D60711007B6E84 /* FFRQuadrantSpaceMapper.m */,
+				219718F718D60711007B6E84 /* FFRTopBottomSpaceMapper.h */,
+				219718F818D60711007B6E84 /* FFRTopBottomSpaceMapper.m */,
+			);
+			path = Mapping;
+			sourceTree = "<group>";
+		};
+		2197190618D60711007B6E84 /* Firmware */ = {
+			isa = PBXGroup;
+			children = (
+				2197190718D60711007B6E84 /* ReadMe.txt */,
+			);
+			path = Firmware;
+			sourceTree = "<group>";
+		};
+		2197193218D60711007B6E84 /* Touch */ = {
+			isa = PBXGroup;
+			children = (
+				21BCD6BF18EF21D900944ACC /* FFRLowPassFilter.h */,
+				21BCD6C018EF21D900944ACC /* FFRLowPassFilter.m */,
+				2197193318D60711007B6E84 /* FFRTouch.h */,
+				2197193418D60711007B6E84 /* FFRTouch.m */,
+				2197193518D60711007B6E84 /* FFRTouchManager.h */,
+				2197193618D60711007B6E84 /* FFRTouchManager.m */,
+				2197193718D60711007B6E84 /* FFRTracker.h */,
+				2197193818D60711007B6E84 /* FFRTrackingManager.h */,
+				2197193918D60711007B6E84 /* FFRTrackingManager.m */,
+				2197193A18D60711007B6E84 /* FFRRawTrackingData.h */,
+			);
+			path = Touch;
+			sourceTree = "<group>";
+		};
+		2197193B18D60711007B6E84 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				2197193C18D60711007B6E84 /* FFRFirmwareMetaData.h */,
+				2197193D18D60711007B6E84 /* FFRFirmwareMetaData.m */,
+				2197193E18D60711007B6E84 /* FFRFirmwareUtility.h */,
+				2197193F18D60711007B6E84 /* FFRFirmwareUtility.m */,
+				21916D8B191BA23300A36F04 /* FFRFirmwareDownloader.h */,
+				21916D8C191BA23300A36F04 /* FFRFirmwareDownloader.m */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		21AC5C0E191A44E80018A1E3 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				21E640B219387E9D00EFDC1A /* SVProgressHUD */,
+				21E640A719387DB000EFDC1A /* Toast */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		21E640A719387DB000EFDC1A /* Toast */ = {
+			isa = PBXGroup;
+			children = (
+				21E640A819387DB000EFDC1A /* UIView+Toast.h */,
+				21E640A919387DB000EFDC1A /* UIView+Toast.m */,
+			);
+			path = Toast;
+			sourceTree = "<group>";
+		};
+		21E640B219387E9D00EFDC1A /* SVProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				21E640B319387E9D00EFDC1A /* SVProgressHUD-Prefix.pch */,
+				21E640B419387E9D00EFDC1A /* SVProgressHUD.bundle */,
+				21E640B519387E9D00EFDC1A /* SVProgressHUD.h */,
+				21E640B619387E9D00EFDC1A /* SVProgressHUD.m */,
+			);
+			path = SVProgressHUD;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		21C8CCD818D6631900E70941 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				21C8CCD918D6634000E70941 /* FFRoad.h in Headers */,
+				21C8CCDA18D6634000E70941 /* FFRExternalSpaceMapper.h in Headers */,
+				21C8CCDB18D6634000E70941 /* FFRLeftRightSpaceMapper.h in Headers */,
+				21C8CCDC18D6634000E70941 /* FFROverlaySpaceMapper.h in Headers */,
+				21C8CCDD18D6634000E70941 /* FFRQuadrantSpaceMapper.h in Headers */,
+				21C8CCDE18D6634000E70941 /* FFRTopBottomSpaceMapper.h in Headers */,
+				21C8CCDF18D6634000E70941 /* FFRBLEExtensions.h in Headers */,
+				21C8CCE018D6634000E70941 /* FFRBLEManager.h in Headers */,
+				21C8CCE118D6634000E70941 /* FFRCaseHandler.h in Headers */,
+				21C8CCE218D6634000E70941 /* FFROADHandler.h in Headers */,
+				21C8CCE318D6634000E70941 /* FFRPeripheralHandler.h in Headers */,
+				21C8CCE418D6634000E70941 /* FFRDebug.h in Headers */,
+				21C8CCE518D6634000E70941 /* FFRTouch.h in Headers */,
+				215E0B3218DC67CF00484E43 /* FFRGestureRecognizer.h in Headers */,
+				215E0B3618DC67CF00484E43 /* FFRPanGestureRecognizer.h in Headers */,
+				215E0B3C18DC67CF00484E43 /* FFRSwipeGestureRecognizer.h in Headers */,
+				215E0B3A18DC67CF00484E43 /* FFRRotationGestureRecognizer.h in Headers */,
+				215E0B3418DC67CF00484E43 /* FFRLongPressGestureRecognizer.h in Headers */,
+				215E0B3E18DC67CF00484E43 /* FFRTapGestureRecognizer.h in Headers */,
+				29923FF81907BD7D00D945EB /* FFRDoubleTapGestureRecognizer.h in Headers */,
+				215E0B3818DC67CF00484E43 /* FFRPinchGestureRecognizer.h in Headers */,
+				21C8CCE618D6634000E70941 /* FFRTouchManager.h in Headers */,
+				21C8CCE718D6634000E70941 /* FFRTracker.h in Headers */,
+				21C8CCE818D6634000E70941 /* FFRTrackingManager.h in Headers */,
+				21C8CCE918D6634000E70941 /* FFRRawTrackingData.h in Headers */,
+				21C8CCEA18D6634000E70941 /* FFRFirmwareMetaData.h in Headers */,
+				21BCD6C118EF21D900944ACC /* FFRLowPassFilter.h in Headers */,
+				21C8CCEB18D6634000E70941 /* FFRFirmwareUtility.h in Headers */,
+				21916D8D191BA23300A36F04 /* FFRFirmwareDownloader.h in Headers */,
+				21E640B819387E9D00EFDC1A /* SVProgressHUD.h in Headers */,
+				21E640B719387E9D00EFDC1A /* SVProgressHUD-Prefix.pch in Headers */,
+				21E640AE19387DB000EFDC1A /* UIView+Toast.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		219718C418D60662007B6E84 /* FuffrLib */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 219718E818D60662007B6E84 /* Build configuration list for PBXNativeTarget "FuffrLib" */;
+			buildPhases = (
+				21C8CCD818D6631900E70941 /* Headers */,
+				219718C118D60662007B6E84 /* Sources */,
+				219718C218D60662007B6E84 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FuffrLib;
+			productName = FuffrLib;
+			productReference = 219718C518D60662007B6E84 /* libFuffrLib.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		219718D418D60662007B6E84 /* FuffrLibTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 219718EB18D60662007B6E84 /* Build configuration list for PBXNativeTarget "FuffrLibTests" */;
+			buildPhases = (
+				219718D118D60662007B6E84 /* Sources */,
+				219718D218D60662007B6E84 /* Frameworks */,
+				219718D318D60662007B6E84 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				219718DC18D60662007B6E84 /* PBXTargetDependency */,
+			);
+			name = FuffrLibTests;
+			productName = FuffrLibTests;
+			productReference = 219718D518D60662007B6E84 /* FuffrLibTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		219718BD18D60662007B6E84 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0510;
+				ORGANIZATIONNAME = Fuffr;
+			};
+			buildConfigurationList = 219718C018D60662007B6E84 /* Build configuration list for PBXProject "FuffrLib" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 219718BC18D60662007B6E84;
+			productRefGroup = 219718C618D60662007B6E84 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				219718C418D60662007B6E84 /* FuffrLib */,
+				219718D418D60662007B6E84 /* FuffrLibTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		219718D318D60662007B6E84 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				219718E318D60662007B6E84 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		219718C118D60662007B6E84 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				21E640AF19387DB000EFDC1A /* UIView+Toast.m in Sources */,
+				2197194618D60711007B6E84 /* FFRCaseHandler.m in Sources */,
+				2197194318D60711007B6E84 /* FFRTopBottomSpaceMapper.m in Sources */,
+				2197194418D60711007B6E84 /* FFRBLEExtensions.m in Sources */,
+				2197195B18D60711007B6E84 /* FFRTouchManager.m in Sources */,
+				215E0B3318DC67CF00484E43 /* FFRGestureRecognizer.m in Sources */,
+				2197194118D60711007B6E84 /* FFROverlaySpaceMapper.m in Sources */,
+				29923FF91907BD7D00D945EB /* FFRDoubleTapGestureRecognizer.m in Sources */,
+				2197194018D60711007B6E84 /* FFRLeftRightSpaceMapper.m in Sources */,
+				215E0B3718DC67CF00484E43 /* FFRPanGestureRecognizer.m in Sources */,
+				2197194218D60711007B6E84 /* FFRQuadrantSpaceMapper.m in Sources */,
+				21BCD6C218EF21D900944ACC /* FFRLowPassFilter.m in Sources */,
+				21E640B919387E9D00EFDC1A /* SVProgressHUD.m in Sources */,
+				21916D8E191BA23300A36F04 /* FFRFirmwareDownloader.m in Sources */,
+				215E0B3F18DC67CF00484E43 /* FFRTapGestureRecognizer.m in Sources */,
+				215E0B3B18DC67CF00484E43 /* FFRRotationGestureRecognizer.m in Sources */,
+				2197195D18D60711007B6E84 /* FFRFirmwareMetaData.m in Sources */,
+				215E0B3518DC67CF00484E43 /* FFRLongPressGestureRecognizer.m in Sources */,
+				2197195C18D60711007B6E84 /* FFRTrackingManager.m in Sources */,
+				2197195E18D60711007B6E84 /* FFRFirmwareUtility.m in Sources */,
+				2197194718D60711007B6E84 /* FFROADHandler.m in Sources */,
+				215E0B3D18DC67CF00484E43 /* FFRSwipeGestureRecognizer.m in Sources */,
+				2197194518D60711007B6E84 /* FFRBLEManager.m in Sources */,
+				215E0B3918DC67CF00484E43 /* FFRPinchGestureRecognizer.m in Sources */,
+				2197195A18D60711007B6E84 /* FFRTouch.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		219718D118D60662007B6E84 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				219718E518D60662007B6E84 /* FuffrLibTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		219718DC18D60662007B6E84 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 219718C418D60662007B6E84 /* FuffrLib */;
+			targetProxy = 219718DB18D60662007B6E84 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		219718E118D60662007B6E84 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				219718E218D60662007B6E84 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		219718E618D60662007B6E84 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		219718E718D60662007B6E84 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		219718E918D60662007B6E84 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/FuffrLib.dst;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "FuffrLib/FuffrLib-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+				);
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PUBLIC_HEADERS_FOLDER_PATH = include/FuffrLib;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		219718EA18D60662007B6E84 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/FuffrLib.dst;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "FuffrLib/FuffrLib-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+				);
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PUBLIC_HEADERS_FOLDER_PATH = include/FuffrLib;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		219718EC18D60662007B6E84 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "FuffrLib/FuffrLib-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "FuffrLibTests/FuffrLibTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		219718ED18D60662007B6E84 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "FuffrLib/FuffrLib-Prefix.pch";
+				INFOPLIST_FILE = "FuffrLibTests/FuffrLibTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		219718C018D60662007B6E84 /* Build configuration list for PBXProject "FuffrLib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				219718E618D60662007B6E84 /* Debug */,
+				219718E718D60662007B6E84 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		219718E818D60662007B6E84 /* Build configuration list for PBXNativeTarget "FuffrLib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				219718E918D60662007B6E84 /* Debug */,
+				219718EA18D60662007B6E84 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		219718EB18D60662007B6E84 /* Build configuration list for PBXNativeTarget "FuffrLibTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				219718EC18D60662007B6E84 /* Debug */,
+				219718ED18D60662007B6E84 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 219718BD18D60662007B6E84 /* Project object */;
+}

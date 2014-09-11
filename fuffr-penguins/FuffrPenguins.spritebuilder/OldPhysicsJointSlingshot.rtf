@@ -1,0 +1,166 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1265\cocoasubrtf190
+{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;}
+{\colortbl;\red255\green255\blue255;\red0\green116\blue0;\red100\green56\blue32;\red196\green26\blue22;
+\red170\green13\blue145;\red63\green110\blue116;\red92\green38\blue153;\red46\green13\blue110;\red28\green0\blue207;
+\red38\green71\blue75;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\deftab529
+\pard\tx529\pardeftab529\pardirnatural
+
+\f0\fs22 \cf2 \CocoaLigature0 //\cf0 \
+\cf2 //  Gameplay.m\cf0 \
+\cf2 //  FuffrPenguins\cf0 \
+\cf2 //\cf0 \
+\cf2 //  Created by Fuffr2 on 01/08/14.\cf0 \
+\cf2 //  Copyright (c) 2014 Apportable. All rights reserved.\cf0 \
+\cf2 //\cf0 \
+\
+\cf3 #import \cf4 "Gameplay.h"\cf3 \
+#import \cf4 "SlingshotLaunchPower.h"\cf3 \
+\cf0 \
+\cf5 @implementation\cf0  Gameplay \{\
+    \cf6 CCPhysicsNode\cf0  *_physicsNode;\
+    \cf6 CCNode\cf0  *_playerOneSlingshotArm, *_playerTwoSlingshotArm;\
+    \cf6 CCNode\cf0  *_levelNode;\
+    \cf6 CCNode\cf0  *_pullbackNode, *_pullbackNode2;\
+    \cf6 CCNode\cf0  *_slingshotPocket;\
+    \cf6 CCNode\cf0  *_mouseJointNode;\
+    \cf6 CCPhysicsJoint\cf0  *_mouseJoint;\
+    \cf6 CCNode\cf0  *_contentNode;\
+    \cf7 CGPoint\cf0  _touchCurrentPoint;\
+    \cf6 CCNode\cf0  *_currentPenguin;\
+    \cf6 CCPhysicsJoint\cf0  *_penguinSlingshotJoint;\
+    \cf6 SlingshotLaunchPower\cf0  *slingshotLaunchPower;\
+\}\
+\
+\cf2 // is called when CCB file has completed loading\cf0 \
+- (\cf5 void\cf0 )didLoadFromCCB \{\
+    \cf2 // tell this scene to accept touches\cf0 \
+    \cf5 self\cf0 .\cf6 userInteractionEnabled\cf0  = \cf5 TRUE\cf0 ;\
+    \
+    \cf6 slingshotLaunchPower\cf0  = [[\cf6 SlingshotLaunchPower\cf0  \cf8 alloc\cf0 ] \cf8 init\cf0 ];\
+    \
+    \cf6 slingshotLaunchPower\cf0 .\cf6 launchPowerMultiplier\cf0  = \cf8 CGPointMake\cf0 (\cf9 0.3\cf0 , \cf9 0.7\cf0 );\
+    \
+    \cf6 CCScene\cf0  *level = [\cf6 CCBReader\cf0  \cf10 loadAsScene\cf0 :\cf4 @"Levels/Level1"\cf0 ];\
+    [\cf6 _levelNode\cf0  \cf10 addChild\cf0 :level];\
+    \
+    \
+    \cf2 // visualize physics bodies & joints\cf0 \
+    \cf6 _physicsNode\cf0 .\cf6 debugDraw\cf0  = \cf5 TRUE\cf0 ;\
+    \
+    \cf2 // nothing shall collide with our invisible nodes\cf0 \
+    \cf6 _pullbackNode\cf0 .\cf6 physicsBody\cf0 .\cf6 collisionMask\cf0  = \cf9 @[]\cf0 ;\
+    \cf6 _pullbackNode2\cf0 .\cf6 physicsBody\cf0 .\cf6 collisionMask\cf0  = \cf9 @[]\cf0 ;\
+    \cf6 _mouseJointNode\cf0 .\cf6 physicsBody\cf0 .\cf6 collisionMask\cf0  = \cf9 @[]\cf0 ;\
+\}\
+\
+-(\cf5 void\cf0 ) touchBegan:(\cf7 UITouch\cf0  *)touch withEvent:(\cf7 UIEvent\cf0  *)event\
+\{\
+    \cf7 CGPoint\cf0  dragJointPosition;\
+    \
+    \cf6 slingshotLaunchPower\cf0 .\cf6 currentLaunchPowerDistance\cf0  = \cf8 CGPointMake\cf0 (\cf9 0\cf0 , \cf9 0\cf0 );\
+    \cf6 slingshotLaunchPower\cf0 .\cf6 launchPower\cf0  = \cf8 CGPointMake\cf0 (\cf9 0\cf0 , \cf9 0\cf0 );\
+    \
+    \cf7 CGPoint\cf0  touchLocation = [touch \cf10 locationInNode\cf0 :\cf6 _contentNode\cf0 ];\
+    \
+    \cf8 NSLog\cf0 (\cf4 @"touchX = %f touchY = %f"\cf0 ,touchLocation.\cf7 x\cf0 , touchLocation.\cf7 y\cf0 );\
+    \
+    \cf6 _touchCurrentPoint\cf0  = touchLocation;\
+    \
+    \
+    dragJointPosition = \cf6 _slingshotPocket\cf0 .\cf6 position\cf0 ;\
+    dragJointPosition.\cf7 x\cf0  -= \cf9 10\cf0 ;\
+    \cf8 NSLog\cf0 (\cf4 @"slingshotpocket posX: %f, posY: %f"\cf0 , \cf6 _slingshotPocket\cf0 .\cf6 position\cf0 .\cf7 x\cf0 , \cf6 _slingshotPocket\cf0 .\cf6 position\cf0 .\cf7 y\cf0 );\
+    \cf2 // move the mouseJointNode to the touch position\cf0 \
+    \cf6 _mouseJointNode\cf0 .\cf6 position\cf0  = dragJointPosition;\
+    \
+    \cf2 // setup a spring joint between the mouseJointNode and the slingshotarm\cf0 \
+    \cf6 _mouseJoint\cf0  = [\cf6 CCPhysicsJoint\cf0  \cf10 connectedSpringJointWithBodyA\cf0 :\cf6 _mouseJointNode\cf0 .\cf6 physicsBody\cf0  \cf10 bodyB\cf0 :\cf6 _slingshotPocket\cf0 .\cf6 physicsBody\cf0  \cf10 anchorA\cf0 :\cf10 ccp\cf0 (\cf9 0\cf0 , \cf9 0\cf0 ) \cf10 anchorB\cf0 :\cf10 ccp\cf0 (\cf9 0\cf0 , \cf9 17.5\cf0 ) \cf10 restLength\cf0 :\cf9 0.f\cf0  \cf10 stiffness\cf0 :\cf9 10000.f\cf0  \cf10 damping\cf0 :\cf9 150.f\cf0 ];\
+    \
+    \cf2 // add a penguin\cf0 \
+    \cf2 // create a penguin from the ccb-file\cf0 \
+    \cf6 _currentPenguin\cf0  = [\cf6 CCBReader\cf0  \cf10 load\cf0 :\cf4 @"Penguin"\cf0 ];\
+    \cf2 // initially position it on the scoop. 34,138 is the position in the node space of the _catapultArm\cf0 \
+    \cf7 CGPoint\cf0  penguinPosition = [\cf6 _slingshotPocket\cf0  \cf10 convertToWorldSpace\cf0 :\cf10 ccp\cf0 (\cf9 15\cf0 , \cf9 17.5\cf0 )];\
+    \cf2 // transform the world position to the node space to which the penguin will be added (_physicsNode)\cf0 \
+    \cf6 _currentPenguin\cf0 .\cf6 position\cf0  = [\cf6 _physicsNode\cf0  \cf10 convertToNodeSpace\cf0 :penguinPosition];\
+    \cf2 // add it to the physics world\cf0 \
+    [\cf6 _physicsNode\cf0  \cf10 addChild\cf0 :\cf6 _currentPenguin\cf0 ];\
+    \cf2 // we don't want the penguin to rotate in the scoop\cf0 \
+    \cf6 _currentPenguin\cf0 .\cf6 physicsBody\cf0 .\cf6 allowsRotation\cf0  = \cf5 FALSE\cf0 ;\
+    \
+    \cf2 // create a joint to keep the penguin fixed to the scoop until the catapult is released\cf0 \
+    \cf6 _penguinSlingshotJoint\cf0  = [\cf6 CCPhysicsJoint\cf0  \cf10 connectedPivotJointWithBodyA\cf0 :\cf6 _currentPenguin\cf0 .\cf6 physicsBody\cf0  \cf10 bodyB\cf0 :\cf6 _slingshotPocket\cf0 .\cf6 physicsBody\cf0  \cf10 anchorA\cf0 :\cf6 _currentPenguin\cf0 .\cf6 anchorPointInPoints\cf0 ];\
+\}\
+\
+- (\cf5 void\cf0 )touchMoved:(\cf7 UITouch\cf0  *)touch withEvent:(\cf7 UIEvent\cf0  *)event\
+\{\
+    \cf7 CGPoint\cf0  touchLocation = [touch \cf10 locationInNode\cf0 :\cf6 _contentNode\cf0 ];\
+    [\cf5 self\cf0  \cf10 calculateLaunchPowerDistance\cf0 :touchLocation];\
+    \cf6 _touchCurrentPoint\cf0  = touchLocation;\
+\}\
+\
+- (\cf5 void\cf0 ) touchEnded:(\cf7 UITouch\cf0  *)touch withEvent:(\cf7 UIEvent\cf0  *)event\
+\{\
+    \cf2 // when touches end, meaning the user releases their finger, release the catapult\cf0 \
+    [\cf5 self\cf0  \cf10 releaseCatapult\cf0 ];\
+\}\
+\
+-(\cf5 void\cf0 ) touchCancelled:(\cf7 UITouch\cf0  *)touch withEvent:(\cf7 UIEvent\cf0  *)event\
+\{\
+    \cf2 // when touches are cancelled, meaning the user drags their finger off the screen or onto something else, release the catapult\cf0 \
+    [\cf5 self\cf0  \cf10 releaseCatapult\cf0 ];\
+\}\
+\
+- (\cf5 void\cf0 )releaseCatapult \{\
+    \cf5 if\cf0  (\cf6 _mouseJoint\cf0  != \cf5 nil\cf0 )\
+    \{\
+        \cf2 // releases the joint and lets the catapult snap back\cf0 \
+        [\cf6 _mouseJoint\cf0  \cf10 invalidate\cf0 ];\
+        \cf6 _mouseJoint\cf0  = \cf5 nil\cf0 ;\
+        \cf2 // releases the joint and lets the penguin fly\cf0 \
+        [\cf6 _penguinSlingshotJoint\cf0  \cf10 invalidate\cf0 ];\
+        \cf6 _penguinSlingshotJoint\cf0  = \cf5 nil\cf0 ;\
+        \
+        \cf2 // after snapping rotation is fine\cf0 \
+        \cf6 _currentPenguin\cf0 .\cf6 physicsBody\cf0 .\cf6 allowsRotation\cf0  = \cf5 TRUE\cf0 ;\
+    \}\
+\}\
+\
+- (\cf5 void\cf0 )calculateLaunchPowerDistance:(\cf7 CGPoint\cf0 ) touchLocation\
+\{\
+    \
+    \cf7 CGPoint\cf0  launchPowerDistance = \cf8 CGPointMake\cf0 ((\cf6 _touchCurrentPoint\cf0 .\cf7 x\cf0  - touchLocation.\cf7 x\cf0 )*\cf6 slingshotLaunchPower\cf0 .\cf6 launchPowerMultiplier\cf0 .\cf7 x\cf0 , (\cf6 _touchCurrentPoint\cf0 .\cf7 y\cf0  - touchLocation.\cf7 y\cf0 )*\cf6 slingshotLaunchPower\cf0 .\cf6 launchPowerMultiplier\cf0 .\cf7 y\cf0 );\
+    \
+    \cf6 slingshotLaunchPower\cf0 .\cf6 currentLaunchPowerDistance\cf0  = \cf8 CGPointMake\cf0 (launchPowerDistance.\cf7 x\cf0  - \cf6 slingshotLaunchPower\cf0 .\cf6 currentLaunchPowerDistance\cf0 .\cf7 x\cf0 , launchPowerDistance.\cf7 y\cf0  - \cf6 slingshotLaunchPower\cf0 .\cf6 currentLaunchPowerDistance\cf0 .\cf7 y\cf0 );\
+    \
+    \cf6 slingshotLaunchPower\cf0 .\cf6 launchPower\cf0  = \cf8 CGPointMake\cf0 (\cf6 slingshotLaunchPower\cf0 .\cf6 currentLaunchPowerDistance\cf0 .\cf7 x\cf0  + \cf6 slingshotLaunchPower\cf0 .\cf6 launchPower\cf0 .\cf7 x\cf0 , \cf6 slingshotLaunchPower\cf0 .\cf6 currentLaunchPowerDistance\cf0 .\cf7 y\cf0  + \cf6 slingshotLaunchPower\cf0 .\cf6 launchPower\cf0 .\cf7 y\cf0 );\
+    \
+    \cf6 _mouseJointNode\cf0 .\cf6 position\cf0  = \cf8 CGPointMake\cf0 (\cf6 _mouseJointNode\cf0 .\cf6 position\cf0 .\cf7 x\cf0  - (\cf6 slingshotLaunchPower\cf0 .\cf6 currentLaunchPowerDistance\cf0 .\cf7 x\cf0 ), \cf6 _mouseJointNode\cf0 .\cf6 position\cf0 .\cf7 y\cf0  - (\cf6 slingshotLaunchPower\cf0 .\cf6 currentLaunchPowerDistance\cf0 .\cf7 y\cf0 ));\
+    \
+    \cf8 NSLog\cf0 (\cf4 @"POWER X = %f, Y = %f"\cf0 ,\cf6 slingshotLaunchPower\cf0 .\cf6 launchPower\cf0 .\cf7 x\cf0 , \cf6 slingshotLaunchPower\cf0 .\cf6 launchPower\cf0 .\cf7 y\cf0 );\
+    \
+    \cf5 if\cf0  (\cf6 slingshotLaunchPower\cf0 .\cf6 launchPower\cf0 .\cf7 x\cf0  > \cf9 50\cf0 ) \cf6 slingshotLaunchPower\cf0 .\cf6 launchPower\cf0  = \cf8 CGPointMake\cf0 (\cf9 50\cf0 , \cf6 slingshotLaunchPower\cf0 .\cf6 launchPower\cf0 .\cf7 y\cf0 );\
+    \cf5 if\cf0  (\cf6 slingshotLaunchPower\cf0 .\cf6 launchPower\cf0 .\cf7 y\cf0  > \cf9 50\cf0 ) \cf6 slingshotLaunchPower\cf0 .\cf6 launchPower\cf0  = \cf8 CGPointMake\cf0 (\cf6 slingshotLaunchPower\cf0 .\cf6 launchPower\cf0 .\cf7 x\cf0 , \cf9 50\cf0 );\
+    \
+    \
+    \cf2 /*\
+    CGFloat launchPowerDistance = (_touchCurrentPoint.x - touchLocation.x)*launchPowerMultiplier;\
+    currentLaunchPowerDistance = launchPowerDistance - currentLaunchPowerDistance;\
+    launchPower += currentLaunchPowerDistance;\
+    NSLog(@"POWER = %f", launchPower);\
+    _mouseJointNode.position = CGPointMake(_mouseJointNode.position.x - (currentLaunchPowerDistance), _mouseJointNode.position.y);\
+     */\cf0 \
+\}\
+\
+- (\cf7 CGFloat\cf0 )distanceBetweenPoints: (\cf7 CGPoint\cf0 )p1 secondPoint:(\cf7 CGPoint\cf0 )p2\
+\{\
+    \cf7 CGFloat\cf0  xDist = (p2.\cf7 x\cf0  - p1.\cf7 x\cf0 );\
+    \cf7 CGFloat\cf0  yDist = (p2.\cf7 y\cf0  - p1.\cf7 y\cf0 );\
+    \cf7 CGFloat\cf0  distance = \cf8 sqrt\cf0 ((xDist * xDist) + (yDist * yDist));\
+    \cf5 return\cf0  distance;\
+\}\
+\
+\cf5 @end\cf0 \
+}
