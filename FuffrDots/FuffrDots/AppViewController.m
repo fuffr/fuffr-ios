@@ -83,6 +83,7 @@ dispatch_queue_t openGLESContextQueue;
 	self.messageView.lineBreakMode = NSLineBreakByWordWrapping;
 	self.messageView.numberOfLines = 0;
     self.messageView.text = @"";
+    self.messageView.textColor = [UIColor whiteColor];
     [self.view addSubview: self.messageView];
 }
 
@@ -93,6 +94,7 @@ dispatch_queue_t openGLESContextQueue;
 	self.buttonSettings = [UIButton buttonWithType: UIButtonTypeSystem];
     [self.buttonSettings setFrame: bounds];
 	[self.buttonSettings setTitle: @"Settings" forState: UIControlStateNormal];
+    [self.buttonSettings setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
 	[self.buttonSettings
 		addTarget: self
 		action: @selector(onButtonSettings:)
