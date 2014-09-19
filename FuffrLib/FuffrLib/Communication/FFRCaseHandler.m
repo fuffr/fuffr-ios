@@ -262,7 +262,7 @@ currently 5 touches. Setting 0 will disable the touch detection."
 			size_t count = characteristic.value.length / sizeof(FFRRawTrackingData);
 
 			// Ensure correct length.
-			if (characteristic.value.length % sizeof(FFRRawTrackingData) != 0)
+			if (characteristic.value.length < sizeof(FFRRawTrackingData))
 			{
 				NSLog(@"Bad touch count length!");
 				return;
@@ -323,7 +323,7 @@ currently 5 touches. Setting 0 will disable the touch detection."
 
 	int sideIndex = (identifier - 1) / _numTouchesPerSide;
 	FFRSide side = SideLookupTable[sideIndex];
-	CGPoint rawPoint = CGPointMake((raw.highX << 8) | raw.lowX, (raw.highY << 8) | raw.lowY);
+	CGPoint rawPoint = CGPointMake(raw.x, raw.y);
 	CGPoint normalizedPoint = [self normalizePoint:rawPoint onSide:side];
 
 	bool down = raw.down;
@@ -375,10 +375,10 @@ currently 5 touches. Setting 0 will disable the touch detection."
 	*/
 
 	// New values (from 2014-04-28).
-	const float FFRLongXResolution = 32767.0;
-	const float FFRLongYResolution = 32767.0;
-	const float FFRShortXResolution = 32767.0;
-	const float FFRShortYResolution = 32767.0;
+	const float FFRLongXResolution = 255.0;
+	const float FFRLongYResolution = 255.0;
+	const float FFRShortXResolution = 255.0;
+	const float FFRShortYResolution = 255.0;
 
 	CGPoint p;
 	switch (side) {

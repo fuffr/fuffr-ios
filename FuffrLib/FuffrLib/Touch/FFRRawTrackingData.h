@@ -29,24 +29,14 @@ typedef struct
 	//Byte typeAndIdentifier;
 
 	/**
-	 x-coordinate low bits
+	 x-coordinate
 	 */
-	Byte lowX;
+	Byte x;
 
 	/**
-	 x-coordinate high bits
+	 y-coordinate
 	 */
-	Byte highX;
-
-	/**
-	 y-coordinate low bits
-	 */
-	Byte lowY;
-
-	/**
-	 y-coordinate high bits
-	 */
-	Byte highY;
+	Byte y;
 } FFRRawTrackingData;
 
 #endif
