@@ -31,6 +31,7 @@
 	birdFlight = 0;
 	tunnelGap = 215;
 	highScoreNumber = [[NSUserDefaults standardUserDefaults] integerForKey:@"highScoreSaved"];
+    [self initScoreLabel];
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -40,6 +41,17 @@
 	[self fuffrSetup];
     [self placeTunnels];
     [self startGame];
+}
+
+- (void)initScoreLabel
+{
+    scoreLabel = [[UILabel alloc] initWithFrame:CGRectMake(35, 68, 200, 45)];
+    scoreLabel.text = @"0";
+    scoreLabel.adjustsFontSizeToFitWidth = YES;
+    [scoreLabel setMinimumScaleFactor:0];
+    scoreLabel.font = [scoreLabel.font fontWithSize:37];
+    scoreLabel.textAlignment = NSTextAlignmentLeft;
+    [self.view addSubview:scoreLabel];
 }
 
 - (void)playBackgroundMusic
@@ -134,7 +146,10 @@
 {
     [scoreSoundPlayer play];
 	scoreNumber++;
-	scoreLabel.text = [NSString stringWithFormat:@"%i", scoreNumber];
+    NSString *test = [NSString stringWithFormat:@"%d", scoreNumber];
+    [scoreLabel setText:test];
+    //[scoreLabel setText:[NSString stringWithFormat:@"%d", scoreNumber]];
+	//scoreLabel.text = [NSString stringWithFormat:@"%i", scoreNumber];
 }
 
 - (void)placeTunnels
