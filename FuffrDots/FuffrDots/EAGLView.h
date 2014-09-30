@@ -39,6 +39,8 @@ Note that setting the view non-opaque will only work if the EAGL surface has an 
     GLuint depthRenderbuffer;
 }
 
+@property (nonatomic, assign) int framesPerSecond;
+
 - (void)drawView;
 - (void)drawViewWithTouches:(NSSet*)touches paintMode:(BOOL)paintMode dotColors:(NSMutableDictionary*)dotColors;
 

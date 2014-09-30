@@ -58,6 +58,8 @@
 {
 	if (self = [super initWithFrame:frame])
 	{
+		self.framesPerSecond = 0;
+
 		CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.layer;
 		
 		self.contentScaleFactor = [UIScreen mainScreen].scale;
@@ -189,6 +191,7 @@
 		sFrameCountLastSecond = sFrameCount;
 		sFPS = fps;
 		NSLog(@"FPS: %i", fps);
+		self.framesPerSecond = fps;
 	}
 	fps = sFPS;
 

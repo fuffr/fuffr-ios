@@ -309,7 +309,10 @@ dispatch_queue_t openGLESContextQueue;
 	
 	[self.glView drawViewWithTouches:self.touches paintMode:self.paintModeOn dotColors:self.dotColors];
 
-	NSString* message = [NSString stringWithFormat: @"Number of touches: %lu", self.touches.count];
+	NSString* message = [NSString
+		stringWithFormat: @"Number of touches: %lu FPS: %i",
+		self.touches.count,
+		self.glView.framesPerSecond];
 	[self showMessage: message];
 }
 
