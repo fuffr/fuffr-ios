@@ -150,7 +150,7 @@ static void logTouches(NSString* label, NSSet* touches)
 					userInfo: nil];
 			});
 		}
-		/*
+		/* Removed notification FFRTrackingPulsedNotification
 		else
 		{
 			//NSLog(@"! touch unchanged side: %i id: %i", (int)touch.side, (int)touch.identifier);
