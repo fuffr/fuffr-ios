@@ -70,6 +70,10 @@ extern const float FFRTrackingManagerUpdateSpeed;
  */
 -(void) clearAllTouches;
 
+-(void) dispatchTouchesBegan: (NSSet*)touches;
+-(void) dispatchTouchesMoved: (NSSet*)touches;
+-(void) dispatchTouchesEnded: (NSSet*)touches;
+
 /**
     Method for processing the reported touches from the sensors
  */

@@ -262,6 +262,8 @@ dispatch_queue_t openGLESContextQueue;
 
 - (void) touchesBegan: (NSSet*)touches
 {
+	//NSLog(@"@@@ touchesBegan: %i", (int)touches.count);
+
 	for (FFRTouch* touch in touches)
 	{
 		[self.touches addObject: touch];
@@ -272,11 +274,15 @@ dispatch_queue_t openGLESContextQueue;
 
 - (void) touchesMoved: (NSSet*)touches
 {
+	//NSLog(@"@@@ touchesMoved: %i", (int)touches.count);
+
 	[self redrawView];
 }
 
 - (void) touchesEnded: (NSSet*)touches
 {
+	//NSLog(@"@@@ touchesEnded: %i", (int)touches.count);
+	
 	for (FFRTouch* touch in touches)
 	{
 		[self.touches removeObject: touch];

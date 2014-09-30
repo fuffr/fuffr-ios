@@ -1,5 +1,5 @@
 //
-//  FFRTrackingHandler.h
+//  FFRTrackingHandler.m
 //  FuffrLib
 //
 //  Created by Fuffr on 2013-10-23.
@@ -112,6 +112,63 @@ static void logTouches(NSString* label, NSSet* touches)
 			[self removeTrackingObject: t];
 			}
 		}
+	});
+}
+
+-(void) dispatchTouchesBegan: (NSSet*)touches
+{
+	// Notify tracking observers.
+	dispatch_async(dispatch_get_main_queue(),
+	^{
+		// Set touch phase to began again on the main queue, to prevent
+		// overwrite by moved events.
+		for (FFRTouch* touch in touches)
+		{
+			touch.phase = FFRTouchPhaseBegan;
+		}
+
+		[[NSNotificationCenter defaultCenter]
+			postNotificationName: FFRTrackingBeganNotification
+			object: touches
+			userInfo:nil];
+	});
+}
+
+-(void) dispatchTouchesMoved: (NSSet*)touches
+{
+	// Notify tracking observers.
+	dispatch_async(dispatch_get_main_queue(),
+	^{
+		// Set touch phase to began again on the main queue, to prevent
+		// overwrite by moved events.
+		for (FFRTouch* touch in touches)
+		{
+			touch.phase = FFRTouchPhaseMoved;
+		}
+
+		[[NSNotificationCenter defaultCenter]
+			postNotificationName: FFRTrackingMovedNotification
+			object: touches
+			userInfo:nil];
+	});
+}
+
+-(void) dispatchTouchesEnded: (NSSet*)touches
+{
+	// Notify tracking observers.
+	dispatch_async(dispatch_get_main_queue(),
+	^{
+		// Set touch phase to began again on the main queue, to prevent
+		// overwrite by moved events.
+		for (FFRTouch* touch in touches)
+		{
+			touch.phase = FFRTouchPhaseEnded;
+		}
+
+		[[NSNotificationCenter defaultCenter]
+			postNotificationName: FFRTrackingEndedNotification
+			object: touches
+			userInfo:nil];
 	});
 }
 

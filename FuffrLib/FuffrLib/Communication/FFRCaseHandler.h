@@ -58,6 +58,12 @@ extern NSString* const FFRBatteryCharacteristicUUID;
     dispatch_queue_t _backgroundQueue;
     
     bool _previousTouchDown[32];
+
+    FFRTouch* _touches[32];
+
+	NSTimer* _timer;
+
+	NSTimeInterval _touchRemoveTimeout;
 }
 
 /**

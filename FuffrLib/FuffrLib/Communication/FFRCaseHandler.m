@@ -72,6 +72,15 @@ static const FFRSide SideLookupTable[4] =
 		_trackingHandler = [[FFRTrackingHandler alloc] init];
 		_trackingHandler.backgroundQueue = _backgroundQueue;
 		memset(_previousTouchDown, 0, sizeof(_previousTouchDown));
+
+		// Timer that handles removal of inactive touches.
+		_touchRemoveTimeout = 0.20;
+		_timer = [NSTimer
+			scheduledTimerWithTimeInterval: _touchRemoveTimeout / 3.0
+			target: self
+			selector: @selector(timerPruneTouches:)
+			userInfo: nil
+			repeats: YES];
 	}
 
 	return self;
@@ -89,6 +98,12 @@ static const FFRSide SideLookupTable[4] =
 
 -(void) shutDown
 {
+	if (_timer)
+	{
+		[_timer invalidate];
+		_timer = nil;
+	}
+	
 	if (_trackingHandler)
 	{
 		[_trackingHandler shutDown];
@@ -251,7 +266,8 @@ currently 5 touches. Setting 0 will disable the touch detection."
 
 -(void) didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
 {
-	dispatch_async(_backgroundQueue, ^{
+	dispatch_async(_backgroundQueue,
+	^{
 		// Do we have touch updates?
 		if ([characteristic.UUID ffr_isEqualToString:FFRTouchCharacteristicUUID1] ||
 			[characteristic.UUID ffr_isEqualToString:FFRTouchCharacteristicUUID2] ||
@@ -268,24 +284,106 @@ currently 5 touches. Setting 0 will disable the touch detection."
 				return;
 			}
 
-			// Copy data to touch buffer.
-			FFRRawTrackingData raw[count];
-			[characteristic.value getBytes:raw length:characteristic.value.length];
+			[self
+				unpackAndSendTouchEventsForCharacteristic: characteristic
+				eventCount: count];
+		}
+	});
+}
 
-			// Unpack data.
-			for (size_t i = 0; i < count; i++)
+-(void) unpackAndSendTouchEventsForCharacteristic: (CBCharacteristic *)characteristic
+	eventCount: (size_t) count
+{
+	// Copy data to touch buffer.
+	FFRRawTrackingData raw[count];
+	[characteristic.value getBytes:raw length:characteristic.value.length];
+
+	// Sets for touch events.
+	NSMutableSet* touchesBegan = nil;
+	NSMutableSet* touchesMoved = nil;
+	NSMutableSet* touchesEnded = nil;
+
+	// Unpack data.
+	for (size_t i = 0; i < count; i++)
+	{
+		FFRRawTrackingData data = raw[i];
+		if (data.identifier > 0)
+		{
+			FFRTouch* touch = [self unpackData: data];
+			if (touch)
 			{
-				FFRRawTrackingData data = raw[i];
-				if (data.identifier > 0)
+				if (FFRTouchPhaseBegan == touch.phase)
 				{
-					FFRTouch* touch = [self unpackData: data];
-					if (touch)
+					if (nil == touchesBegan)
 					{
-						[_trackingHandler handleNewOrChangedTrackingObject: touch];
+						touchesBegan = [NSMutableSet new];
 					}
+					[touchesBegan addObject: touch];
+				}
+				else if (FFRTouchPhaseMoved == touch.phase)
+				{
+					if (nil == touchesMoved)
+					{
+						touchesMoved = [NSMutableSet new];
+					}
+					[touchesMoved addObject: touch];
+				}
+				else if (FFRTouchPhaseEnded == touch.phase)
+				{
+					if (nil == touchesEnded)
+					{
+						touchesEnded = [NSMutableSet new];
+					}
+					[touchesEnded addObject: touch];
 				}
 			}
 		}
+	}
+
+	// Send touch objects.
+	if (nil != touchesBegan)
+	{
+		[_trackingHandler dispatchTouchesBegan: touchesBegan];
+	}
+	else if (nil != touchesMoved)
+	{
+		//NSLog(@"=== touchesMoved: %i", (int)touchesMoved.count);
+		[_trackingHandler dispatchTouchesMoved: touchesMoved];
+	}
+	else if (nil != touchesEnded)
+	{
+		[_trackingHandler dispatchTouchesEnded: touchesEnded];
+	}
+}
+
+-(void) timerPruneTouches:(id) sender
+{
+	//NSLog(@"timerPruneTouches queue: %s", dispatch_queue_get_label(dispatch_get_current_queue()));
+	dispatch_async(_backgroundQueue,
+	^{
+		NSTimeInterval now = [[NSProcessInfo processInfo] systemUptime];
+		NSMutableSet* touchesEnded = nil;
+
+		for (int i = 0; i < 32; ++i)
+		{
+			FFRTouch* touch = _touches[i];
+			if ((nil != touch) &&
+				(FFRTouchPhaseBegan == touch.phase ||
+				 FFRTouchPhaseMoved == touch.phase) &&
+				(now - touch.timestamp >= _touchRemoveTimeout))
+			{
+				//NSLog(@"***Pruning id: %d, side: %d", (int)touch.identifier, touch.side);
+
+				if (nil == touchesEnded)
+				{
+					touchesEnded = [NSMutableSet new];
+				}
+				touch.phase = FFRTouchPhaseEnded;
+				[touchesEnded addObject: touch];
+			}
+		}
+
+		[_trackingHandler dispatchTouchesEnded: touchesEnded];
 	});
 }
 
@@ -318,7 +416,6 @@ currently 5 touches. Setting 0 will disable the touch detection."
 
 -(FFRTouch*) unpackData:(FFRRawTrackingData)raw
 {
-
 	Byte identifier = raw.identifier;
 
 	int sideIndex = (identifier - 1) / _numTouchesPerSide;
@@ -336,12 +433,20 @@ currently 5 touches. Setting 0 will disable the touch detection."
 		return nil;
 	}
 
-	FFRTouch* touch = [[FFRTouch alloc] init];
+	// Get the touch object.
+	if (nil == _touches[identifier])
+	{
+		_touches[identifier] = [FFRTouch new];
+	}
+	FFRTouch* touch = _touches[identifier];
+
 	touch.identifier = identifier;
 	if (down && !previousDown) { touch.phase = FFRTouchPhaseBegan; }
 	else if (down && previousDown) { touch.phase = FFRTouchPhaseMoved; }
 	else if (!down && previousDown) { touch.phase = FFRTouchPhaseEnded; }
+	//else if (!down && !previousDown) { touch.phase = FFRTouchPhaseInactive; }
 
+	touch.timestamp = [[NSProcessInfo processInfo] systemUptime];
 	touch.side = side;
 	touch.rawPoint = rawPoint;
 	touch.normalizedLocation = normalizedPoint;
