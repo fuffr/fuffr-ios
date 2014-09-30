@@ -69,7 +69,7 @@ static const FFRSide SideLookupTable[4] =
 		_numTouchesPerSide = 0;
 		_backgroundQueue = dispatch_queue_create("com.fuffr.background", nil);
 		self.spaceMapper = [[FFROverlaySpaceMapper alloc] init];
-		_trackingManager = [[FFRTrackingManager alloc] init];
+		_trackingManager = [[FFRTrackingHandler alloc] init];
 		_trackingManager.backgroundQueue = _backgroundQueue;
 		memset(_previousTouchDown, 0, sizeof(_previousTouchDown));
 	}

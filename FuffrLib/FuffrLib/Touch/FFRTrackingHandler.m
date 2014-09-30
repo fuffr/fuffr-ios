@@ -1,12 +1,12 @@
 //
-//  FFRTrackingArray.m
+//  FFRTrackingHandler.h
 //  FuffrLib
 //
 //  Created by Fuffr on 2013-10-23.
 //  Copyright (c) 2013 Fuffr. All rights reserved.
 //
 
-#import "FFRTrackingManager.h"
+#import "FFRTrackingHandler.h"
 
 
 NSString* const FFRTrackingBeganNotification = @"FFRTrackingBeganNotification";
@@ -29,7 +29,7 @@ static void logTouches(NSString* label, NSSet* touches)
 }
 */
 
-@interface FFRTrackingManager ()
+@interface FFRTrackingHandler ()
 
 -(void) addTrackingObject: (FFRTouch*) touch;
 -(void) removeTrackingObject: (FFRTouch*) touch;
@@ -37,7 +37,7 @@ static void logTouches(NSString* label, NSSet* touches)
 
 @end
 
-@implementation FFRTrackingManager
+@implementation FFRTrackingHandler
 
 @synthesize trackedObjects = _trackedObjects;
 

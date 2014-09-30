@@ -10,7 +10,7 @@
 #import <CoreBluetooth/CoreBluetooth.h>
 #import "FFRPeripheralHandler.h"
 #import "FFRTouch.h"
-#import "FFRTrackingManager.h"
+#import "FFRTrackingHandler.h"
 #import "FFRExternalSpaceMapper.h"
 
 /**
@@ -51,7 +51,7 @@ extern NSString* const FFRBatteryCharacteristicUUID;
     CBPeripheral* _peripheral;
 
     // tracks touch data to be able to supply began/ended events
-    FFRTrackingManager* _trackingManager;
+    FFRTrackingHandler* _trackingManager;
 
 	int _numTouchesPerSide;
 	

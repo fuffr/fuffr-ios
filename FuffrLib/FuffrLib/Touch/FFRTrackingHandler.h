@@ -1,5 +1,5 @@
 //
-//  FFRTrackingArray.h
+//  FFRTrackingHandler.h
 //  FuffrLib
 //
 //  Created by Fuffr on 2013-10-23.
@@ -36,7 +36,7 @@ extern const float FFRTrackingManagerUpdateSpeed;
     in order to trigger events for added/removed touches,
     as well as enabling KVO of location in existing touches.
  */
-@interface FFRTrackingManager : NSObject
+@interface FFRTrackingHandler : NSObject
 {
     NSMutableArray* _trackedObjects;
 	NSTimer* _timer;
