@@ -69,8 +69,8 @@ static const FFRSide SideLookupTable[4] =
 		_numTouchesPerSide = 0;
 		_backgroundQueue = dispatch_queue_create("com.fuffr.background", nil);
 		self.spaceMapper = [[FFROverlaySpaceMapper alloc] init];
-		_trackingManager = [[FFRTrackingHandler alloc] init];
-		_trackingManager.backgroundQueue = _backgroundQueue;
+		_trackingHandler = [[FFRTrackingHandler alloc] init];
+		_trackingHandler.backgroundQueue = _backgroundQueue;
 		memset(_previousTouchDown, 0, sizeof(_previousTouchDown));
 	}
 
@@ -89,10 +89,10 @@ static const FFRSide SideLookupTable[4] =
 
 -(void) shutDown
 {
-	if (_trackingManager)
+	if (_trackingHandler)
 	{
-		[_trackingManager shutDown];
-		_trackingManager = nil;
+		[_trackingHandler shutDown];
+		_trackingHandler = nil;
 	}
 
 	_backgroundQueue = nil;
@@ -121,7 +121,7 @@ static const FFRSide SideLookupTable[4] =
  */
 -(void) clearAllTouches
 {
-	[_trackingManager clearAllTouches];
+	[_trackingHandler clearAllTouches];
 }
 
 #pragma mark - Enable/disable sensors
@@ -281,7 +281,7 @@ currently 5 touches. Setting 0 will disable the touch detection."
 					FFRTouch* touch = [self unpackData: data];
 					if (touch)
 					{
-						[_trackingManager handleNewOrChangedTrackingObject: touch];
+						[_trackingHandler handleNewOrChangedTrackingObject: touch];
 					}
 				}
 			}
@@ -308,7 +308,7 @@ currently 5 touches. Setting 0 will disable the touch detection."
 	NSLog(@"FFRCaseHandler: peripheralDisconnected");
 
 	// Tell tracking manager to remove all touch objects.
-	[_trackingManager clearAllTouches];
+	[_trackingHandler clearAllTouches];
 }
 
 #pragma mark - Touch data handling

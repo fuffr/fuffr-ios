@@ -51,7 +51,7 @@ extern NSString* const FFRBatteryCharacteristicUUID;
     CBPeripheral* _peripheral;
 
     // tracks touch data to be able to supply began/ended events
-    FFRTrackingHandler* _trackingManager;
+    FFRTrackingHandler* _trackingHandler;
 
 	int _numTouchesPerSide;
 	
