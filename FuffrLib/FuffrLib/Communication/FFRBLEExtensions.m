@@ -11,7 +11,7 @@
 
 @implementation NSUUID (FFRExtensions)
 
--(BOOL) isEqualToString:(NSString*)string {
+-(BOOL) ffr_isEqualToString:(NSString*)string {
     if (![string length]) {
         return FALSE;
     }
@@ -23,7 +23,7 @@
 
 @implementation CBUUID (FFRExtensions)
 
--(BOOL) isEqualToString:(NSString*)string {
+-(BOOL) ffr_isEqualToString:(NSString*)string {
     if (![string length]) {
         return FALSE;
     }
@@ -35,11 +35,11 @@
 
 @implementation CBService (FFRExtensions)
 
--(CBCharacteristic*) characteristicWithIdentifier:(NSString *)identifier {
+-(CBCharacteristic*) ffr_characteristicWithIdentifier:(NSString *)identifier {
     //NSLog(@"looking for characteristics in service %@ with count: %d", self.UUID, [self.characteristics count]);
     for (CBCharacteristic *characteristic in self.characteristics) {
         //NSLog(@"characteristic scanned: %@", characteristic.UUID);
-        if ([characteristic.UUID isEqualToString:identifier]) {
+        if ([characteristic.UUID ffr_isEqualToString:identifier]) {
             return characteristic;
         }
     }
@@ -51,9 +51,9 @@
 
 @implementation CBPeripheral (FFRExtensions)
 
--(CBService*) serviceWithIdentifier:(NSString *)identifier {
+-(CBService*) ffr_serviceWithIdentifier:(NSString *)identifier {
     for (CBService *service in self.services) {
-        if ([service.UUID isEqualToString:identifier]) {
+        if ([service.UUID ffr_isEqualToString:identifier]) {
             return service;
         }
     }
@@ -61,10 +61,10 @@
     return nil;
 }
 
--(CBCharacteristic*) characteristicWithIdentifier:(NSString *)identifier {
+-(CBCharacteristic*) ffr_characteristicWithIdentifier:(NSString *)identifier {
     for (CBService *service in self.services) {
         //NSLog(@"peripheral service scanned: %@", service.UUID);
-        CBCharacteristic* characteristic = [service characteristicWithIdentifier:identifier];
+        CBCharacteristic* characteristic = [service ffr_characteristicWithIdentifier:identifier];
         if (characteristic != nil) {
             return characteristic;
         }
@@ -73,48 +73,48 @@
     return nil;
 }
 
--(CBCharacteristic*) characteristicWithIdentifier:(NSString *)identifier inService:(NSString *)serviceIdentifier {
+-(CBCharacteristic*) ffr_characteristicWithIdentifier:(NSString *)identifier inService:(NSString *)serviceIdentifier {
 
-    CBService* service = [self serviceWithIdentifier:serviceIdentifier];
+    CBService* service = [self ffr_serviceWithIdentifier:serviceIdentifier];
     if (service) {
-        return [service characteristicWithIdentifier:identifier];
+        return [service ffr_characteristicWithIdentifier:identifier];
     }
     else {
         return nil;
     }
 }
 
--(void) writeCharacteristicWithIdentifier:(NSString*)identifier data:(NSData*)data {
-    CBCharacteristic* characteristic = [self characteristicWithIdentifier:identifier];
+-(void) ffr_writeCharacteristicWithIdentifier:(NSString*)identifier data:(NSData*)data {
+    CBCharacteristic* characteristic = [self ffr_characteristicWithIdentifier:identifier];
     if (characteristic) {
         [self writeValue:data forCharacteristic:characteristic type:CBCharacteristicWriteWithResponse];
     }
 }
 
--(void) writeCharacteristicWithoutResponseForIdentifier:(NSString*)identifier data:(NSData*)data {
-    CBCharacteristic* characteristic = [self characteristicWithIdentifier:identifier];
+-(void) ffr_writeCharacteristicWithoutResponseForIdentifier:(NSString*)identifier data:(NSData*)data {
+    CBCharacteristic* characteristic = [self ffr_characteristicWithIdentifier:identifier];
     if (characteristic) {
         [self writeValue:data forCharacteristic:characteristic type:CBCharacteristicWriteWithoutResponse];
     }
 }
 
--(void) readCharacteristicWithIdentifier:(NSString*)identifier {
-    CBCharacteristic* characteristic = [self characteristicWithIdentifier:identifier];
+-(void) ffr_readCharacteristicWithIdentifier:(NSString*)identifier {
+    CBCharacteristic* characteristic = [self ffr_characteristicWithIdentifier:identifier];
     if (characteristic) {
         [self readValueForCharacteristic:characteristic];
     }
 }
 
 
--(void) setNotificationForCharacteristicWithIdentifier:(NSString*)identifier enabled:(BOOL)enable {
-    CBCharacteristic* characteristic = [self characteristicWithIdentifier:identifier];
+-(void) ffr_setNotificationForCharacteristicWithIdentifier:(NSString*)identifier enabled:(BOOL)enable {
+    CBCharacteristic* characteristic = [self ffr_characteristicWithIdentifier:identifier];
     if (characteristic) {
         [self setNotifyValue:enable forCharacteristic:characteristic];
     }
 }
 
--(bool) isCharacteristicWithIdentifierNotifiable:(NSString*)identifier {
-    CBCharacteristic* characteristic = [self characteristicWithIdentifier:identifier];
+-(bool) ffr_isCharacteristicWithIdentifierNotifiable:(NSString*)identifier {
+    CBCharacteristic* characteristic = [self ffr_characteristicWithIdentifier:identifier];
     if (characteristic.properties & CBCharacteristicPropertyNotify) {
         return TRUE;
     }

@@ -168,7 +168,7 @@ NSString* const FFRProgrammingUserInfoTimeLeftKey = @"FFRProgrammingTimeLeftKey"
 	// Enable notifrication on the image version characteristic.
 	// Note that this is for info about version A/B, not the version number.
 	[_peripheral
-		setNotificationForCharacteristicWithIdentifier:tiOADImageNotify
+		ffr_setNotificationForCharacteristicWithIdentifier:tiOADImageNotify
 		enabled:YES];
 }
 
@@ -177,7 +177,7 @@ NSString* const FFRProgrammingUserInfoTimeLeftKey = @"FFRProgrammingTimeLeftKey"
 	// Updated enabled flag from TRUE to FALSE (NO).
 	// (this must have been a typo in the original code)
 	[_peripheral
-		setNotificationForCharacteristicWithIdentifier:tiOADImageNotify
+		ffr_setNotificationForCharacteristicWithIdentifier:tiOADImageNotify
 		enabled:NO];
 }
 
@@ -186,7 +186,7 @@ NSString* const FFRProgrammingUserInfoTimeLeftKey = @"FFRProgrammingTimeLeftKey"
 	// Write 0 to check if this is version A.
 	unsigned char data = 0x00;
 	[_peripheral
-		writeCharacteristicWithIdentifier:tiOADImageNotify
+		ffr_writeCharacteristicWithIdentifier:tiOADImageNotify
 		data:[NSData dataWithBytes:&data length:1]];
 }
 
@@ -198,7 +198,7 @@ NSString* const FFRProgrammingUserInfoTimeLeftKey = @"FFRProgrammingTimeLeftKey"
 	// Write 1 to detect version B.
 	unsigned char data = 0x01;
 	[_peripheral
-		writeCharacteristicWithIdentifier:tiOADImageNotify
+		ffr_writeCharacteristicWithIdentifier:tiOADImageNotify
 		data:[NSData dataWithBytes:&data length:1]];
 }
 
@@ -206,7 +206,7 @@ NSString* const FFRProgrammingUserInfoTimeLeftKey = @"FFRProgrammingTimeLeftKey"
 
 -(void) didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
 {
-	if ([characteristic.UUID isEqualToString:tiOADImageNotify])
+	if ([characteristic.UUID ffr_isEqualToString:tiOADImageNotify])
 	{
 		_imageDetected = YES;
 
@@ -324,7 +324,7 @@ NSString* const FFRProgrammingUserInfoTimeLeftKey = @"FFRProgrammingTimeLeftKey"
 	requestData[OAD_IMG_HDR_SIZE + 1] = HI_UINT16(15);
 
 	[_peripheral
-		writeCharacteristicWithIdentifier:tiOADImageNotify
+		ffr_writeCharacteristicWithIdentifier:tiOADImageNotify
 		data:[NSData dataWithBytes:requestData length:OAD_IMG_HDR_SIZE + 2 + 2]];
 
 	// calculate blocks to send
@@ -371,7 +371,7 @@ NSString* const FFRProgrammingUserInfoTimeLeftKey = @"FFRProgrammingTimeLeftKey"
 		NSLog(@"data send: %@", log);*/
 
 		[_peripheral
-			writeCharacteristicWithoutResponseForIdentifier:tiOADImageBlockRequest
+			ffr_writeCharacteristicWithoutResponseForIdentifier:tiOADImageBlockRequest
 			data:[NSData dataWithBytes:requestData length:2 + OAD_BLOCK_SIZE]];
 
 		iBlocks++;

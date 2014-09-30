@@ -194,7 +194,7 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 			// Find service.
 			for (CBService* service in device.services)
 			{
-				if ([service.UUID isEqualToString: serviceUUID])
+				if ([service.UUID ffr_isEqualToString: serviceUUID])
 				{
 					// Do we have the characteristics for the service?
 					if (service.characteristics)
@@ -330,7 +330,7 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 	// Here connect seems to be made to a known device. If this is done,
 	// observers of discovery should not be notified !?
 	// TODO: Investigate and fix.
-	if ([peripheral.identifier isEqualToString:self.monitoredPeripheralIdentifier])
+	if ([peripheral.identifier ffr_isEqualToString:self.monitoredPeripheralIdentifier])
 	{
 		NSLog(@"centralManager:didDiscoverPeripheral: connecting to monitored device...");
 

@@ -184,7 +184,7 @@ to read data from MSP430."
 {
 	dispatch_async(dispatch_get_main_queue(), ^{
 		[_peripheral
-			setNotificationForCharacteristicWithIdentifier: uuidString
+			ffr_setNotificationForCharacteristicWithIdentifier: uuidString
 			enabled: YES];
 	});
 	NSLog(@"FFRCaseHandler: enabled touch characteristic: %@", uuidString);
@@ -194,7 +194,7 @@ to read data from MSP430."
 {
 	dispatch_async(dispatch_get_main_queue(), ^{
 		[_peripheral
-			setNotificationForCharacteristicWithIdentifier: uuidString
+			ffr_setNotificationForCharacteristicWithIdentifier: uuidString
 			enabled: NO];
 	});
 	NSLog(@"FFRCaseHandler: disabled touch characteristic: %@", uuidString);
@@ -227,7 +227,7 @@ currently 5 touches. Setting 0 will disable the touch detection."
 	@try
 	{
 		dispatch_async(dispatch_get_main_queue(), ^{
-			[p writeCharacteristicWithIdentifier:FFRProximityEnablerCharacteristic data:data];
+			[p ffr_writeCharacteristicWithIdentifier:FFRProximityEnablerCharacteristic data:data];
 		});
 	}
 	@catch (NSException *exception)
@@ -253,11 +253,11 @@ currently 5 touches. Setting 0 will disable the touch detection."
 {
 	dispatch_async(_backgroundQueue, ^{
 		// Do we have touch updates?
-		if ([characteristic.UUID isEqualToString:FFRTouchCharacteristicUUID1] ||
-			[characteristic.UUID isEqualToString:FFRTouchCharacteristicUUID2] ||
-			[characteristic.UUID isEqualToString:FFRTouchCharacteristicUUID3] ||
-			[characteristic.UUID isEqualToString:FFRTouchCharacteristicUUID4] ||
-			[characteristic.UUID isEqualToString:FFRTouchCharacteristicUUID5])
+		if ([characteristic.UUID ffr_isEqualToString:FFRTouchCharacteristicUUID1] ||
+			[characteristic.UUID ffr_isEqualToString:FFRTouchCharacteristicUUID2] ||
+			[characteristic.UUID ffr_isEqualToString:FFRTouchCharacteristicUUID3] ||
+			[characteristic.UUID ffr_isEqualToString:FFRTouchCharacteristicUUID4] ||
+			[characteristic.UUID ffr_isEqualToString:FFRTouchCharacteristicUUID5])
 		{
 			size_t count = characteristic.value.length / sizeof(FFRRawTrackingData);
 
