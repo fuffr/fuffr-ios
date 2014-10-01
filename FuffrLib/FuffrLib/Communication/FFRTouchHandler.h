@@ -10,7 +10,7 @@
 #import <CoreBluetooth/CoreBluetooth.h>
 #import "FFRPeripheralHandler.h"
 #import "FFRTouch.h"
-#import "FFRTrackingHandler.h"
+#import "FFRTouchHandlerDelegate.h"
 #import "FFRExternalSpaceMapper.h"
 
 /**
@@ -33,25 +33,22 @@ extern NSString* const FFRTouchCharacteristicUUID4;
 extern NSString* const FFRTouchCharacteristicUUID5;
 
 /**
- * Battry service.
+ * Battery service.
  */
 extern NSString* const FFRBatteryServiceUUID;
 
 /**
- * Battry characteristic.
+ * Battery characteristic.
  */
 extern NSString* const FFRBatteryCharacteristicUUID;
 
 /**
-    Main class for handling BLE communication with Fuffr
+ * Class that handles BLE touch events.
  */
-@interface FFRCaseHandler : NSObject<FFRPeripheralHandler>
+@interface FFRTouchHandler : NSObject<FFRPeripheralHandler>
 {
     // The peripheral
     CBPeripheral* _peripheral;
-
-    // tracks touch data to be able to supply began/ended events
-    FFRTrackingHandler* _trackingHandler;
 
 	int _numTouchesPerSide;
 	
@@ -67,7 +64,12 @@ extern NSString* const FFRBatteryCharacteristicUUID;
 }
 
 /**
-    The space mapper to use to give screen space coordinates from the side sensors
+ * The delegate object to send touch events to.
+ */
+@property (nonatomic, weak) id<FFRTouchHandlerDelegate> touchDelegate;
+
+/**
+ * The space mapper maps sensor coordinate to screen coordinates.
  */
 @property (nonatomic, strong) id<FFRExternalSpaceMapper> spaceMapper;
 

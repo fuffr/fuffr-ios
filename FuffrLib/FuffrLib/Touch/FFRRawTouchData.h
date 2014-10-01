@@ -1,13 +1,13 @@
 //
-//  RawTrackingData.h
+//  FFRRawTouchData.h
 //  FuffrLib
 //
 //  Created by Fuffr on 2013-10-23.
 //  Copyright (c) 2013 Fuffr. All rights reserved.
 //
 
-#ifndef FFRRawTrackingData_h
-#define FFRRawTrackingData_h
+#ifndef FFRRawTouchData_h
+#define FFRRawTouchData_h
 
 /**
  * Touch data.
@@ -47,6 +47,6 @@ typedef struct
 	 y-coordinate high bits
 	 */
 	Byte highY;
-} FFRRawTrackingData;
+} FFRRawTouchData;
 
 #endif

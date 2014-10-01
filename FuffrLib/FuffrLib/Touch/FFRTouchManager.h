@@ -9,7 +9,8 @@
 
 #import <Foundation/Foundation.h>
 #import "FFRBLEManager.h"
-#import "FFRCaseHandler.h"
+#import "FFRTouchHandler.h"
+#import "FFRTouchHandlerDelegate.h"
 #import "FFROADHandler.h"
 #import "FFRGestureRecognizer.h"
 #import "FFRLongPressGestureRecognizer.h"
@@ -23,7 +24,7 @@
  * Class that provides a high-level interface to the 
  * Fuffr library.
  */
-@interface FFRTouchManager : NSObject
+@interface FFRTouchManager : NSObject<FFRTouchHandlerDelegate>
 
 /**
  * Public class method that returns singleton instance of 

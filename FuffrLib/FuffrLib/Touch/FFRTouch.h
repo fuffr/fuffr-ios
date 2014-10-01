@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "FFRRawTrackingData.h"
+#import "FFRRawTouchData.h"
 
 /**
  * Type that defines constants for the states of a touch.

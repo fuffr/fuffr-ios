@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Fuffr. All rights reserved.
 //
 
-#import "FFRCaseHandler.h"
+#import "FFRTouchHandler.h"
 #import "FFROverlaySpaceMapper.h"
 #import "FFRBLEExtensions.h"
 #import "FFRBLEManager.h"
@@ -31,16 +31,16 @@ typedef struct
 	Byte pointsPerSide;
 } FFREnableData;
 
-@interface FFRCaseHandler ()
+@interface FFRTouchHandler ()
 
 /**
  * Unpacks the bluetooth packet and converts it into a touch object.
  */
--(FFRTouch*) unpackData:(FFRRawTrackingData)raw;
+-(FFRTouch*) unpackData:(FFRRawTouchData)raw;
 
 @end
 
-@implementation FFRCaseHandler
+@implementation FFRTouchHandler
 
 NSString* const FFRCaseSensorServiceUUID = @"fff0";
 NSString* const FFRProximityEnablerCharacteristic = @"fff1";
@@ -68,10 +68,9 @@ static const FFRSide SideLookupTable[4] =
 	{
 		_numTouchesPerSide = 0;
 		_backgroundQueue = dispatch_queue_create("com.fuffr.background", nil);
-		self.spaceMapper = [[FFROverlaySpaceMapper alloc] init];
-		_trackingHandler = [[FFRTrackingHandler alloc] init];
-		_trackingHandler.backgroundQueue = _backgroundQueue;
 		memset(_previousTouchDown, 0, sizeof(_previousTouchDown));
+		self.spaceMapper = [FFROverlaySpaceMapper new];
+		self.touchDelegate = nil;
 
 		// Timer that handles removal of inactive touches.
 		_touchRemoveTimeout = 0.20;
@@ -103,16 +102,11 @@ static const FFRSide SideLookupTable[4] =
 		[_timer invalidate];
 		_timer = nil;
 	}
-	
-	if (_trackingHandler)
-	{
-		[_trackingHandler shutDown];
-		_trackingHandler = nil;
-	}
 
 	_backgroundQueue = nil;
-	self.spaceMapper = nil;
 	_peripheral = nil;
+	self.spaceMapper = nil;
+	self.touchDelegate = nil;
 }
 
 #pragma mark - Service discovery
@@ -132,11 +126,12 @@ static const FFRSide SideLookupTable[4] =
 }
 
 /**
- * Tell the tracking manager to remove all touches.
+ * Remove all touches.
  */
 -(void) clearAllTouches
 {
-	[_trackingHandler clearAllTouches];
+	// Old code: [_trackingHandler clearAllTouches];
+	// TODO: Implement (set all array elements to nil?)
 }
 
 #pragma mark - Enable/disable sensors
@@ -275,10 +270,10 @@ currently 5 touches. Setting 0 will disable the touch detection."
 			[characteristic.UUID ffr_isEqualToString:FFRTouchCharacteristicUUID4] ||
 			[characteristic.UUID ffr_isEqualToString:FFRTouchCharacteristicUUID5])
 		{
-			size_t count = characteristic.value.length / sizeof(FFRRawTrackingData);
+			size_t count = characteristic.value.length / sizeof(FFRRawTouchData);
 
 			// Ensure correct length.
-			if (characteristic.value.length % sizeof(FFRRawTrackingData) != 0)
+			if (characteristic.value.length % sizeof(FFRRawTouchData) != 0)
 			{
 				NSLog(@"Bad touch count length!");
 				return;
@@ -295,7 +290,7 @@ currently 5 touches. Setting 0 will disable the touch detection."
 	eventCount: (size_t) count
 {
 	// Copy data to touch buffer.
-	FFRRawTrackingData raw[count];
+	FFRRawTouchData raw[count];
 	[characteristic.value getBytes:raw length:characteristic.value.length];
 
 	// Sets for touch events.
@@ -306,7 +301,7 @@ currently 5 touches. Setting 0 will disable the touch detection."
 	// Unpack data.
 	for (size_t i = 0; i < count; i++)
 	{
-		FFRRawTrackingData data = raw[i];
+		FFRRawTouchData data = raw[i];
 		if (data.identifier > 0)
 		{
 			FFRTouch* touch = [self unpackData: data];
@@ -343,17 +338,70 @@ currently 5 touches. Setting 0 will disable the touch detection."
 	// Send touch objects.
 	if (nil != touchesBegan)
 	{
-		[_trackingHandler dispatchTouchesBegan: touchesBegan];
+		[self sendTouchesBegan: touchesBegan];
 	}
 	else if (nil != touchesMoved)
 	{
 		//NSLog(@"=== touchesMoved: %i", (int)touchesMoved.count);
-		[_trackingHandler dispatchTouchesMoved: touchesMoved];
+		[self sendTouchesMoved: touchesMoved];
 	}
 	else if (nil != touchesEnded)
 	{
-		[_trackingHandler dispatchTouchesEnded: touchesEnded];
+		[self sendTouchesEnded: touchesEnded];
 	}
+}
+
+-(void) sendTouchesBegan: (NSSet*) touches
+{
+	// Notify touch delegate.
+	dispatch_async(dispatch_get_main_queue(),
+	^{
+		// Set touch phase to began again on the main queue, to prevent
+		// overwrite by moved events.
+		for (FFRTouch* touch in touches)
+		{
+			touch.phase = FFRTouchPhaseBegan;
+		}
+
+		if (nil != touches && nil != self.touchDelegate)
+		{
+			[self.touchDelegate touchesBegan: touches];
+		}
+	});
+}
+
+-(void) sendTouchesMoved: (NSSet*) touches
+{
+	// Notify touch delegate.
+	dispatch_async(dispatch_get_main_queue(),
+	^{
+		for (FFRTouch* touch in touches)
+		{
+			touch.phase = FFRTouchPhaseMoved;
+		}
+
+		if (nil != touches && nil != self.touchDelegate)
+		{
+			[self.touchDelegate touchesMoved: touches];
+		}
+	});
+}
+
+-(void) sendTouchesEnded: (NSSet*) touches
+{
+	// Notify touch delegate.
+	dispatch_async(dispatch_get_main_queue(),
+	^{
+		for (FFRTouch* touch in touches)
+		{
+			touch.phase = FFRTouchPhaseEnded;
+		}
+
+		if (nil != touches && nil != self.touchDelegate)
+		{
+			[self.touchDelegate touchesEnded: touches];
+		}
+	});
 }
 
 -(void) timerPruneTouches:(id) sender
@@ -383,7 +431,10 @@ currently 5 touches. Setting 0 will disable the touch detection."
 			}
 		}
 
-		[_trackingHandler dispatchTouchesEnded: touchesEnded];
+		if (nil != touchesEnded && nil != self.touchDelegate)
+		{
+			[self.touchDelegate touchesEnded: touchesEnded];
+		}
 	});
 }
 
@@ -405,8 +456,7 @@ currently 5 touches. Setting 0 will disable the touch detection."
 {
 	NSLog(@"FFRCaseHandler: peripheralDisconnected");
 
-	// Tell tracking manager to remove all touch objects.
-	[_trackingHandler clearAllTouches];
+	[self clearAllTouches];
 }
 
 #pragma mark - Touch data handling
@@ -414,7 +464,7 @@ currently 5 touches. Setting 0 will disable the touch detection."
 // For debugging.
 //static int NumberOfActiveTouches = 0;
 
--(FFRTouch*) unpackData:(FFRRawTrackingData)raw
+-(FFRTouch*) unpackData:(FFRRawTouchData)raw
 {
 	Byte identifier = raw.identifier;
 
