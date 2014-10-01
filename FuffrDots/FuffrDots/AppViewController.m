@@ -312,8 +312,16 @@ dispatch_queue_t openGLESContextQueue;
 	{
 		self.glView.clearsContextBeforeDrawing = NO;
 	}
-	
-	[self.glView drawViewWithTouches:self.touches paintMode:self.paintModeOn dotColors:self.dotColors];
+
+	// Copying set to prevent exception:
+	//   *** Terminating app due to uncaught exception 'NSGenericException',
+	//   reason: '*** Collection <__NSSetM: 0x178054460> was mutated while
+	//   being enumerated.'
+	// from occuring in EAGLView in method drawViewWithTouches in the for-loop.
+	[self.glView
+		drawViewWithTouches:[NSSet setWithSet:self.touches]
+		paintMode:self.paintModeOn
+		dotColors:self.dotColors];
 
 	NSString* message = [NSString
 		stringWithFormat: @"Number of touches: %lu FPS: %i",
