@@ -122,18 +122,25 @@ static BOOL stringContains(NSString* string, NSString* substring)
 		options:NSCaseInsensitiveSearch].length > 0;
 }
 
-// Helper function.
-static NSSet* filterTouchesBySide(NSSet* touches, FFRSide side)
+// Helper function for filtering touch events by side.
+static NSSet* filterTouchesBySide(NSSet* touches, FFRSide sides)
 {
+	// If all sides are set there is no need to filter.
+	if (sides & FFRSideAll)
+	{
+		return touches;
+	}
+
+	// Else filter toches by side.
 	return [touches objectsPassingTest:
 		^BOOL(id obj, BOOL* stop)
 		{
-			return side & ((FFRTouch*)obj).side;
+			return sides & ((FFRTouch*)obj).side;
 		}];
 }
 
-// For testing, no filtering.
-static NSSet* OFF_filterTouchesBySide(NSSet* touches, FFRSide side)
+// For performance testing, no filtering.
+static NSSet* OFF_filterTouchesBySide(NSSet* touches, FFRSide sides)
 {
 	return touches;
 }

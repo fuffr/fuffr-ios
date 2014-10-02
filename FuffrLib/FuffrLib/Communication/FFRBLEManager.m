@@ -86,8 +86,6 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 {
 	if (self = [super init])
 	{
-		_receiveQueue = dispatch_queue_create("com.fuffr.receivequeue", nil);
-
 		_manager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
 		self.connectedPeripherals = [NSMutableArray array];
 		self.discoveredPeripherals = [NSMutableArray array];
@@ -442,13 +440,12 @@ static void * const kCBDiscoveryRSSIYKey = (void*)&kCBDiscoveryRSSIYKey;
 {
 	//NSLog(@"didUpdateValueForCharacteristic 1: %@ %@, error: %@", characteristic.UUID, characteristic, error);
 
-	// The purpose of the receive queue could be to read notifications
-	// as quickly as possible.
-	dispatch_async(_receiveQueue, ^{
-		if (!error && self.handler) {
-			[self.handler didUpdateValueForCharacteristic:characteristic];
-		}
-	});
+	// Let the touch handler handle the touch event data.
+	if (!error && self.handler)
+	{
+		[self.handler didUpdateValueForCharacteristic:characteristic];
+	}
+
 }
 
 -(void) peripheral:(CBPeripheral *)peripheral

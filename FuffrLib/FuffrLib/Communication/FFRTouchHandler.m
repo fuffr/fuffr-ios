@@ -67,14 +67,14 @@ static const FFRSide SideLookupTable[4] =
 	if (self = [super init])
 	{
 		_numTouchesPerSide = 0;
-		_backgroundQueue = dispatch_queue_create("com.fuffr.background", nil);
+		_touchQueue = dispatch_queue_create("com.fuffr.touchqueue", nil);
 		memset(_previousTouchDown, 0, sizeof(_previousTouchDown));
 		self.spaceMapper = [FFROverlaySpaceMapper new];
 		self.touchDelegate = nil;
 
 		// Timer that handles removal of inactive touches.
 		_touchRemoveTimeout = 0.20;
-		_timer = [NSTimer
+		_touchPruneTimer = [NSTimer
 			scheduledTimerWithTimeInterval: _touchRemoveTimeout / 3.0
 			target: self
 			selector: @selector(timerPruneTouches:)
@@ -97,13 +97,13 @@ static const FFRSide SideLookupTable[4] =
 
 -(void) shutDown
 {
-	if (_timer)
+	if (_touchPruneTimer)
 	{
-		[_timer invalidate];
-		_timer = nil;
+		[_touchPruneTimer invalidate];
+		_touchPruneTimer = nil;
 	}
 
-	_backgroundQueue = nil;
+	_touchQueue = nil;
 	_peripheral = nil;
 	self.spaceMapper = nil;
 	self.touchDelegate = nil;
@@ -247,6 +247,7 @@ currently 5 touches. Setting 0 will disable the touch detection."
 	{
 	}
 
+	// TODO: Remove commented out code.
 	//[_peripheral writeCharacteristicWithoutResponseForIdentifier:FFRProximityServiceUUID data:data];
 
 	NSLog(@"FFRCaseHandler: touches: %d left: %d right: %d top: %d bottom: %d",
@@ -261,7 +262,7 @@ currently 5 touches. Setting 0 will disable the touch detection."
 
 -(void) didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
 {
-	dispatch_async(_backgroundQueue,
+	dispatch_async(_touchQueue,
 	^{
 		// Do we have touch updates?
 		if ([characteristic.UUID ffr_isEqualToString:FFRTouchCharacteristicUUID1] ||
@@ -407,7 +408,7 @@ currently 5 touches. Setting 0 will disable the touch detection."
 -(void) timerPruneTouches:(id) sender
 {
 	//NSLog(@"timerPruneTouches queue: %s", dispatch_queue_get_label(dispatch_get_current_queue()));
-	dispatch_async(_backgroundQueue,
+	dispatch_async(_touchQueue,
 	^{
 		NSTimeInterval now = [[NSProcessInfo processInfo] systemUptime];
 		NSMutableSet* touchesEnded = nil;

@@ -39,7 +39,10 @@ typedef enum
 	FFRSideLeft = 0x4,
 
 	/** Touch tracked along right edge. */
-	FFRSideRight = 0x8
+	FFRSideRight = 0x8,
+
+	/** All sides. */
+	FFRSideAll = 0xF
 }
 FFRSide;
 

@@ -31,7 +31,6 @@
 	CBCentralManager* _manager;
 	CBPeripheral* _disconnectedPeripheral;
 	UIAlertView* _bluetoothAlertView;
-	dispatch_queue_t _receiveQueue;
 }
 
 /**

@@ -47,19 +47,26 @@ extern NSString* const FFRBatteryCharacteristicUUID;
  */
 @interface FFRTouchHandler : NSObject<FFRPeripheralHandler>
 {
-    // The peripheral
+    // The peripheral.
     CBPeripheral* _peripheral;
 
+	// Current setting for number of touches per side.
 	int _numTouchesPerSide;
-	
-    dispatch_queue_t _backgroundQueue;
-    
+
+	// Queue for handling touch event data.
+    dispatch_queue_t _touchQueue;
+
+	// Previous touch state.
+	// TODO: This can probably be removed.
     bool _previousTouchDown[32];
 
+	// Touch events.
     FFRTouch* _touches[32];
 
-	NSTimer* _timer;
+	// Timer that handles pruning of old touches.
+	NSTimer* _touchPruneTimer;
 
+	// Time after which to remove inactive touches.
 	NSTimeInterval _touchRemoveTimeout;
 }
 
