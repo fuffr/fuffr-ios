@@ -18,10 +18,10 @@
 #import <FuffrLib/FFROADHandler.h>
 #import <FuffrLib/UIView+Toast.h>
 
-#define URL_ARE_YOU_THERE @"http://demos.fuffr.com/AreYouThere.txt"
-#define URL_START_PAGE @"http://demos.fuffr.com/"
-#define URL_FIRMWARE_LIST @"http://demos.fuffr.com/firmware/firmware.lst"
-#define URL_INITIAL_URL_FIELD @"demos.fuffr.com"
+#define URL_ARE_YOU_THERE @"http://games.fuffr.com/AreYouThere.txt"
+#define URL_START_PAGE @"http://games.fuffr.com/"
+#define URL_FIRMWARE_LIST @"http://games.fuffr.com/firmware/firmware.lst"
+#define URL_INITIAL_URL_FIELD @"games.fuffr.com"
 
 /**
  * Reference to the AppViewController instance.
