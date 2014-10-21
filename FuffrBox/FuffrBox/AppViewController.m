@@ -474,13 +474,18 @@ static void CreateSwipeGesture(
 
 	// Web view.
 
+	// Set web view bounds.
 	bounds = viewBounds;
 	//bounds = CGRectOffset(bounds, 0, 20);
 	//bounds = CGRectInset(bounds, 0, 50);
 	bounds.origin.y = toolbarHeight;
 	bounds.size.height -= bounds.origin.y;
 
+	// Create the web view.
 	self.webView = [[UIWebView alloc] initWithFrame: bounds];
+
+	// Set the web view delegate.
+	self.webView.delegate = self;
 
 	// Set properties of the web view.
     self.webView.autoresizingMask =
@@ -570,9 +575,14 @@ static void CreateSwipeGesture(
 - (void) viewWillDisappear: (BOOL)animated
 {
 	NSLog(@"FuffrBox: viewWillDisappear");
+
+	// Clear the web view delegate.
+	self.webView.delegate = nil;
+
     [[NSNotificationCenter defaultCenter] removeObserver: self];
 	[[FFRTouchManager sharedManager] shutDown]; // Disconnects Fuffr.
 	//  [[FFRTouchManager sharedManager] disconnectFuffr];
+
     [super viewWillDisappear: animated];
 }
 
@@ -848,6 +858,48 @@ static void CreateSwipeGesture(
 		touch.previousLocation.y,
 		touch.normalizedLocation.x,
 		touch.normalizedLocation.y];
+}
+
+/**
+ * From interface UIWebViewDelegate.
+ */
+- (BOOL)webView:(UIWebView *)webView
+	shouldStartLoadWithRequest:(NSURLRequest *)request
+	navigationType:(UIWebViewNavigationType)navigationType
+{
+	//NSLog(@"Loading URL :%@", request.URL.absoluteString);
+
+	//return FALSE; //to stop loading
+	return YES;
+}
+
+- (void)webViewDidStartLoad:(UIWebView *)webView
+{
+	//NSLog(@"webViewDidStartLoad");
+}
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView
+{
+	//NSLog(@"webViewDidFinishLoad");
+}
+
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
+{
+	NSLog(@"Failed to load page: %@", [error debugDescription]);
+
+	// Show error page.
+
+	// Set URL to local error page.
+	NSString* path = [[NSBundle mainBundle]
+		pathForResource:@"error" ofType:@"html" inDirectory:@"www"];
+	NSURL* errorPageURL = [NSURL fileURLWithPath:path isDirectory:NO];
+
+	// Load URL into web view.
+	NSURLRequest* request = [NSURLRequest
+		requestWithURL: errorPageURL
+		cachePolicy: NSURLRequestReloadIgnoringLocalAndRemoteCacheData
+		timeoutInterval: 10];
+	[self.webView loadRequest: request];
 }
 
 @end
