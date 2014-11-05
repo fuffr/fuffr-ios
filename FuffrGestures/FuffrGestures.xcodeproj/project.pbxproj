@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		2116BCB118E6C43200BEE3D8 /* Images in Resources */ = {isa = PBXBuildFile; fileRef = 2116BCB018E6C43200BEE3D8 /* Images */; };
-		215E0B1A18DC671000484E43 /* libFuffrLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2199203518DC654A00E8A004 /* libFuffrLib.a */; };
 		2199200118DC652900E8A004 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2199200018DC652900E8A004 /* Foundation.framework */; };
 		2199200318DC652900E8A004 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2199200218DC652900E8A004 /* CoreGraphics.framework */; };
 		2199200518DC652900E8A004 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2199200418DC652900E8A004 /* UIKit.framework */; };
@@ -22,16 +21,21 @@
 		2199202418DC652900E8A004 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2199202218DC652900E8A004 /* InfoPlist.strings */; };
 		2199202618DC652900E8A004 /* FuffrGesturesTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2199202518DC652900E8A004 /* FuffrGesturesTests.m */; };
 		2199203A18DC658500E8A004 /* AppViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2199203918DC658500E8A004 /* AppViewController.m */; };
+		3824584219FE570A004293D8 /* libFuffrLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3824583F19FE5703004293D8 /* libFuffrLib.a */; };
+		3824584619FE5AA5004293D8 /* Fuffr Guy.png in Resources */ = {isa = PBXBuildFile; fileRef = 3824584519FE5AA5004293D8 /* Fuffr Guy.png */; };
+		387CCCB21A090A9F00E93347 /* Fuffr Guy2.png in Resources */ = {isa = PBXBuildFile; fileRef = 387CCCAC1A090A9F00E93347 /* Fuffr Guy2.png */; };
+		387CCCB31A090A9F00E93347 /* Fuffr Guy3.png in Resources */ = {isa = PBXBuildFile; fileRef = 387CCCAD1A090A9F00E93347 /* Fuffr Guy3.png */; };
+		387CCCB41A090A9F00E93347 /* Fuffr Guy4.png in Resources */ = {isa = PBXBuildFile; fileRef = 387CCCAE1A090A9F00E93347 /* Fuffr Guy4.png */; };
+		387CCCB51A090A9F00E93347 /* Fuffr Guy5.png in Resources */ = {isa = PBXBuildFile; fileRef = 387CCCAF1A090A9F00E93347 /* Fuffr Guy5.png */; };
+		387CCCB61A090A9F00E93347 /* Fuffr Guy6.png in Resources */ = {isa = PBXBuildFile; fileRef = 387CCCB01A090A9F00E93347 /* Fuffr Guy6.png */; };
+		387CCCB71A090A9F00E93347 /* Fuffr Guy7.png in Resources */ = {isa = PBXBuildFile; fileRef = 387CCCB11A090A9F00E93347 /* Fuffr Guy7.png */; };
+		387CCCC31A0A518600E93347 /* Fuffr Guy Right Eye.png in Resources */ = {isa = PBXBuildFile; fileRef = 387CCCC11A0A518600E93347 /* Fuffr Guy Right Eye.png */; };
+		387CCCC41A0A518600E93347 /* Fuffr Guy Left Eye.png in Resources */ = {isa = PBXBuildFile; fileRef = 387CCCC21A0A518600E93347 /* Fuffr Guy Left Eye.png */; };
+		387CCCC81A0A68DE00E93347 /* GothamRnd-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = 387CCCC61A0A686B00E93347 /* GothamRnd-Book.otf */; };
+		387CCCC91A0A68E000E93347 /* GothamRnd-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 387CCCC71A0A686B00E93347 /* GothamRnd-Bold.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		215E0B1818DC670900484E43 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2199202F18DC654A00E8A004 /* FuffrLib.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 219718C418D60662007B6E84;
-			remoteInfo = FuffrLib;
-		};
 		2199201D18DC652900E8A004 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 21991FF518DC652900E8A004 /* Project object */;
@@ -39,19 +43,26 @@
 			remoteGlobalIDString = 21991FFC18DC652900E8A004;
 			remoteInfo = FuffrGestures;
 		};
-		2199203418DC654A00E8A004 /* PBXContainerItemProxy */ = {
+		3824583E19FE5703004293D8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 2199202F18DC654A00E8A004 /* FuffrLib.xcodeproj */;
+			containerPortal = 3824583919FE5702004293D8 /* FuffrLib.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 219718C518D60662007B6E84;
 			remoteInfo = FuffrLib;
 		};
-		2199203618DC654A00E8A004 /* PBXContainerItemProxy */ = {
+		3824584019FE5703004293D8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 2199202F18DC654A00E8A004 /* FuffrLib.xcodeproj */;
+			containerPortal = 3824583919FE5702004293D8 /* FuffrLib.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 219718D518D60662007B6E84;
 			remoteInfo = FuffrLibTests;
+		};
+		3824584319FE570D004293D8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3824583919FE5702004293D8 /* FuffrLib.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 219718C418D60662007B6E84;
+			remoteInfo = FuffrLib;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -73,9 +84,20 @@
 		2199202118DC652900E8A004 /* FuffrGesturesTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "FuffrGesturesTests-Info.plist"; sourceTree = "<group>"; };
 		2199202318DC652900E8A004 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		2199202518DC652900E8A004 /* FuffrGesturesTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FuffrGesturesTests.m; sourceTree = "<group>"; };
-		2199202F18DC654A00E8A004 /* FuffrLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FuffrLib.xcodeproj; path = ../FuffrLib/FuffrLib.xcodeproj; sourceTree = "<group>"; };
 		2199203818DC658500E8A004 /* AppViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppViewController.h; sourceTree = "<group>"; };
 		2199203918DC658500E8A004 /* AppViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppViewController.m; sourceTree = "<group>"; };
+		3824583919FE5702004293D8 /* FuffrLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FuffrLib.xcodeproj; path = ../FuffrLib/FuffrLib.xcodeproj; sourceTree = "<group>"; };
+		3824584519FE5AA5004293D8 /* Fuffr Guy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Fuffr Guy.png"; sourceTree = "<group>"; };
+		387CCCAC1A090A9F00E93347 /* Fuffr Guy2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Fuffr Guy2.png"; sourceTree = "<group>"; };
+		387CCCAD1A090A9F00E93347 /* Fuffr Guy3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Fuffr Guy3.png"; sourceTree = "<group>"; };
+		387CCCAE1A090A9F00E93347 /* Fuffr Guy4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Fuffr Guy4.png"; sourceTree = "<group>"; };
+		387CCCAF1A090A9F00E93347 /* Fuffr Guy5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Fuffr Guy5.png"; sourceTree = "<group>"; };
+		387CCCB01A090A9F00E93347 /* Fuffr Guy6.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Fuffr Guy6.png"; sourceTree = "<group>"; };
+		387CCCB11A090A9F00E93347 /* Fuffr Guy7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Fuffr Guy7.png"; sourceTree = "<group>"; };
+		387CCCC11A0A518600E93347 /* Fuffr Guy Right Eye.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Fuffr Guy Right Eye.png"; sourceTree = "<group>"; };
+		387CCCC21A0A518600E93347 /* Fuffr Guy Left Eye.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Fuffr Guy Left Eye.png"; sourceTree = "<group>"; };
+		387CCCC61A0A686B00E93347 /* GothamRnd-Book.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "GothamRnd-Book.otf"; sourceTree = "<group>"; };
+		387CCCC71A0A686B00E93347 /* GothamRnd-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "GothamRnd-Bold.otf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,7 +105,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				215E0B1A18DC671000484E43 /* libFuffrLib.a in Frameworks */,
+				3824584219FE570A004293D8 /* libFuffrLib.a in Frameworks */,
 				2199200318DC652900E8A004 /* CoreGraphics.framework in Frameworks */,
 				2199200518DC652900E8A004 /* UIKit.framework in Frameworks */,
 				2199200118DC652900E8A004 /* Foundation.framework in Frameworks */,
@@ -111,7 +133,7 @@
 				2199201F18DC652900E8A004 /* FuffrGesturesTests */,
 				21991FFF18DC652900E8A004 /* Frameworks */,
 				21991FFE18DC652900E8A004 /* Products */,
-				2199202F18DC654A00E8A004 /* FuffrLib.xcodeproj */,
+				3824583919FE5702004293D8 /* FuffrLib.xcodeproj */,
 			);
 			sourceTree = "<group>";
 		};
@@ -151,10 +173,21 @@
 		2199200718DC652900E8A004 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				387CCCC11A0A518600E93347 /* Fuffr Guy Right Eye.png */,
+				387CCCC21A0A518600E93347 /* Fuffr Guy Left Eye.png */,
+				3824584519FE5AA5004293D8 /* Fuffr Guy.png */,
+				387CCCAC1A090A9F00E93347 /* Fuffr Guy2.png */,
+				387CCCAD1A090A9F00E93347 /* Fuffr Guy3.png */,
+				387CCCAE1A090A9F00E93347 /* Fuffr Guy4.png */,
+				387CCCAF1A090A9F00E93347 /* Fuffr Guy5.png */,
+				387CCCB01A090A9F00E93347 /* Fuffr Guy6.png */,
+				387CCCB11A090A9F00E93347 /* Fuffr Guy7.png */,
 				2199200818DC652900E8A004 /* FuffrGestures-Info.plist */,
 				2199200918DC652900E8A004 /* InfoPlist.strings */,
 				2199200C18DC652900E8A004 /* main.m */,
 				2199200E18DC652900E8A004 /* FuffrGestures-Prefix.pch */,
+				387CCCC61A0A686B00E93347 /* GothamRnd-Book.otf */,
+				387CCCC71A0A686B00E93347 /* GothamRnd-Bold.otf */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -177,11 +210,11 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		2199203018DC654A00E8A004 /* Products */ = {
+		3824583A19FE5702004293D8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				2199203518DC654A00E8A004 /* libFuffrLib.a */,
-				2199203718DC654A00E8A004 /* FuffrLibTests.xctest */,
+				3824583F19FE5703004293D8 /* libFuffrLib.a */,
+				3824584119FE5703004293D8 /* FuffrLibTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -200,7 +233,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				215E0B1918DC670900484E43 /* PBXTargetDependency */,
+				3824584419FE570D004293D8 /* PBXTargetDependency */,
 			);
 			name = FuffrGestures;
 			productName = FuffrGestures;
@@ -235,7 +268,7 @@
 				ORGANIZATIONNAME = Fuffr;
 				TargetAttributes = {
 					21991FFC18DC652900E8A004 = {
-						DevelopmentTeam = VH56AB4SKF;
+						DevelopmentTeam = LNZ46XBBR6;
 					};
 					2199201718DC652900E8A004 = {
 						TestTargetID = 21991FFC18DC652900E8A004;
@@ -254,8 +287,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 2199203018DC654A00E8A004 /* Products */;
-					ProjectRef = 2199202F18DC654A00E8A004 /* FuffrLib.xcodeproj */;
+					ProductGroup = 3824583A19FE5702004293D8 /* Products */;
+					ProjectRef = 3824583919FE5702004293D8 /* FuffrLib.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -267,18 +300,18 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		2199203518DC654A00E8A004 /* libFuffrLib.a */ = {
+		3824583F19FE5703004293D8 /* libFuffrLib.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libFuffrLib.a;
-			remoteRef = 2199203418DC654A00E8A004 /* PBXContainerItemProxy */;
+			remoteRef = 3824583E19FE5703004293D8 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		2199203718DC654A00E8A004 /* FuffrLibTests.xctest */ = {
+		3824584119FE5703004293D8 /* FuffrLibTests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = FuffrLibTests.xctest;
-			remoteRef = 2199203618DC654A00E8A004 /* PBXContainerItemProxy */;
+			remoteRef = 3824584019FE5703004293D8 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -288,9 +321,20 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				387CCCB61A090A9F00E93347 /* Fuffr Guy6.png in Resources */,
+				387CCCB31A090A9F00E93347 /* Fuffr Guy3.png in Resources */,
 				2199200B18DC652900E8A004 /* InfoPlist.strings in Resources */,
 				2116BCB118E6C43200BEE3D8 /* Images in Resources */,
+				387CCCB71A090A9F00E93347 /* Fuffr Guy7.png in Resources */,
+				387CCCC41A0A518600E93347 /* Fuffr Guy Left Eye.png in Resources */,
+				3824584619FE5AA5004293D8 /* Fuffr Guy.png in Resources */,
+				387CCCC91A0A68E000E93347 /* GothamRnd-Bold.otf in Resources */,
+				387CCCB51A090A9F00E93347 /* Fuffr Guy5.png in Resources */,
+				387CCCB41A090A9F00E93347 /* Fuffr Guy4.png in Resources */,
 				2199201318DC652900E8A004 /* Images.xcassets in Resources */,
+				387CCCB21A090A9F00E93347 /* Fuffr Guy2.png in Resources */,
+				387CCCC81A0A68DE00E93347 /* GothamRnd-Book.otf in Resources */,
+				387CCCC31A0A518600E93347 /* Fuffr Guy Right Eye.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -326,15 +370,15 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		215E0B1918DC670900484E43 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = FuffrLib;
-			targetProxy = 215E0B1818DC670900484E43 /* PBXContainerItemProxy */;
-		};
 		2199201E18DC652900E8A004 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 21991FFC18DC652900E8A004 /* FuffrGestures */;
 			targetProxy = 2199201D18DC652900E8A004 /* PBXContainerItemProxy */;
+		};
+		3824584419FE570D004293D8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = FuffrLib;
+			targetProxy = 3824584319FE570D004293D8 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -446,7 +490,7 @@
 				);
 				INFOPLIST_FILE = "FuffrGestures/FuffrGestures-Info.plist";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = FuffrGestures;
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
@@ -468,7 +512,7 @@
 				);
 				INFOPLIST_FILE = "FuffrGestures/FuffrGestures-Info.plist";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = FuffrGestures;
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
@@ -490,7 +534,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "FuffrGesturesTests/FuffrGesturesTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = FuffrGesturesTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -508,7 +552,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FuffrGestures/FuffrGestures-Prefix.pch";
 				INFOPLIST_FILE = "FuffrGesturesTests/FuffrGesturesTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = FuffrGesturesTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
