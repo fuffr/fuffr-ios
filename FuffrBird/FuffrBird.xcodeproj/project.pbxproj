@@ -12,6 +12,9 @@
 		380BEAF919AC862100E3F409 /* I_Like_Jump_Rope.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 380BEAF819AC862100E3F409 /* I_Like_Jump_Rope.mp3 */; };
 		380BEAFD19AC889300E3F409 /* beep.wav in Resources */ = {isa = PBXBuildFile; fileRef = 380BEAFC19AC889300E3F409 /* beep.wav */; };
 		3840ED2D1947397700365D5E /* libFuffrLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3840ED281947395D00365D5E /* libFuffrLib.a */; };
+		387CCD481A0D109000E93347 /* Fuffr Connected.png in Resources */ = {isa = PBXBuildFile; fileRef = 387CCD461A0D109000E93347 /* Fuffr Connected.png */; };
+		387CCD491A0D109000E93347 /* Fuffr Disconnected.png in Resources */ = {isa = PBXBuildFile; fileRef = 387CCD471A0D109000E93347 /* Fuffr Disconnected.png */; };
+		387CCD4D1A0D109700E93347 /* UIView+FuffrToast.m in Sources */ = {isa = PBXBuildFile; fileRef = 387CCD4C1A0D109700E93347 /* UIView+FuffrToast.m */; };
 		38F04AA7193356D10046B447 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38F04AA6193356D10046B447 /* Foundation.framework */; };
 		38F04AA9193356D10046B447 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38F04AA8193356D10046B447 /* CoreGraphics.framework */; };
 		38F04AAB193356D10046B447 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38F04AAA193356D10046B447 /* UIKit.framework */; };
@@ -73,6 +76,10 @@
 		380BEAF819AC862100E3F409 /* I_Like_Jump_Rope.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = I_Like_Jump_Rope.mp3; sourceTree = "<group>"; };
 		380BEAFC19AC889300E3F409 /* beep.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = beep.wav; sourceTree = "<group>"; };
 		3840ED221947395D00365D5E /* FuffrLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FuffrLib.xcodeproj; path = ../FuffrLib/FuffrLib.xcodeproj; sourceTree = "<group>"; };
+		387CCD461A0D109000E93347 /* Fuffr Connected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Fuffr Connected.png"; sourceTree = "<group>"; };
+		387CCD471A0D109000E93347 /* Fuffr Disconnected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Fuffr Disconnected.png"; sourceTree = "<group>"; };
+		387CCD4B1A0D109700E93347 /* UIView+FuffrToast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+FuffrToast.h"; sourceTree = "<group>"; };
+		387CCD4C1A0D109700E93347 /* UIView+FuffrToast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+FuffrToast.m"; sourceTree = "<group>"; };
 		38F04AA3193356D10046B447 /* FuffrBird.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FuffrBird.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		38F04AA6193356D10046B447 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		38F04AA8193356D10046B447 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -178,6 +185,8 @@
 				38F04AE2193357880046B447 /* Main.storyboard */,
 				38F04ADF1933577D0046B447 /* ViewController.h */,
 				38F04AE01933577D0046B447 /* ViewController.m */,
+				387CCD4B1A0D109700E93347 /* UIView+FuffrToast.h */,
+				387CCD4C1A0D109700E93347 /* UIView+FuffrToast.m */,
 				38F04ADC1933575F0046B447 /* Game.h */,
 				38F04ADD1933575F0046B447 /* Game.m */,
 				38F04ABE193356D10046B447 /* Images.xcassets */,
@@ -189,6 +198,8 @@
 		38F04AAD193356D10046B447 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				387CCD461A0D109000E93347 /* Fuffr Connected.png */,
+				387CCD471A0D109000E93347 /* Fuffr Disconnected.png */,
 				380BEAFC19AC889300E3F409 /* beep.wav */,
 				380BEAF819AC862100E3F409 /* I_Like_Jump_Rope.mp3 */,
 				38F04AE41933579C0046B447 /* BirdDown.png */,
@@ -334,7 +345,9 @@
 				380BEAF919AC862100E3F409 /* I_Like_Jump_Rope.mp3 in Resources */,
 				38F04AE3193357880046B447 /* Main.storyboard in Resources */,
 				38F04AEE1933579C0046B447 /* fuffrBackground.png in Resources */,
+				387CCD481A0D109000E93347 /* Fuffr Connected.png in Resources */,
 				380BEAF419AC7DAE00E3F409 /* fuffrBackgroundRed.png in Resources */,
+				387CCD491A0D109000E93347 /* Fuffr Disconnected.png in Resources */,
 				38F04AF01933579C0046B447 /* tunnelBottom.png in Resources */,
 				38F04ABF193356D10046B447 /* Images.xcassets in Resources */,
 				38F04AB1193356D10046B447 /* InfoPlist.strings in Resources */,
@@ -360,6 +373,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				38F04AB7193356D10046B447 /* AppDelegate.m in Sources */,
+				387CCD4D1A0D109700E93347 /* UIView+FuffrToast.m in Sources */,
 				38F04AB3193356D10046B447 /* main.m in Sources */,
 				38F04AE11933577D0046B447 /* ViewController.m in Sources */,
 				38F04ADE1933575F0046B447 /* Game.m in Sources */,

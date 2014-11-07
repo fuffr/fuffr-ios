@@ -21,7 +21,6 @@ NSString *fuffrStatusString;
 @interface ViewController : UIViewController
 {
 	IBOutlet UILabel *highScore;
-	IBOutlet UILabel *fuffrLabel;
     __weak IBOutlet UIImageView *backGroundImageView;
 }
 
