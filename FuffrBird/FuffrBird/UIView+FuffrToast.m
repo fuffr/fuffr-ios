@@ -53,7 +53,7 @@
     
     UIImageView *toastView = [[UIImageView alloc] initWithFrame:CGRectMake(toastPosition.x, toastPosition.y, toastSize.width, toastSize.height)];
     
-    if ([status containsString:@"Disconnected"])
+    if ([status rangeOfString:@"Disconnected"].location != NSNotFound)
     {
         toastView.frame = CGRectMake(toastView.frame.origin.x, toastView.frame.origin.y, toastView.frame.size.width *1.2, toastView.frame.size.height);
     }
