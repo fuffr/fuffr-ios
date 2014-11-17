@@ -43,18 +43,19 @@
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleUITap:)];
     tapGestureRecognizer.delegate = self;
     [self.view addGestureRecognizer:tapGestureRecognizer];
+    
+    [self initializeRenderingParameters];
+    [self drawImageView];
+    [self startGravity];
+    [self loadExplosionImageArray];
 }
 
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear: animated];
     
-    // Setup the fuffr connection and initialize some variables.
+    // Setup the fuffr connection
     [self setupFuffr];
-    [self initializeRenderingParameters];
-    [self drawImageView];
-    [self startGravity];
-    [self loadExplosionImageArray];
 }
 
 -(void)createMessageView
@@ -521,7 +522,7 @@
 
 - (void)fuffrGuyMoving
 {
-    // Gravity function. Make sure he stays on the bottom of the screen.
+    // Gravity function. Make sure he stays on the bottom of the screen. Only apply when not paning
     if (!self.paning)
     {
         CGPoint newPos = CGPointMake(self.imageView.center.x, self.imageView.center.y - self.fuffrGuyFlight);
