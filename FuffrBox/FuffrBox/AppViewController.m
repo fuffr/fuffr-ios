@@ -632,23 +632,17 @@ static void CreateSwipeGesture(
 
 - (void) setupTouches
 {
-	//[[FFRTouchManager sharedManager] unregisterTouchMethods];
-
-    [[NSNotificationCenter defaultCenter]
-		addObserver: self
-		selector: @selector(touchesBegan:)
-		name: FFRTrackingBeganNotification
-		object: nil];
-    [[NSNotificationCenter defaultCenter]
-		addObserver: self
-		selector: @selector(touchesMoved:)
-		name: FFRTrackingMovedNotification
-		object: nil];
-    [[NSNotificationCenter defaultCenter]
-		addObserver: self
-		selector: @selector(touchesEnded:)
-		name: FFRTrackingEndedNotification
-		object: nil];
+	// Register listener for all sides. The JavaScript application
+	// can still enable/disable sides, this is a separate mechanism
+	// that updates the actual configuraton used by the hardware.
+	// Sides below are used for filtering touches by side, and here
+	// we use no filtering (all sides enabled turns off filtering).
+	[[FFRTouchManager sharedManager]
+		addTouchObserver: self
+		touchBegan: @selector(touchesBegan:)
+		touchMoved: @selector(touchesMoved:)
+		touchEnded: @selector(touchesEnded:)
+		sides: FFRSideRight | FFRSideLeft | FFRSideTop | FFRSideBottom];
 }
 
 - (void) executeJavaScriptCommand: (NSString*) command
@@ -783,21 +777,18 @@ static void CreateSwipeGesture(
 	}
 }
 
-- (void) touchesBegan: (NSNotification*)data
+- (void) touchesBegan: (NSSet*)touches
 {
-    NSSet* touches = data.object;
 	[self callJS: @"fuffr.on.touchesBegan" withTouches: touches];
 }
 
-- (void) touchesMoved: (NSNotification*)data
+- (void) touchesMoved: (NSSet*)touches
 {
-    NSSet* touches = data.object;
 	[self callJS: @"fuffr.on.touchesMoved" withTouches: touches];
 }
 
-- (void) touchesEnded: (NSNotification*)data
+- (void) touchesEnded: (NSSet*)touches
 {
-    NSSet* touches = data.object;
 	[self callJS: @"fuffr.on.touchesEnded" withTouches: touches];
 }
 
