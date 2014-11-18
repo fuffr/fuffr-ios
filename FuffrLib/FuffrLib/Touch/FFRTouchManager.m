@@ -140,10 +140,12 @@ static NSSet* filterTouchesBySide(NSSet* touches, FFRSide sides)
 }
 
 // For performance testing, no filtering.
-static NSSet* OFF_filterTouchesBySide(NSSet* touches, FFRSide sides)
+/*
+static NSSet* filterTouchesBySide(NSSet* touches, FFRSide sides)
 {
 	return touches;
 }
+*/
 
 /* Unused
 static NSSet* filterTouchesBySideAndPhase(NSSet* touches, FFRSide sides, FFRTouchPhase phase)
