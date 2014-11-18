@@ -12,6 +12,7 @@
 
 
 #import "ViewController.h"
+#import "UIView+FuffrToast.h"
 
 @interface ViewController ()
 
@@ -40,7 +41,6 @@
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
-	fuffrLabel.text = [NSString stringWithFormat:@"Searching for Fuffr Device..."];
     backGroundImageView.image = [UIImage imageNamed:@"fuffrBackgroundRed.png"];
 }
 
@@ -52,9 +52,9 @@
 	[manager
 	 onFuffrConnected:
 	 ^{
+         [self.view makeFuffrConnectedToastAtPosition:CGPointMake(self.view.center.x, 475) asCenter:YES];
 		 [manager useSensorService:
-		  ^{
-			  fuffrLabel.text = [NSString stringWithFormat:@"Fuffr Connected!"];
+          ^{
               backGroundImageView.image = [UIImage imageNamed:@"fuffrBackground.png"];
 				// Set active sides.
 				[[FFRTouchManager sharedManager]
@@ -65,7 +65,7 @@
 	 }
 	 onFuffrDisconnected:
 	 ^{
-		 fuffrLabel.text = [NSString stringWithFormat:@"Fuffr Disconnected! Attempting To Reconnect"];
+         [self.view makeFuffrDisconnectedToastAtPosition:CGPointMake(self.view.center.x, 475) asCenter:YES];
          backGroundImageView.image = [UIImage imageNamed:@"fuffrBackgroundRed.png"];
 	 }];
 
@@ -92,7 +92,7 @@
 
 - (void)receivedNotification:(id)sender
 {
-	fuffrLabel.text = [NSString stringWithFormat:@"Fuffr Disconnected during gameplay. Reconnect and try again"];
+    [self.view makeFuffrDisconnectedToastAtPosition:CGPointMake(self.view.center.x, 475) asCenter:YES];
     backGroundImageView.image = [UIImage imageNamed:@"fuffrBackgroundRed.png"];
 }
 

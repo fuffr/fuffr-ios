@@ -1,6 +1,6 @@
 //
 //  AppViewController.h
-//  FuffrGesutres
+//  FuffrGestures
 //
 //  Created by Fuffr on 21/03/14.
 //  Copyright (c) 2014 Fuffr. All rights reserved.
@@ -9,29 +9,20 @@
 #import <Foundation/Foundation.h>
 #import <FuffrLib/FFRTouchManager.h>
 
-typedef struct
-{
-	CGFloat red;
-	CGFloat green;
-	CGFloat blue;
-}
-MyColor;
-
 /**
  * View controller that displays an object controlled by gestures.
  */
-@interface AppViewController : UIViewController
+@interface AppViewController : UIViewController <UIGestureRecognizerDelegate>
 
 /** View where gestures are drawn. */
-@property UIImageView* imageView;
+@property UIImageView *imageView, *rightEyeImageView, *leftEyeImageView;
 
 /** Message view. */
-@property UILabel* messageView;
+@property UILabel *messageView;
 
 /** Translation. */
-@property CGPoint currentTranslation;
-@property CGPoint baseTranslation;
-@property FFRPanGestureRecognizer* panRecognizer;
+@property CGPoint startPoint;
+@property NSString *degrees;
 
 /** Scale. */
 @property CGFloat currentScale;
@@ -40,9 +31,15 @@ MyColor;
 /** Rotation. */
 @property CGFloat currentRotation;
 @property CGFloat baseRotation;
-@property BOOL rotateActivated;
 
-/** Color. */
-@property MyColor objectColor;
+@property CGFloat offsetSize;
+
+@property int fuffrGuyFlight;
+
+@property NSTimer *fuffrGuyMovement;
+
+@property BOOL paning, pinchRotateActive, tapCooldown, longPressCooldown;
+
+@property NSMutableArray *explodeAnimationArray;
 
 @end

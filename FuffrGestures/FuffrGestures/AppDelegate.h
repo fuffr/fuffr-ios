@@ -1,6 +1,6 @@
 //
 //  AppDelegate.h
-//  FuffrDots
+//  FuffrGestures
 //
 //  Created by Fuffr on 18/03/14.
 //  Copyright (c) 2014 Fuffr. All rights reserved.

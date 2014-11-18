@@ -9,11 +9,10 @@
 #import <Foundation/Foundation.h>
 #import <FuffrLib/FFRTouchManager.h>
 
-
 /**
  * View controller with a web view.
  */
-@interface AppViewController : UIViewController
+@interface AppViewController : UIViewController<UIWebViewDelegate>
 
 /** The web view. */
 @property UIWebView* webView;
