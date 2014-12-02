@@ -81,6 +81,11 @@ extern NSString* const FFRBatteryCharacteristicUUID;
 @property (nonatomic, strong) id<FFRExternalSpaceMapper> spaceMapper;
 
 /**
+ * Current device orientation.
+ */
+@property (atomic, assign) UIDeviceOrientation deviceOrientation;
+
+/**
  * Activate the sensor service of the case.
  */
 - (void) useSensorService: (void(^)())serviceAvailableBlock;

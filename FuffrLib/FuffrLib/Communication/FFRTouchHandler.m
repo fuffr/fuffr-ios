@@ -80,6 +80,15 @@ static const FFRSide SideLookupTable[4] =
 			selector: @selector(timerPruneTouches:)
 			userInfo: nil
 			repeats: YES];
+
+		// Enable device orientation readings.
+		[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+		[[NSNotificationCenter defaultCenter]
+			addObserver: self
+			selector: @selector(deviceOrientationDidChange:)
+			name: UIDeviceOrientationDidChangeNotification
+			object: nil];
+		self.deviceOrientation = [[UIDevice currentDevice] orientation];
 	}
 
 	return self;
@@ -107,6 +116,8 @@ static const FFRSide SideLookupTable[4] =
 	_peripheral = nil;
 	self.spaceMapper = nil;
 	self.touchDelegate = nil;
+
+	[[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
 }
 
 #pragma mark - Service discovery
@@ -357,8 +368,8 @@ currently 5 touches. Setting 0 will disable the touch detection."
 	// Notify touch delegate.
 	dispatch_async(dispatch_get_main_queue(),
 	^{
-		// Set touch phase to began again on the main queue, to prevent
-		// overwrite by moved events.
+		// Set touch phase to began again on the main queue,
+		// to prevent overwrite by moved events.
 		for (FFRTouch* touch in touches)
 		{
 			touch.phase = FFRTouchPhaseBegan;
@@ -446,9 +457,11 @@ currently 5 touches. Setting 0 will disable the touch detection."
 	{
 		// Trap error for debugging.
 		NSLog(@"didWriteValueForCharacteristic error: %@", error);
+		// Don't kill the app!!
 		//assert(false);
 
 		// What effect will this have exactly? (This is the original code.)
+		// TODO: Should we comment this out?
 		_peripheral = nil;
 	}
 }
@@ -461,9 +474,6 @@ currently 5 touches. Setting 0 will disable the touch detection."
 }
 
 #pragma mark - Touch data handling
-
-// For debugging.
-//static int NumberOfActiveTouches = 0;
 
 -(FFRTouch*) unpackData:(FFRRawTouchData)raw
 {
@@ -478,7 +488,7 @@ currently 5 touches. Setting 0 will disable the touch detection."
 	bool previousDown = _previousTouchDown[identifier];
 	_previousTouchDown[identifier] = down;
 
-	// if touch remains inactive, return nil.
+	// If touch remains inactive, return nil.
 	if (!down && !previousDown)
 	{
 		return nil;
@@ -495,33 +505,22 @@ currently 5 touches. Setting 0 will disable the touch detection."
 	if (down && !previousDown) { touch.phase = FFRTouchPhaseBegan; }
 	else if (down && previousDown) { touch.phase = FFRTouchPhaseMoved; }
 	else if (!down && previousDown) { touch.phase = FFRTouchPhaseEnded; }
+	//TODO: FFRTouchPhaseInactive not used. Remove.
 	//else if (!down && !previousDown) { touch.phase = FFRTouchPhaseInactive; }
 
 	touch.timestamp = [[NSProcessInfo processInfo] systemUptime];
 	touch.side = side;
 	touch.rawPoint = rawPoint;
-	touch.normalizedLocation = normalizedPoint;
-	touch.location = [self.spaceMapper locationOnScreen:normalizedPoint fromSide:side];
-
-#if 0
-	if(touch.phase != FFRTouchPhaseMoved) {
-		NSLog(@"Touch id: %d, down: %d, phase: %d, side: %d, rawcoord: %@", identifier, down, touch.phase, side, NSStringFromCGPoint(rawPoint));
-	}
-#endif
-	// Debug log for down/up events (but not moved).
-	//if (eventType != 1)
-	//{
-		//if (0 == eventType) { ++NumberOfActiveTouches; }
-		//if (2 == eventType) { --NumberOfActiveTouches; }
-		//NSLog(@"Touch id: %d, event: %d, side: %d, rawcoord: %@, activeTouches: %i", identifier, eventType, side, NSStringFromCGPoint(rawPoint), NumberOfActiveTouches);
-		
-		//NSLog(@"Touch id: %d, event: %d, side: %d, rawcoord: %@", identifier, eventType, side, NSStringFromCGPoint(rawPoint));
-	//}
+	touch.normalizedLocation = [self mapNormalizedPoint: normalizedPoint];
+	touch.location = [self.spaceMapper
+		locationOnScreen: touch.normalizedLocation
+		fromSide: side];
 
 	return touch;
 }
 
--(CGPoint) normalizePoint:(CGPoint)point onSide:(FFRSide)side {
+-(CGPoint) normalizePoint:(CGPoint)point onSide:(FFRSide)side
+{
 	// Old values (before 2014-04-28).
 	/*
 	const float FFRLongXResolution = 3327.0;
@@ -555,6 +554,47 @@ currently 5 touches. Setting 0 will disable the touch detection."
 	}
 
 	return p;
+}
+
+-(CGPoint) mapNormalizedPoint: (CGPoint)point
+{
+	CGPoint p = point;
+
+	if (UIDeviceOrientationPortraitUpsideDown == self.deviceOrientation)
+	{
+		p.x = 1.0 - point.x;
+		p.y = 1.0 - point.y;
+		return p;
+	}
+	else if (UIDeviceOrientationLandscapeLeft == self.deviceOrientation)
+	{
+		p.y = 1.0 - point.x;
+		p.x = point.y;
+		return p;
+	}
+	else if (UIDeviceOrientationLandscapeRight == self.deviceOrientation)
+	{
+		p.y = point.x;
+		p.x = 1.0 - point.y;
+		return p;
+	}
+	else
+	{
+		return p;
+	}
+}
+
+- (void)deviceOrientationDidChange:(NSNotification *)notification
+{
+	UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+
+	if (UIDeviceOrientationPortrait == orientation ||
+		UIDeviceOrientationPortraitUpsideDown == orientation ||
+		UIDeviceOrientationLandscapeLeft == orientation ||
+		UIDeviceOrientationLandscapeRight == orientation)
+	{
+		self.deviceOrientation = orientation;
+	}
 }
 
 @end
