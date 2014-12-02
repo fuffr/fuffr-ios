@@ -14,13 +14,13 @@
 #import "SVProgressHUD.h"
 #import <QuartzCore/QuartzCore.h>
 
-NSString * const SVProgressHUDDidReceiveTouchEventNotification = @"SVProgressHUDDidReceiveTouchEventNotification";
-NSString * const SVProgressHUDWillDisappearNotification = @"SVProgressHUDWillDisappearNotification";
-NSString * const SVProgressHUDDidDisappearNotification = @"SVProgressHUDDidDisappearNotification";
-NSString * const SVProgressHUDWillAppearNotification = @"SVProgressHUDWillAppearNotification";
-NSString * const SVProgressHUDDidAppearNotification = @"SVProgressHUDDidAppearNotification";
+NSString * const FFR_SVProgressHUDDidReceiveTouchEventNotification = @"SVProgressHUDDidReceiveTouchEventNotification";
+NSString * const FFR_SVProgressHUDWillDisappearNotification = @"SVProgressHUDWillDisappearNotification";
+NSString * const FFR_SVProgressHUDDidDisappearNotification = @"SVProgressHUDDidDisappearNotification";
+NSString * const FFR_SVProgressHUDWillAppearNotification = @"SVProgressHUDWillAppearNotification";
+NSString * const FFR_SVProgressHUDDidAppearNotification = @"SVProgressHUDDidAppearNotification";
 
-NSString * const SVProgressHUDStatusUserInfoKey = @"SVProgressHUDStatusUserInfoKey";
+NSString * const FFR_SVProgressHUDStatusUserInfoKey = @"SVProgressHUDStatusUserInfoKey";
 
 static UIColor *SVProgressHUDBackgroundColor;
 static UIColor *SVProgressHUDForegroundColor;
@@ -33,9 +33,9 @@ static const CGFloat SVProgressHUDRingRadius = 18;
 static const CGFloat SVProgressHUDRingNoTextRadius = 24;
 static const CGFloat SVProgressHUDParallaxDepthPoints = 10;
 
-@interface SVProgressHUD ()
+@interface FFR_SVProgressHUD ()
 
-@property (nonatomic, readwrite) SVProgressHUDMaskType maskType;
+@property (nonatomic, readwrite) FFR_SVProgressHUDMaskType maskType;
 @property (nonatomic, strong, readonly) NSTimer *fadeOutTimer;
 @property (nonatomic, readonly, getter = isClear) BOOL clear;
 
@@ -43,7 +43,7 @@ static const CGFloat SVProgressHUDParallaxDepthPoints = 10;
 @property (nonatomic, strong) UIView *hudView;
 @property (nonatomic, strong) UILabel *stringLabel;
 @property (nonatomic, strong) UIImageView *imageView;
-@property (nonatomic, strong) SVIndefiniteAnimatedView *indefiniteAnimatedView;
+@property (nonatomic, strong) FFR_SVIndefiniteAnimatedView *indefiniteAnimatedView;
 
 @property (nonatomic, readwrite) CGFloat progress;
 @property (nonatomic, readwrite) NSUInteger activityCount;
@@ -56,7 +56,7 @@ static const CGFloat SVProgressHUDParallaxDepthPoints = 10;
 
 - (void)showProgress:(float)progress
               status:(NSString*)string
-            maskType:(SVProgressHUDMaskType)hudMaskType;
+            maskType:(FFR_SVProgressHUDMaskType)hudMaskType;
 
 - (void)showImage:(UIImage*)image
            status:(NSString*)status
@@ -74,11 +74,11 @@ static const CGFloat SVProgressHUDParallaxDepthPoints = 10;
 @end
 
 
-@implementation SVProgressHUD
+@implementation FFR_SVProgressHUD
 
-+ (SVProgressHUD*)sharedView {
++ (FFR_SVProgressHUD*)sharedView {
     static dispatch_once_t once;
-    static SVProgressHUD *sharedView;
+    static FFR_SVProgressHUD *sharedView;
     dispatch_once(&once, ^ { sharedView = [[self alloc] initWithFrame:[[UIScreen mainScreen] bounds]]; });
     return sharedView;
 }
@@ -122,30 +122,30 @@ static const CGFloat SVProgressHUDParallaxDepthPoints = 10;
 #pragma mark - Show Methods
 
 + (void)show {
-    [[self sharedView] showProgress:-1 status:nil maskType:SVProgressHUDMaskTypeNone];
+    [[self sharedView] showProgress:-1 status:nil maskType:FFR_SVProgressHUDMaskTypeNone];
 }
 
 + (void)showWithStatus:(NSString *)status {
-    [[self sharedView] showProgress:-1 status:status maskType:SVProgressHUDMaskTypeNone];
+    [[self sharedView] showProgress:-1 status:status maskType:FFR_SVProgressHUDMaskTypeNone];
 }
 
-+ (void)showWithMaskType:(SVProgressHUDMaskType)maskType {
++ (void)showWithMaskType:(FFR_SVProgressHUDMaskType)maskType {
     [[self sharedView] showProgress:-1 status:nil maskType:maskType];
 }
 
-+ (void)showWithStatus:(NSString*)status maskType:(SVProgressHUDMaskType)maskType {
++ (void)showWithStatus:(NSString*)status maskType:(FFR_SVProgressHUDMaskType)maskType {
     [[self sharedView] showProgress:-1 status:status maskType:maskType];
 }
 
 + (void)showProgress:(float)progress {
-    [[self sharedView] showProgress:progress status:nil maskType:SVProgressHUDMaskTypeNone];
+    [[self sharedView] showProgress:progress status:nil maskType:FFR_SVProgressHUDMaskTypeNone];
 }
 
 + (void)showProgress:(float)progress status:(NSString *)status {
-    [[self sharedView] showProgress:progress status:status maskType:SVProgressHUDMaskTypeNone];
+    [[self sharedView] showProgress:progress status:status maskType:FFR_SVProgressHUDMaskTypeNone];
 }
 
-+ (void)showProgress:(float)progress status:(NSString *)status maskType:(SVProgressHUDMaskType)maskType {
++ (void)showProgress:(float)progress status:(NSString *)status maskType:(FFR_SVProgressHUDMaskType)maskType {
     [[self sharedView] showProgress:progress status:status maskType:maskType];
 }
 
@@ -162,7 +162,7 @@ static const CGFloat SVProgressHUDParallaxDepthPoints = 10;
 }
 
 + (void)showImage:(UIImage *)image status:(NSString *)string {
-    NSTimeInterval displayInterval = [[SVProgressHUD sharedView] displayDurationForString:string];
+    NSTimeInterval displayInterval = [[FFR_SVProgressHUD sharedView] displayDurationForString:string];
     [[self sharedView] showImage:image status:string duration:displayInterval];
 }
 
@@ -220,13 +220,13 @@ static const CGFloat SVProgressHUDParallaxDepthPoints = 10;
     
     switch (self.maskType) {
             
-        case SVProgressHUDMaskTypeBlack: {
+        case FFR_SVProgressHUDMaskTypeBlack: {
             [[UIColor colorWithWhite:0 alpha:0.5] set];
             CGContextFillRect(context, self.bounds);
             break;
         }
             
-        case SVProgressHUDMaskTypeGradient: {
+        case FFR_SVProgressHUDMaskTypeGradient: {
             
             size_t locationsCount = 2;
             CGFloat locations[2] = {0.0f, 1.0f};
@@ -374,7 +374,7 @@ static const CGFloat SVProgressHUDParallaxDepthPoints = 10;
 
 - (NSDictionary *)notificationUserInfo
 {
-    return (self.stringLabel.text ? @{SVProgressHUDStatusUserInfoKey : self.stringLabel.text} : nil);
+    return (self.stringLabel.text ? @{FFR_SVProgressHUDStatusUserInfoKey : self.stringLabel.text} : nil);
 }
 
 
@@ -466,12 +466,12 @@ static const CGFloat SVProgressHUDParallaxDepthPoints = 10;
 }
 
 - (void)overlayViewDidReceiveTouchEvent:(id)sender forEvent:(UIEvent *)event {
-    [[NSNotificationCenter defaultCenter] postNotificationName:SVProgressHUDDidReceiveTouchEventNotification object:event];
+    [[NSNotificationCenter defaultCenter] postNotificationName:FFR_SVProgressHUDDidReceiveTouchEventNotification object:event];
 }
 
 #pragma mark - Master show/dismiss methods
 
-- (void)showProgress:(float)progress status:(NSString*)string maskType:(SVProgressHUDMaskType)hudMaskType {
+- (void)showProgress:(float)progress status:(NSString*)string maskType:(FFR_SVProgressHUDMaskType)hudMaskType {
     
     if(!self.overlayView.superview){
         NSEnumerator *frontToBackWindows = [[[UIApplication sharedApplication]windows]reverseObjectEnumerator];
@@ -510,7 +510,7 @@ static const CGFloat SVProgressHUDParallaxDepthPoints = 10;
         [self.hudView addSubview:self.indefiniteAnimatedView];
     }
     
-    if(self.maskType != SVProgressHUDMaskTypeNone) {
+    if(self.maskType != FFR_SVProgressHUDMaskTypeNone) {
         self.overlayView.userInteractionEnabled = YES;
         self.accessibilityLabel = string;
         self.isAccessibilityElement = YES;
@@ -527,7 +527,7 @@ static const CGFloat SVProgressHUDParallaxDepthPoints = 10;
     
     if(self.alpha != 1) {
         NSDictionary *userInfo = [self notificationUserInfo];
-        [[NSNotificationCenter defaultCenter] postNotificationName:SVProgressHUDWillAppearNotification
+        [[NSNotificationCenter defaultCenter] postNotificationName:FFR_SVProgressHUDWillAppearNotification
                                                             object:nil
                                                           userInfo:userInfo];
         
@@ -551,7 +551,7 @@ static const CGFloat SVProgressHUDParallaxDepthPoints = 10;
                                  self.alpha = 1;
                          }
                          completion:^(BOOL finished){
-                             [[NSNotificationCenter defaultCenter] postNotificationName:SVProgressHUDDidAppearNotification
+                             [[NSNotificationCenter defaultCenter] postNotificationName:FFR_SVProgressHUDDidAppearNotification
                                                                                  object:nil
                                                                                userInfo:userInfo];
                              UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil);
@@ -578,7 +578,7 @@ static const CGFloat SVProgressHUDParallaxDepthPoints = 10;
     [self updatePosition];
     [self.indefiniteAnimatedView removeFromSuperview];
     
-    if(self.maskType != SVProgressHUDMaskTypeNone) {
+    if(self.maskType != FFR_SVProgressHUDMaskTypeNone) {
         self.accessibilityLabel = string;
         self.isAccessibilityElement = YES;
     } else {
@@ -595,7 +595,7 @@ static const CGFloat SVProgressHUDParallaxDepthPoints = 10;
 
 - (void)dismiss {
     NSDictionary *userInfo = [self notificationUserInfo];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SVProgressHUDWillDisappearNotification
+    [[NSNotificationCenter defaultCenter] postNotificationName:FFR_SVProgressHUDWillDisappearNotification
                                                         object:nil
                                                       userInfo:userInfo];
     
@@ -628,7 +628,7 @@ static const CGFloat SVProgressHUDParallaxDepthPoints = 10;
                              
                              UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil);
                              
-                             [[NSNotificationCenter defaultCenter] postNotificationName:SVProgressHUDDidDisappearNotification
+                             [[NSNotificationCenter defaultCenter] postNotificationName:FFR_SVProgressHUDDidDisappearNotification
                                                                                  object:nil
                                                                                userInfo:userInfo];
                              
@@ -647,9 +647,9 @@ static const CGFloat SVProgressHUDParallaxDepthPoints = 10;
 
 #pragma mark - Ring progress animation
 
-- (SVIndefiniteAnimatedView *)indefiniteAnimatedView {
+- (FFR_SVIndefiniteAnimatedView *)indefiniteAnimatedView {
     if (_indefiniteAnimatedView == nil) {
-        _indefiniteAnimatedView = [[SVIndefiniteAnimatedView alloc] initWithFrame:CGRectZero];
+        _indefiniteAnimatedView = [[FFR_SVIndefiniteAnimatedView alloc] initWithFrame:CGRectZero];
         _indefiniteAnimatedView.radius = self.stringLabel.text ? SVProgressHUDRingRadius : SVProgressHUDRingNoTextRadius;
         [_indefiniteAnimatedView sizeToFit];
     }
@@ -730,7 +730,7 @@ static const CGFloat SVProgressHUDParallaxDepthPoints = 10;
 }
 
 - (BOOL)isClear { // used for iOS 7
-    return (self.maskType == SVProgressHUDMaskTypeClear || self.maskType == SVProgressHUDMaskTypeNone);
+    return (self.maskType == FFR_SVProgressHUDMaskTypeClear || self.maskType == FFR_SVProgressHUDMaskTypeNone);
 }
 
 - (UIControl *)overlayView {
@@ -820,13 +820,13 @@ static const CGFloat SVProgressHUDParallaxDepthPoints = 10;
 
 #pragma mark SVIndefiniteAnimatedView
 
-@interface SVIndefiniteAnimatedView ()
+@interface FFR_SVIndefiniteAnimatedView ()
 
 @property (nonatomic, strong) CAShapeLayer *indefiniteAnimatedLayer;
 
 @end
 
-@implementation SVIndefiniteAnimatedView
+@implementation FFR_SVIndefiniteAnimatedView
 
 - (id)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {

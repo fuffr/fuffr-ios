@@ -30,22 +30,22 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
 
-@interface UIView (Toast)
+@interface UIView (FFR_Toast)
 
-// each makeToast method creates a view and displays it as toast
-- (void)makeToast:(NSString *)message;
-- (void)makeToast:(NSString *)message duration:(NSTimeInterval)interval position:(id)position;
-- (void)makeToast:(NSString *)message duration:(NSTimeInterval)interval position:(id)position image:(UIImage *)image;
-- (void)makeToast:(NSString *)message duration:(NSTimeInterval)interval position:(id)position title:(NSString *)title;
-- (void)makeToast:(NSString *)message duration:(NSTimeInterval)interval position:(id)position title:(NSString *)title image:(UIImage *)image;
+// each ffr_makeToast method creates a view and displays it as toast
+- (void)ffr_makeToast:(NSString *)message;
+- (void)ffr_makeToast:(NSString *)message duration:(NSTimeInterval)interval position:(id)position;
+- (void)ffr_makeToast:(NSString *)message duration:(NSTimeInterval)interval position:(id)position image:(UIImage *)image;
+- (void)ffr_makeToast:(NSString *)message duration:(NSTimeInterval)interval position:(id)position title:(NSString *)title;
+- (void)ffr_makeToast:(NSString *)message duration:(NSTimeInterval)interval position:(id)position title:(NSString *)title image:(UIImage *)image;
 
 // displays toast with an activity spinner
-- (void)makeToastActivity;
-- (void)makeToastActivity:(id)position;
-- (void)hideToastActivity;
+- (void)ffr_makeToastActivity;
+- (void)ffr_makeToastActivity:(id)position;
+- (void)ffr_hideToastActivity;
 
-// the showToast methods display any view as toast
-- (void)showToast:(UIView *)toast;
-- (void)showToast:(UIView *)toast duration:(NSTimeInterval)interval position:(id)point;
+// the ffr_showToast methods display any view as toast
+- (void)ffr_showToast:(UIView *)toast;
+- (void)ffr_showToast:(UIView *)toast duration:(NSTimeInterval)interval position:(id)point;
 
 @end

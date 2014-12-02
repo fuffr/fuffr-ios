@@ -10,24 +10,24 @@
 #import <UIKit/UIKit.h>
 #import <AvailabilityMacros.h>
 
-extern NSString * const SVProgressHUDDidReceiveTouchEventNotification;
-extern NSString * const SVProgressHUDWillDisappearNotification;
-extern NSString * const SVProgressHUDDidDisappearNotification;
-extern NSString * const SVProgressHUDWillAppearNotification;
-extern NSString * const SVProgressHUDDidAppearNotification;
+extern NSString * const FFR_SVProgressHUDDidReceiveTouchEventNotification;
+extern NSString * const FFR_SVProgressHUDWillDisappearNotification;
+extern NSString * const FFR_SVProgressHUDDidDisappearNotification;
+extern NSString * const FFR_SVProgressHUDWillAppearNotification;
+extern NSString * const FFR_SVProgressHUDDidAppearNotification;
 
-extern NSString * const SVProgressHUDStatusUserInfoKey;
+extern NSString * const FFR_SVProgressHUDStatusUserInfoKey;
 
 enum {
-    SVProgressHUDMaskTypeNone = 1, // allow user interactions while HUD is displayed
-    SVProgressHUDMaskTypeClear, // don't allow
-    SVProgressHUDMaskTypeBlack, // don't allow and dim the UI in the back of the HUD
-    SVProgressHUDMaskTypeGradient // don't allow and dim the UI with a a-la-alert-view bg gradient
+    FFR_SVProgressHUDMaskTypeNone = 1, // allow user interactions while HUD is displayed
+    FFR_SVProgressHUDMaskTypeClear, // don't allow
+    FFR_SVProgressHUDMaskTypeBlack, // don't allow and dim the UI in the back of the HUD
+    FFR_SVProgressHUDMaskTypeGradient // don't allow and dim the UI with a a-la-alert-view bg gradient
 };
 
-typedef NSUInteger SVProgressHUDMaskType;
+typedef NSUInteger FFR_SVProgressHUDMaskType;
 
-@interface SVProgressHUD : UIView
+@interface FFR_SVProgressHUD : UIView
 
 #pragma mark - Customization
 
@@ -41,13 +41,13 @@ typedef NSUInteger SVProgressHUDMaskType;
 #pragma mark - Show Methods
 
 + (void)show;
-+ (void)showWithMaskType:(SVProgressHUDMaskType)maskType;
++ (void)showWithMaskType:(FFR_SVProgressHUDMaskType)maskType;
 + (void)showWithStatus:(NSString*)status;
-+ (void)showWithStatus:(NSString*)status maskType:(SVProgressHUDMaskType)maskType;
++ (void)showWithStatus:(NSString*)status maskType:(FFR_SVProgressHUDMaskType)maskType;
 
 + (void)showProgress:(float)progress;
 + (void)showProgress:(float)progress status:(NSString*)status;
-+ (void)showProgress:(float)progress status:(NSString*)status maskType:(SVProgressHUDMaskType)maskType;
++ (void)showProgress:(float)progress status:(NSString*)status maskType:(FFR_SVProgressHUDMaskType)maskType;
 
 + (void)setStatus:(NSString*)string; // change the HUD loading status while it's showing
 
@@ -67,7 +67,7 @@ typedef NSUInteger SVProgressHUDMaskType;
 @end
 
 
-@interface SVIndefiniteAnimatedView : UIView
+@interface FFR_SVIndefiniteAnimatedView : UIView
 
 @property (nonatomic, assign) CGFloat strokeThickness;
 @property (nonatomic, assign) CGFloat radius;
