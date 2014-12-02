@@ -18,10 +18,14 @@
 #import <FuffrLib/FFROADHandler.h>
 #import <FuffrLib/UIView+Toast.h>
 
+/*********** Constants ***********/
+
 #define URL_ARE_YOU_THERE @"http://games.fuffr.com/AreYouThere.txt"
 #define URL_START_PAGE @"http://games.fuffr.com/"
 #define URL_FIRMWARE_LIST @"http://games.fuffr.com/firmware/firmware.lst"
 #define URL_INITIAL_URL_FIELD @"games.fuffr.com"
+
+/*********** Global variables ***********/
 
 /**
  * Reference to the AppViewController instance.
@@ -32,6 +36,8 @@ static AppViewController* theAppViewController;
  * Could not resist shortcut using a global.
  */
 static BOOL FuffrIsConnected = NO;
+
+/*********** Class URLProtocolFuffrBridge ***********/
 
 /**
  * Bridge from JavaScript to Objective-C.
@@ -101,6 +107,8 @@ static BOOL FuffrIsConnected = NO;
 }
 
 @end
+
+/*********** Class GestureListener ***********/
 
 /**
  * Gesture listener.
@@ -397,113 +405,186 @@ static void CreateSwipeGesture(
 
 @end
 
-@implementation AppViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+/*********** Class FuffrBoxView ***********/
+
+@interface FuffrBoxView : UIView
+
+/** The web view. */
+@property UIWebView* webView;
+
+/** The url field. */
+@property UITextField* urlField;
+
+/** The Back button. */
+@property UIButton* buttonBack;
+
+/** The Go button. */
+@property UIButton* buttonGo;
+
+@end
+
+@implementation FuffrBoxView
+
+- (id)initWithFrame:(CGRect)frame
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self)
-    {
-        // Add custom initialization if needed.
-    }
+	self = [super initWithFrame: frame];
+	if (self)
+	{
+    	self.autoresizingMask =
+			UIViewAutoresizingFlexibleHeight |
+			UIViewAutoresizingFlexibleWidth;
+		self.multipleTouchEnabled = YES;
+		[self setBackgroundColor:[UIColor whiteColor]];
+		[self createSubviews];
+	}
 
-	//[[NSURLCache sharedURLCache] removeAllCachedResponses];
-
-	//NSURLCache *sharedCache = [[NSURLCache alloc]
-	//	initWithMemoryCapacity:0 diskCapacity:0 diskPath:nil];
-	//[NSURLCache setSharedURLCache: sharedCache];
-
-	// Global reference to the AppViewController instance.
-	theAppViewController = self;
-
-	self.gestureListeners = [NSMutableDictionary new];
-
-    return self;
+	return self;
 }
 
-- (BOOL)prefersStatusBarHidden
+- (void) createSubviews
 {
-    return YES;
+	// Create Back button.
+	self.buttonBack = [UIButton buttonWithType: UIButtonTypeSystem];
+	[self.buttonBack setTitle: @"Back" forState: UIControlStateNormal];
+    [self addSubview: self.buttonBack];
+
+	// Create URL field.
+	self.urlField = [[UITextField alloc] initWithFrame: CGRectZero];
+	self.urlField.clearButtonMode = UITextFieldViewModeNever;
+	[self.urlField setKeyboardType: UIKeyboardTypeURL];
+	self.urlField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    [self addSubview: self.urlField];
+
+	// Create Go button.
+	self.buttonGo = [UIButton buttonWithType: UIButtonTypeSystem];
+	[self.buttonGo setTitle: @"Go" forState: UIControlStateNormal];
+    [self addSubview: self.buttonGo];
+
+	// Create Web view.
+	self.webView = [[UIWebView alloc] initWithFrame: CGRectZero];
+	self.webView.autoresizingMask =
+		UIViewAutoresizingFlexibleHeight |
+		UIViewAutoresizingFlexibleWidth;
+	self.webView.scalesPageToFit = NO; //YES;
+	self.webView.scrollView.bounces = NO;
+	[self.webView setBackgroundColor:[UIColor whiteColor]];
+    [self addSubview: self.webView];
 }
 
-- (void)viewDidLoad
+- (void) layoutSubviews
 {
-    [super viewDidLoad];
+NSLog(@"layoutSubviews");
 
 	CGRect bounds;
-
-	CGRect viewBounds = self.view.bounds;
 
 	CGFloat toolbarOffsetY = 0;
 	CGFloat toolbarHeight = 40;
 
-	// Back button.
+	CGSize size = [UIApplication sharedApplication].keyWindow.frame.size;
+	NSLog(@"frame size 2: %f %f", size.width, size.height);
+	NSLog(@"view size 2: %f %f", self.bounds.size.width, self.bounds.size.height);
 
-	UIButton* buttonBack = [UIButton buttonWithType: UIButtonTypeSystem];
-    [buttonBack setFrame: CGRectMake(3, toolbarOffsetY, 40, toolbarHeight)];
-	[buttonBack setTitle: @"Back" forState: UIControlStateNormal];
-	[buttonBack
-		addTarget: self
-		action: @selector(onButtonBack:)
-		forControlEvents: UIControlEventTouchUpInside];
-    [self.view addSubview: buttonBack];
+	CGRect viewBounds = self.bounds;
 
-	// URL field.
+	// Size Back button.
+    [self.buttonBack setFrame: CGRectMake(3, toolbarOffsetY, 40, toolbarHeight)];
 
+	// Size URL field.
 	bounds = CGRectMake(50, toolbarOffsetY + 1, 0, toolbarHeight);
 	bounds.size.width = viewBounds.size.width - 90;
-	self.urlField = [[UITextField alloc] initWithFrame: bounds];
-	[self setSavedURL];
-	self.urlField.clearButtonMode = UITextFieldViewModeNever;
-	[self.urlField setKeyboardType: UIKeyboardTypeURL];
-	self.urlField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-    [self.view addSubview: self.urlField];
+	[self.urlField setFrame: bounds];
 
-	// Go button.
-
+	// Size Go button.
 	bounds = CGRectMake(0, toolbarOffsetY, 40, toolbarHeight);
 	bounds.origin.x = viewBounds.size.width - 40;
-	UIButton* buttonGo = [UIButton buttonWithType: UIButtonTypeSystem];
-    [buttonGo setFrame: bounds];
-	[buttonGo setTitle: @"Go" forState: UIControlStateNormal];
-	[buttonGo
-		addTarget: self
-		action: @selector(onButtonGo:)
-		forControlEvents: UIControlEventTouchUpInside];
-    [self.view addSubview: buttonGo];
+    [self.buttonGo setFrame: bounds];
 
-	// Web view.
-
-	// Set web view bounds.
+	// Size Web view.
 	bounds = viewBounds;
 	//bounds = CGRectOffset(bounds, 0, 20);
 	//bounds = CGRectInset(bounds, 0, 50);
 	bounds.origin.y = toolbarHeight;
 	bounds.size.height -= bounds.origin.y;
+	[self.webView setFrame: bounds];
 
-	// Create the web view.
-	self.webView = [[UIWebView alloc] initWithFrame: bounds];
+}
+
+@end
+
+/*********** Class AppViewController ***********/
+
+@implementation AppViewController
+
+- (id) init
+{
+	NSLog(@"init");
+
+	self = [super init];
+
+	// Global reference to the AppViewController instance.
+	theAppViewController = self;
+
+    return self;
+}
+
+- (void) loadView
+{
+NSLog(@"loadView");
+
+	// Create application root view.
+	self.view = [[FuffrBoxView alloc] initWithFrame: CGRectZero];
+}
+
+- (UIWebView*) webView
+{
+	return self.rootView.webView;
+}
+
+- (FuffrBoxView*) rootView
+{
+	return (FuffrBoxView*) self.view;
+}
+
+- (void) viewDidLoad
+{
+NSLog(@"viewDidLoad");
+
+    [super viewDidLoad];
+
+	// Set property that fixes web view layout problem.
+	// http://stackoverflow.com/questions/18947872/ios7-added-new-whitespace-in-uiwebview-removing-uiwebview-whitespace-in-ios7
+	self.automaticallyAdjustsScrollViewInsets = NO;
 
 	// Set the web view delegate.
 	self.webView.delegate = self;
 
-	// Set properties of the web view.
-    self.webView.autoresizingMask =
-		UIViewAutoresizingFlexibleHeight |
-		UIViewAutoresizingFlexibleWidth;
-	self.webView.scalesPageToFit = NO; //YES;
-	// http://stackoverflow.com/questions/2442727/strange-padding-margin-when-using-uiwebview
-	// http://stackoverflow.com/questions/18947872/ios7-added-new-whitespace-in-uiwebview-removing-uiwebview-whitespace-in-ios7
-	self.automaticallyAdjustsScrollViewInsets = NO;
-	self.webView.scrollView.bounces = NO;
-	self.view.multipleTouchEnabled = YES;
-	[self.webView setBackgroundColor:[UIColor greenColor]];
+	// Set button event handlers.
+	[self.rootView.buttonGo
+		addTarget: self
+		action: @selector(onButtonGo:)
+		forControlEvents: UIControlEventTouchUpInside];
+	[self.rootView.buttonBack
+		addTarget: self
+		action: @selector(onButtonBack:)
+		forControlEvents: UIControlEventTouchUpInside];
 
-    [self.view addSubview: self.webView];
+	// Set saved URL field content.
+	[self setSavedURL];
 
+	// Load initial content into the view view.
+	[self loadWebViewContent];
+
+	// Create object that handles calls from JavaScript.
 	[NSURLProtocol registerClass: [URLProtocolFuffrBridge class]];
 
-	[self loadWebViewContent];
+	// Create gesture listeners.
+	self.gestureListeners = [NSMutableDictionary new];
+}
+
+- (BOOL) prefersStatusBarHidden
+{
+    return YES;
 }
 
 -(void) loadWebViewContent
@@ -579,9 +660,8 @@ static void CreateSwipeGesture(
 	// Clear the web view delegate.
 	self.webView.delegate = nil;
 
-    [[NSNotificationCenter defaultCenter] removeObserver: self];
-	[[FFRTouchManager sharedManager] shutDown]; // Disconnects Fuffr.
-	//  [[FFRTouchManager sharedManager] disconnectFuffr];
+	// Disconnects Fuffr.
+	[[FFRTouchManager sharedManager] shutDown];
 
     [super viewWillDisappear: animated];
 }
@@ -605,7 +685,7 @@ static void CreateSwipeGesture(
 
 - (void) connectToFuffr
 {
-	[self.view makeToast: @"Scanning for Fuffr"];
+	[self.view ffr_makeToast: @"Scanning for Fuffr"];
 
 	// Get a reference to the touch manager.
 	// First time the manager is requested, it will be created
@@ -617,14 +697,14 @@ static void CreateSwipeGesture(
 		onFuffrConnected:
 		^{
 			NSLog(@"Fuffr Connected");
-			[self.view makeToast: @"Fuffr Connected"];
+			[self.view ffr_makeToast: @"Fuffr Connected"];
 			FuffrIsConnected = YES;
 			[self callJS: @"fuffr.on.connected()"];
 		}
 		onFuffrDisconnected:
 		^{
 			NSLog(@"Fuffr Disconnected");
-			[self.view makeToast: @"Fuffr Disconnected"];
+			[self.view ffr_makeToast: @"Fuffr Disconnected"];
 			FuffrIsConnected = NO;
 			[self callJS: @"fuffr.on.disconnected()"];
 		}];
@@ -739,7 +819,7 @@ static void CreateSwipeGesture(
 {
 	[self.view endEditing: YES];
 
-	NSString* urlString = self.urlField.text;
+	NSString* urlString = self.rootView.urlField.text;
 
 	if (![urlString hasPrefix: @"http"])
 	{
@@ -769,11 +849,11 @@ static void CreateSwipeGesture(
 		stringForKey: @"FuffrBoxSavedURL"];
 	if (url)
 	{
-		self.urlField.text = url;
+		self.rootView.urlField.text = url;
 	}
 	else
 	{
-		self.urlField.text = URL_INITIAL_URL_FIELD;
+		self.rootView.urlField.text = URL_INITIAL_URL_FIELD;
 	}
 }
 

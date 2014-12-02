@@ -14,12 +14,6 @@
  */
 @interface AppViewController : UIViewController<UIWebViewDelegate>
 
-/** The web view. */
-@property UIWebView* webView;
-
-/** The url field. */
-@property UITextField* urlField;
-
 @property NSMutableDictionary* gestureListeners;
 
 - (void) executeJavaScriptCommand: (NSString*) command;
