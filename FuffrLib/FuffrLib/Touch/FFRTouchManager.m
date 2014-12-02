@@ -126,7 +126,7 @@ static BOOL stringContains(NSString* string, NSString* substring)
 static NSSet* filterTouchesBySide(NSSet* touches, FFRSide sides)
 {
 	// If all sides are set there is no need to filter.
-	if (sides & FFRSideAll)
+	if (sides == FFRSideAll)
 	{
 		return touches;
 	}
