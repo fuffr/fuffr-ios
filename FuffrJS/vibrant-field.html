@@ -60,8 +60,17 @@ fuffr.on.connected = function()
 }
 </script>
 <script type="text/paperscript" canvas="paper-canvas">
+
+// Save window width and height.
 var windowWidth = $(window).width()
 var windowHeight = $(window).height()
+
+// Update width and height when window resizes.
+window.addEventListener('resize', function(event)
+{
+	windowWidth = $(window).width()
+	windowHeight = $(window).height()
+})
 
 var mousePoint = view.center;
 var amount = 10; // 25;

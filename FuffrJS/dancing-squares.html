@@ -79,8 +79,16 @@ fuffr.on.connected = function()
 		1)
 }
 
+// Save window width and height.
 var windowWidth = $(window).width()
 var windowHeight = $(window).height()
+
+// Update width and height when window resizes.
+window.addEventListener('resize', function(event)
+{
+	windowWidth = $(window).width()
+	windowHeight = $(window).height()
+})
 
 function OnRightTouch(touchId, touchX, touchY, previousX, previousY, normalizedX, normalizedY)
 {

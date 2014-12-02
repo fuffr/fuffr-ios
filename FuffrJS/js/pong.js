@@ -418,8 +418,12 @@ var resetPlayfield = function()
 {
 	game.playfieldWidth = $('#playfield').width()
 	game.playfieldHeight = $('#playfield').height()
+
 	gfx.paddleLeft.setLeft(0)
+	gfx.paddleLeft.setCenterY(game.playfieldHeight / 2)
+
 	gfx.paddleRight.setRight(game.playfieldWidth)
+	gfx.paddleRight.setCenterY(game.playfieldHeight / 2)
 }
 
 function OnRightTouch(touchId, touchX, touchY, previousX, previousY, normalizedX, normalizedY)
@@ -494,6 +498,12 @@ function touchHandler(touches)
 fuffr.on.touchesBegan = touchHandler
 fuffr.on.touchesMoved = touchHandler
 fuffr.on.touchesEnded = touchHandler
+
+// Update playfield when window resizes.
+window.addEventListener('resize', function(event)
+{
+	resetPlayfield()
+})
 
 var simulator = {}
 
