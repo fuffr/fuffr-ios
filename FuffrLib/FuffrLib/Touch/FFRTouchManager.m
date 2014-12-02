@@ -295,11 +295,11 @@ static int touchBlockIdCounter = 0;
 	self.firmwareUpdateState = FFRFirmwareUpdateInitiated;
 
 	// Initalise progress UI.
-	[SVProgressHUD setBackgroundColor: [UIColor lightGrayColor]];
-	[SVProgressHUD setRingThickness: 4.0];
-	[SVProgressHUD
+	[FFR_SVProgressHUD setBackgroundColor: [UIColor lightGrayColor]];
+	[FFR_SVProgressHUD setRingThickness: 4.0];
+	[FFR_SVProgressHUD
 		showWithStatus: @"Perparing Update 1(2)"
-		maskType: SVProgressHUDMaskTypeBlack];
+		maskType: FFR_SVProgressHUDMaskTypeBlack];
 
 	FFRBLEManager* bleManager = [FFRBLEManager sharedManager];
 
@@ -398,19 +398,19 @@ static int touchBlockIdCounter = 0;
 				(FFRFirmwareUpdateCC2541 == self.firmwareUpdateState) ? @"Update 1(2)" : @"Update 2(2)",
 				secondsLeft / 60,
 				secondsLeft % 60];
-		[SVProgressHUD
+		[FFR_SVProgressHUD
 			showProgress: progress
 			status: message
-			maskType: SVProgressHUDMaskTypeBlack];
+			maskType: FFR_SVProgressHUDMaskTypeBlack];
     }
     else if (state == FFRProgrammingStateWriteCompleted)
 	{
 		if (FFRFirmwareUpdateCC2541 == self.firmwareUpdateState)
 		{
 			NSLog(@"Firmware part 1 updated");
-			[SVProgressHUD
+			[FFR_SVProgressHUD
 				showWithStatus: @"Perparing Update 2(2)"
-				maskType: SVProgressHUDMaskTypeBlack];
+				maskType: FFR_SVProgressHUDMaskTypeBlack];
         	[self
 				performSelector: @selector(updateFirmwareMSP430)
 				withObject: nil
@@ -420,7 +420,7 @@ static int touchBlockIdCounter = 0;
 		{
 			NSLog(@"Firmware part 2 updated");
 
-			[SVProgressHUD showSuccessWithStatus:@"Firmware updated"];
+			[FFR_SVProgressHUD showSuccessWithStatus:@"Firmware updated"];
 
         	[self performSelector:@selector(firmwareUpdateEnded) withObject:nil afterDelay:3.0];
 
@@ -459,7 +459,7 @@ static int touchBlockIdCounter = 0;
 {
 	if (self.firmwareUpdateState != FFRFirmwareUpdateNotInProgress)
 	{
-		[SVProgressHUD dismiss];
+		[FFR_SVProgressHUD dismiss];
 
 		// Recreate touch handler.
 		[self createTouchHandlerAndRegisterAsTouchDelegate];
@@ -573,6 +573,7 @@ static int touchBlockIdCounter = 0;
 {
 	if (self = [super init])
 	{
+		// Initialise properties.
 		self.onConnectedBlock = nil;
 		self.onDisconnectedBlock = nil;
 		self.touchObservers = [NSMutableArray array];
@@ -584,6 +585,8 @@ static int touchBlockIdCounter = 0;
 		// comment in header file if you change this.
 		self.screenIdleTimerTimeout = 5.0;
 		self.lastTouchMovedEventTimeStamp = 0.0;
+
+		// Start timer that handles screen stay awake behaviour.
 		[self createScreenIdleTimer];
 	}
 	return self;
