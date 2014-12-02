@@ -182,12 +182,6 @@
 
 - (void) touchRightMoved: (NSSet*)touches
 {
-	// Check that tracked touch is present in current set.
-	if (![touches containsObject: self.touchRight])
-	{
-		return;
-	}
-
 	// Set position of the right circle and redraw. Note that
 	// rather than using the set of touches, we use the touch
 	// that we got from the touch began event.
@@ -196,12 +190,6 @@
 
 - (void) touchLeftMoved: (NSSet*)touches
 {
-	// Check that tracked touch is present in current set.
-	if (![touches containsObject: self.touchLeft])
-	{
-		return;
-	}
-
 	// Set position of the left circle and redraw. Note that
 	// rather than using the set of touches, we use the touch
 	// that we got from the touch began event.
