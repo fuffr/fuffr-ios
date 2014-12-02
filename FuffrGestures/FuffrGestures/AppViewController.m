@@ -53,7 +53,14 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear: animated];
-    
+
+	// Track orientation changes.
+	[[NSNotificationCenter defaultCenter]
+		addObserver: self
+		selector: @selector(orientationChanged:)
+		name: UIDeviceOrientationDidChangeNotification
+		object:nil];
+
     // Setup the fuffr connection
     [self setupFuffr];
 }
@@ -373,6 +380,11 @@
 {
     // Hide and show help and status text. For demonstrate purposes.
     self.messageView.hidden = (!self.messageView.hidden);
+}
+
+- (void) orientationChanged: (NSNotification *)notification
+{
+	[self drawImageView];
 }
 
 - (void)drawImageView

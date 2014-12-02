@@ -51,6 +51,13 @@
 {
     [super viewDidAppear: animated];
 
+	// Track orientation changes.
+	[[NSNotificationCenter defaultCenter]
+		addObserver: self
+		selector: @selector(orientationChanged:)
+		name: UIDeviceOrientationDidChangeNotification
+		object:nil];
+
 	// Draw the initial view.
 	[self drawImageView];
 
@@ -81,6 +88,11 @@
 	self.messageView.text = message;
 	self.messageView.frame = CGRectMake(10, 25, 300, 300);
 	[self.messageView sizeToFit];
+}
+
+- (void) orientationChanged: (NSNotification *)notification
+{
+	[self drawImageView];
 }
 
 - (void)drawImageView

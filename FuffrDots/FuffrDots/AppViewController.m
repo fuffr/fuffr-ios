@@ -195,6 +195,13 @@ dispatch_queue_t openGLESContextQueue;
 {
     [super viewDidAppear: animated];
 
+	// Track orientation changes.
+	[[NSNotificationCenter defaultCenter]
+		addObserver: self
+		selector: @selector(orientationChanged:)
+		name: UIDeviceOrientationDidChangeNotification
+		object:nil];
+
 	// Connect to Fuffr and setup touch events.
 	[self setupFuffr];
 }
@@ -288,6 +295,11 @@ dispatch_queue_t openGLESContextQueue;
 		[self.touches removeObject: touch];
 	}
 
+	[self redrawView];
+}
+
+- (void) orientationChanged: (NSNotification *)notification
+{
 	[self redrawView];
 }
 
