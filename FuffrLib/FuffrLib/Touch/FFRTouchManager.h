@@ -26,6 +26,18 @@
  */
 @interface FFRTouchManager : NSObject<FFRTouchHandlerDelegate>
 
+// Public properties.
+
+/** 
+ * Time in seconds after no touch activity has occured
+ * until the system keep-screen-alive flag is set to NO.
+ * Currently the default value is 5 seconds. If your app
+ * needs longer time to stay awake, increase this value.
+ */
+@property (nonatomic, assign) NSTimeInterval screenIdleTimerTimeout;
+
+// Public class methods.
+
 /**
  * Public class method that returns singleton instance of 
  * this class.

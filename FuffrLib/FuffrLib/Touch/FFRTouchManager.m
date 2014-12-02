@@ -98,6 +98,12 @@ extern NSString* FFRFirmwareDownloader_URL;
 /** Firmware A/B version. */
 @property char firmwareImageVersion;
 
+/** Timer that sets the idleTimerDisabled flag. */
+@property NSTimer* screenIdleTimerTimer;
+
+/** Time stap for when the most recent touch moved event occured. */
+@property (nonatomic, assign) NSTimeInterval lastTouchMovedEventTimeStamp;
+
 /**
  * Type that defines constants for firmware update states.
  */
@@ -247,6 +253,12 @@ static int touchBlockIdCounter = 0;
 
 - (void) shutDown
 {
+	if (self.screenIdleTimerTimer)
+	{
+		[self.screenIdleTimerTimer invalidate];
+		self.screenIdleTimerTimer = nil;
+	}
+
 	[self disconnectFuffr];
 }
 
@@ -568,8 +580,18 @@ static int touchBlockIdCounter = 0;
 		self.peripheralWithMaxRSSI = nil;
 		self.activePeripheral = nil;
 		self.firmwareUpdateState = FFRFirmwareUpdateNotInProgress;
+		// Set default value. Update documentation
+		// comment in header file if you change this.
+		self.screenIdleTimerTimeout = 5.0;
+		self.lastTouchMovedEventTimeStamp = 0.0;
+		[self createScreenIdleTimer];
 	}
 	return self;
+}
+
+- (void) dealloc
+{
+	[self shutDown];
 }
 
 // Internal helper method.
@@ -703,6 +725,37 @@ static int touchBlockIdCounter = 0;
 	touchHandler.touchDelegate = self;
 }
 
+- (void) createScreenIdleTimer
+{
+	self.screenIdleTimerTimer =
+		[NSTimer
+			scheduledTimerWithTimeInterval: self.screenIdleTimerTimeout / 2.0
+			target: self
+			selector: @selector(screenKeepAliveCheck:)
+			userInfo: nil
+			repeats: YES];
+}
+
+- (void) screenKeepAliveCheck: (id) sender
+{
+	// Set the idleTimerDisabled flag based on when last touch event occured.
+	NSTimeInterval now = [[NSProcessInfo processInfo] systemUptime];
+	if (now - self.lastTouchMovedEventTimeStamp >= self.screenIdleTimerTimeout)
+	{
+		[UIApplication sharedApplication].idleTimerDisabled = NO;
+	}
+	else
+	{
+		[UIApplication sharedApplication].idleTimerDisabled = YES;
+	}
+}
+
+- (void) updateTouchTimeStamp
+{
+	// Save time stamp.
+	self.lastTouchMovedEventTimeStamp = [[NSProcessInfo processInfo] systemUptime];
+}
+
 - (void) touchesBegan: (NSSet*)touches
 {
 	//NSLog(@"FFRTouchManager touchBegan count: %i", (int)touches.count);
@@ -746,6 +799,8 @@ static int touchBlockIdCounter = 0;
 	//NSLog(@"FFRTouchManager touchMoved count: %i", (int)touches.count);
 
 	//logTouches(@"FFRTouchMan moved", touches);
+
+	[self updateTouchTimeStamp];
 
 	// Notify touch observers.
 	NSArray* observers = [self.touchObservers copy];
