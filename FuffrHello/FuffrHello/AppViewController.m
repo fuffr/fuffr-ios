@@ -128,32 +128,17 @@
 {
 	[self showMessage: @"Scanning for Fuffr..."];
 
-	// Get a reference to the touch manager.
-	FFRTouchManager* manager = [FFRTouchManager sharedManager];
+	[[FFRTouchManager sharedManager]
+		addObserver: self
+		forKeyPath: @"connected"
+		options: 0 //NSKeyValueObservingOptionNew
+		context: nil];
 
-	// Set active sides.
-	[manager
-		onFuffrConnected:
-		^{
-			[manager useSensorService:
-			^{
-				NSLog(@"Fuffr Connected");
-				[self showMessage: @"Fuffr Connected"];
-				[[FFRTouchManager sharedManager]
-					enableSides: FFRSideLeft | FFRSideRight
-					touchesPerSide: @1
-					];
-			}];
-		}
-		onFuffrDisconnected:
-		^{
-			NSLog(@"Fuffr Disconnected");
-			[self showMessage: @"Fuffr Disconnected"];
-		}];
+	[FFRTouchManager connectEnableLeftRight];
 
 	// Register methods for right side touches. The touchEnded
 	// method is not used in this example.
-	[manager
+	[FFRTouchManager
 		addTouchObserver: self
 		touchBegan: @selector(touchRightBegan:)
 		touchMoved: @selector(touchRightMoved:)
@@ -162,12 +147,31 @@
 
 	// Register methods for left side touches. The touchEnded
 	// method is not used in this example.
-	[manager
+	[FFRTouchManager
 		addTouchObserver: self
 		touchBegan: @selector(touchLeftBegan:)
 		touchMoved: @selector(touchLeftMoved:)
 		touchEnded: nil
 		sides: FFRSideLeft];
+}
+
+- (void)observeValueForKeyPath: (NSString*)keyPath
+	ofObject: (id)object
+	change: (NSDictionary*)change
+	context: (void*)context
+{
+	if ([keyPath isEqual:@"connected"])
+	{
+		BOOL connected = [[object valueForKeyPath: keyPath] boolValue];
+		if (connected)
+		{
+			[self showMessage: @"Fuffr Connected"];
+		}
+		else
+		{
+			[self showMessage: @"Fuffr Disconnected"];
+		}
+	}
 }
 
 - (void) touchRightBegan: (NSSet*)touches
