@@ -185,7 +185,7 @@ static FFRTouchManager* sharedInstance = NULL;
 // Touch block id counter.
 static int touchBlockIdCounter = 0;
 
-// Public class method.
+// Public class methods.
 
 + (FFRTouchManager*) sharedManager
 {
@@ -201,6 +201,64 @@ static int touchBlockIdCounter = 0;
 	return sharedInstance;
 }
 
++ (void) connectEnableLeftRight
+{
+	[FFRTouchManager connectEnableSides: FFRSideLeft | FFRSideRight];
+}
+
++ (void) connectEnableSides: (FFRSide)sides
+{
+	[FFRTouchManager connectEnableSides: sides touchesPerSide: @1];
+}
+
++ (void) connectEnableSides: (FFRSide)sides touchesPerSide: (NSNumber*)numberOfTouches
+{
+	// Scan is started automatically by FFRBLEManager.
+	// No need to do this here.
+	//[self startScan];
+
+	// Get a reference to the touch manager.
+	FFRTouchManager* manager = [FFRTouchManager sharedManager];
+
+	// Set active sides.
+	[manager
+		onFuffrConnected:
+		^{
+			[manager useSensorService:
+			^{
+				NSLog(@"Fuffr Connected");
+				[manager
+					enableSides: sides
+					touchesPerSide: numberOfTouches];
+			}];
+		}
+		onFuffrDisconnected:
+		^{
+			NSLog(@"Fuffr Disconnected");
+		}];
+}
+
++ (void) enableSides: (FFRSide)sides touchesPerSide: (NSNumber*)numberOfTouches
+{
+	[[FFRTouchManager sharedManager]
+		enableSides: sides
+		touchesPerSide: numberOfTouches];
+}
+
++ (void) addTouchObserver: (id)object
+	touchBegan: (SEL)touchBeganSelector
+	touchMoved: (SEL)touchMovedSelector
+	touchEnded: (SEL)touchEndedSelector
+	sides: (FFRSide)sides
+{
+	[[FFRTouchManager sharedManager]
+		addTouchObserver: object
+		touchBegan: touchBeganSelector
+		touchMoved: touchMovedSelector
+		touchEnded: touchEndedSelector
+		sides: sides];
+}
+
 // Public instance methods.
 
 - (void) onFuffrConnected: (void(^)())connectedBlock
@@ -209,25 +267,38 @@ static int touchBlockIdCounter = 0;
 	self.onConnectedBlock = connectedBlock;
 	self.onDisconnectedBlock = disconnectedBlock;
 
-	// Scan is started automatically by FFRBLEManager.
-	// No need to do this here.
-	//[self startScan];
-
-	// TODO: Call connectedBlock if already connected?
-	// And do the same in onFuffrConnected?
-	// There could be a situation where this method is
-	// called "too late" and you will never call the
-	// connected block.
+	if (self.connected)
+	{
+		// Call connectedBlock if already connected.
+		connectedBlock();
+	}
+	else
+	{
+		// Call disconnectedBlock if already disconnected.
+		disconnectedBlock();
+	}
 }
 
 - (void) onFuffrConnected: (void(^)())connectedBlock
 {
 	self.onConnectedBlock = connectedBlock;
+
+	if (self.connected)
+	{
+		// Call connectedBlock if already connected.
+		connectedBlock();
+	}
 }
 
 - (void) onFuffrDisconnected: (void(^)())disconnectedBlock
 {
 	self.onDisconnectedBlock = disconnectedBlock;
+
+	if (!self.connected)
+	{
+		// Call disconnectedBlock if already disconnected.
+		disconnectedBlock();
+	}
 }
 
 - (void) disconnectFuffr
@@ -574,6 +645,7 @@ static int touchBlockIdCounter = 0;
 	if (self = [super init])
 	{
 		// Initialise properties.
+		self.connected = NO;
 		self.onConnectedBlock = nil;
 		self.onDisconnectedBlock = nil;
 		self.touchObservers = [NSMutableArray array];
@@ -693,6 +765,7 @@ static int touchBlockIdCounter = 0;
 		{
 			NSLog(@"initFuffr onPeriperalConnected");
 			[manager.handler setPeripheral: hostPeripheral];
+			self.connected = YES;
 			if (me.onConnectedBlock)
 			{
 				me.onConnectedBlock();
@@ -703,6 +776,7 @@ static int touchBlockIdCounter = 0;
 		^(CBPeripheral* hostPeripheral)
 		{
 			NSLog(@"initFuffr onPeriperalDisconnected");
+			self.connected = NO;
 			if (me.onDisconnectedBlock)
 			{
 				me.onDisconnectedBlock();

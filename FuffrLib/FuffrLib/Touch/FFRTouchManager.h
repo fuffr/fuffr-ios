@@ -29,6 +29,14 @@
 // Public properties.
 
 /** 
+ * Boolean value for connection status. Is true if
+ * connected to Fuffr, false if disconnected. You can
+ * observe this value using KVO to monitor connection 
+ * status changes.
+ */
+@property (nonatomic, assign) BOOL connected;
+
+/** 
  * Time in seconds after no touch activity has occured
  * until the system keep-screen-alive flag is set to NO.
  * Currently the default value is 5 seconds. If your app
@@ -43,6 +51,71 @@
  * this class.
  */
 + (FFRTouchManager*) sharedManager;
+
+/** 
+ * Connect to the closest Fuffr case and enable left and 
+ * right sides with one touch per side.
+ */
++ (void) connectEnableLeftRight;
+
+/** 
+ * Connect to the closest Fuffr case and enable the given
+ * sides with one touch per side.
+ * @param sides Sides to enable, bitwise or:ed values 
+ * (FFRSideTop, FFRSideLeft, FFRSideRight, FFRSideBottom).
+ */
++ (void) connectEnableSides: (FFRSide)sides;
+
+/** 
+ * Connect to the closest Fuffr case and enable the given
+ * sides with the given number of touches per side.
+ * @param sides Sides to enable, bitwise or:ed values 
+ * (FFRSideTop, FFRSideLeft, FFRSideRight, FFRSideBottom).
+ * @param numberOfTouches Number of touches per side, max 5.
+ */
++ (void) connectEnableSides: (FFRSide)sides touchesPerSide: (NSNumber*)numberOfTouches;
+
+/** 
+ * When already connected change the enabled sides and
+ * the number of touches per side.
+ * @param sides Sides to enable, bitwise or:ed values 
+ * (FFRSideTop, FFRSideLeft, FFRSideRight, FFRSideBottom).
+ * @param numberOfTouches Number of touches per side, max 5.
+ * 0 means off and puts Fuffr into sleep mode.
+ */
++ (void) enableSides: (FFRSide)sides touchesPerSide: (NSNumber*)numberOfTouches;
+
+/**
+ * Add an object as observer for touch events.
+ *
+ * @param object The observer that will recieve touch
+ * events, as specified by the megthod selectors.
+ * @param touchBegan Selector for touch began events.
+ * @param touchMoved Selector for touch moved events.
+ * @param touchEnded Selector for touch ended events.
+ * @param sides The side(s) of Fuffr that will be observed.
+ *
+ * The touchBegan, touchMoved and touchEnded methods
+ * have the format:
+ *	methodName: (NSSet*) touches
+ * where touches is a set of FFRTouch objects.
+ * The touch method selectors can be set to nil, in which 
+ * case that touch event will not be received.
+ *
+ * The side can be one of the constants FFRLeft,
+ * FFRRight, FFRTop, and FFRBottom. Multiple
+ * sides can be observed by the same methods by combining
+ * the side constants with the bitwise or operator.
+ *
+ * The most convinient way to monitor different sides of
+ * Fuffr is usually to set up different set of methods
+ * for each side used by the application.
+ */
++ (void) addTouchObserver: (id)object
+	touchBegan: (SEL)touchBeganSelector
+	touchMoved: (SEL)touchMovedSelector
+	touchEnded: (SEL)touchEndedSelector
+	sides: (FFRSide)sides;
 
 // Public instance methods.
 
