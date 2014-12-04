@@ -190,7 +190,7 @@
 		sLastSecondTimestamp = now;
 		sFrameCountLastSecond = sFrameCount;
 		sFPS = fps;
-		NSLog(@"FPS: %i", fps);
+		//NSLog(@"FPS: %i", fps);
 		self.framesPerSecond = fps;
 	}
 	fps = sFPS;
