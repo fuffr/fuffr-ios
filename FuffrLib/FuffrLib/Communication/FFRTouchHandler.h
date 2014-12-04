@@ -56,10 +56,6 @@ extern NSString* const FFRBatteryCharacteristicUUID;
 	// Queue for handling touch event data.
     dispatch_queue_t _touchQueue;
 
-	// Previous touch state.
-	// TODO: This can probably be removed.
-    bool _previousTouchDown[32];
-
 	// Touch events.
     FFRTouch* _touches[32];
 

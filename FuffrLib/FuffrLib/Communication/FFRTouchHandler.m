@@ -67,8 +67,8 @@ static const FFRSide SideLookupTable[4] =
 	if (self = [super init])
 	{
 		_numTouchesPerSide = 0;
-		_touchQueue = dispatch_queue_create("com.fuffr.touchqueue", nil);
-		memset(_previousTouchDown, 0, sizeof(_previousTouchDown));
+		_touchQueue = dispatch_queue_create("com.fuffr.touchqueue", DISPATCH_QUEUE_SERIAL);
+		memset(_touches, 0, sizeof(_touches));
 		self.spaceMapper = [FFROverlaySpaceMapper new];
 		self.touchDelegate = nil;
 
@@ -291,9 +291,13 @@ currently 5 touches. Setting 0 will disable the touch detection."
 				return;
 			}
 
-			[self
-				unpackAndSendTouchEventsForCharacteristic: characteristic
-				eventCount: count];
+			__weak FFRTouchHandler* me = self;
+			dispatch_async(dispatch_get_main_queue(),
+			^{
+				[me
+					unpackAndSendTouchEventsForCharacteristic: characteristic
+					eventCount: count];
+			});
 		}
 	});
 }
@@ -352,12 +356,11 @@ currently 5 touches. Setting 0 will disable the touch detection."
 	{
 		[self sendTouchesBegan: touchesBegan];
 	}
-	else if (nil != touchesMoved)
+	if (nil != touchesMoved)
 	{
-		//NSLog(@"=== touchesMoved: %i", (int)touchesMoved.count);
 		[self sendTouchesMoved: touchesMoved];
 	}
-	else if (nil != touchesEnded)
+	if (nil != touchesEnded)
 	{
 		[self sendTouchesEnded: touchesEnded];
 	}
@@ -366,10 +369,19 @@ currently 5 touches. Setting 0 will disable the touch detection."
 -(void) sendTouchesBegan: (NSSet*) touches
 {
 	// Notify touch delegate.
-	dispatch_async(dispatch_get_main_queue(),
-	^{
-		// Set touch phase to began again on the main queue,
-		// to prevent overwrite by moved events.
+	//dispatch_async(dispatch_get_main_queue(),
+	//^{
+		//
+		// Set touch phase to began again here on the main queue,
+		// to prevent overwrite by moved events. Same mechanism
+		// is used in sendTouchesMoved and sendTouchesEnded.
+		//
+		// TODO: This is unsafe mechanism, touch data is shared
+		// between dispatch queues, which is not really safe.
+		// Consider doing unpacking of events on the main queue,
+		// or use some other mechanism (but we don't want to slow
+		// down touch processing).
+		//
 		for (FFRTouch* touch in touches)
 		{
 			touch.phase = FFRTouchPhaseBegan;
@@ -379,14 +391,14 @@ currently 5 touches. Setting 0 will disable the touch detection."
 		{
 			[self.touchDelegate touchesBegan: touches];
 		}
-	});
+	//});
 }
 
 -(void) sendTouchesMoved: (NSSet*) touches
 {
 	// Notify touch delegate.
-	dispatch_async(dispatch_get_main_queue(),
-	^{
+	//dispatch_async(dispatch_get_main_queue(),
+	//^{
 		for (FFRTouch* touch in touches)
 		{
 			touch.phase = FFRTouchPhaseMoved;
@@ -396,14 +408,14 @@ currently 5 touches. Setting 0 will disable the touch detection."
 		{
 			[self.touchDelegate touchesMoved: touches];
 		}
-	});
+	//});
 }
 
 -(void) sendTouchesEnded: (NSSet*) touches
 {
 	// Notify touch delegate.
-	dispatch_async(dispatch_get_main_queue(),
-	^{
+	//dispatch_async(dispatch_get_main_queue(),
+	//^{
 		for (FFRTouch* touch in touches)
 		{
 			touch.phase = FFRTouchPhaseEnded;
@@ -413,13 +425,13 @@ currently 5 touches. Setting 0 will disable the touch detection."
 		{
 			[self.touchDelegate touchesEnded: touches];
 		}
-	});
+	//});
 }
 
 -(void) timerPruneTouches:(id) sender
 {
-	//NSLog(@"timerPruneTouches queue: %s", dispatch_queue_get_label(dispatch_get_current_queue()));
-	dispatch_async(_touchQueue,
+	//dispatch_async(_touchQueue,
+	dispatch_async(dispatch_get_main_queue(),
 	^{
 		NSTimeInterval now = [[NSProcessInfo processInfo] systemUptime];
 		NSMutableSet* touchesEnded = nil;
@@ -432,7 +444,7 @@ currently 5 touches. Setting 0 will disable the touch detection."
 				 FFRTouchPhaseMoved == touch.phase) &&
 				(now - touch.timestamp >= _touchRemoveTimeout))
 			{
-				//NSLog(@"***Pruning id: %d, side: %d", (int)touch.identifier, touch.side);
+				NSLog(@"***Pruning id: %d, side: %d", (int)touch.identifier, touch.side);
 
 				if (nil == touchesEnded)
 				{
@@ -443,9 +455,9 @@ currently 5 touches. Setting 0 will disable the touch detection."
 			}
 		}
 
-		if (nil != touchesEnded && nil != self.touchDelegate)
+		if (nil != touchesEnded)
 		{
-			[self.touchDelegate touchesEnded: touchesEnded];
+			[self sendTouchesEnded: touchesEnded];
 		}
 	});
 }
@@ -485,28 +497,42 @@ currently 5 touches. Setting 0 will disable the touch detection."
 	CGPoint normalizedPoint = [self normalizePoint:rawPoint onSide:side];
 
 	bool down = raw.down;
-	bool previousDown = _previousTouchDown[identifier];
-	_previousTouchDown[identifier] = down;
 
-	// If touch remains inactive, return nil.
-	if (!down && !previousDown)
+	// Get the touch object.
+	FFRTouch* touch = _touches[identifier];
+	if (nil == touch) // Create touch object
 	{
+		_touches[identifier] = [FFRTouch new];
+		_touches[identifier].identifier = identifier;
+	}
+
+ 	// Began
+	if (down && (FFRTouchPhaseEnded == touch.phase
+		|| FFRTouchPhaseInactive == touch.phase))
+	{
+		touch.phase = FFRTouchPhaseBegan;
+	}
+ 	// Moved
+	else if (down && (FFRTouchPhaseBegan == touch.phase
+		|| FFRTouchPhaseMoved == touch.phase))
+	{
+		touch.phase = FFRTouchPhaseMoved;
+	}
+ 	// Ended
+	else if (!down && (FFRTouchPhaseBegan == touch.phase
+		|| FFRTouchPhaseMoved == touch.phase))
+	{
+		touch.phase = FFRTouchPhaseEnded;
+	}
+ 	// Inactive
+	else
+	{
+		touch.phase = FFRTouchPhaseInactive;
 		return nil;
 	}
 
-	// Get the touch object.
-	if (nil == _touches[identifier])
-	{
-		_touches[identifier] = [FFRTouch new];
-	}
-	FFRTouch* touch = _touches[identifier];
-
-	touch.identifier = identifier;
-	if (down && !previousDown) { touch.phase = FFRTouchPhaseBegan; }
-	else if (down && previousDown) { touch.phase = FFRTouchPhaseMoved; }
-	else if (!down && previousDown) { touch.phase = FFRTouchPhaseEnded; }
-	//TODO: FFRTouchPhaseInactive not used. Remove.
-	//else if (!down && !previousDown) { touch.phase = FFRTouchPhaseInactive; }
+	//if (touch.phase != FFRTouchPhaseMoved)
+	//	NSLog(@"  @@@ unpackData id: %i down: %i phase: %i", identifier, down, touch.phase);
 
 	touch.timestamp = [[NSProcessInfo processInfo] systemUptime];
 	touch.side = side;
