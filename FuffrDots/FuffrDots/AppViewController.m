@@ -262,11 +262,6 @@ dispatch_queue_t openGLESContextQueue;
 		sides: FFRSideLeft | FFRSideRight | FFRSideTop | FFRSideBottom];
 }
 
-- (void) fuffrConnected
-{
-	NSLog(@"fuffrConnected");
-}
-
 - (void) touchesBegan: (NSSet*)touches
 {
 	//NSLog(@"@@@ touchesBegan: %i", (int)touches.count);
@@ -289,7 +284,7 @@ dispatch_queue_t openGLESContextQueue;
 - (void) touchesEnded: (NSSet*)touches
 {
 	//NSLog(@"@@@ touchesEnded: %i", (int)touches.count);
-	
+
 	for (FFRTouch* touch in touches)
 	{
 		[self.touches removeObject: touch];
@@ -305,6 +300,13 @@ dispatch_queue_t openGLESContextQueue;
 
 - (void) redrawView
 {
+	// Update touch count messge.
+	NSString* message = [NSString
+		stringWithFormat: @"Number of touches: %i FPS: %i",
+		(int)self.touches.count,
+		self.glView.framesPerSecond];
+	[self showMessage: message];
+
 	// Render asynchronously, only one frame at a time.
 	if (dispatch_semaphore_wait(frameRenderingSemaphore, DISPATCH_TIME_NOW) != 0)
 	{
@@ -315,13 +317,6 @@ dispatch_queue_t openGLESContextQueue;
 		[self drawImageView];
 		dispatch_semaphore_signal(frameRenderingSemaphore);
 	});
-
-	// Update touch count messge.
-	NSString* message = [NSString
-		stringWithFormat: @"Number of touches: %lu FPS: %i",
-		self.touches.count,
-		self.glView.framesPerSecond];
-	[self showMessage: message];
 }
 
 - (void)drawImageView
