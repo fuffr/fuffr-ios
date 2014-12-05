@@ -53,7 +53,7 @@ extern NSString* const FFRBatteryCharacteristicUUID;
 	// Current setting for number of touches per side.
 	int _numTouchesPerSide;
 
-	// Queue for handling touch event data.
+	// Queue for receiving touch events.
     dispatch_queue_t _touchQueue;
 
 	// Touch events.

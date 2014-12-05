@@ -20,16 +20,11 @@
 
 -(id) init {
 	if (self = [super init]) {
+		// Initial state.
+		self.phase = FFRTouchPhaseEnded;
+
+		// Time stamp is set elsewhere.
 		//self.timestamp = [[NSProcessInfo processInfo] systemUptime];
-		self.phase = FFRTouchPhaseInactive;
-		/*
-		// for emulation
-		// TODO: remove
-		static unsigned int count = 0;
-		srand((unsigned int)time(NULL) + count++);
-		int side = rand() % 4;
-		self.side = side;
-		*/
 	}
 
 	return self;
