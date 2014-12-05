@@ -474,18 +474,12 @@ static void CreateSwipeGesture(
 
 - (void) layoutSubviews
 {
-NSLog(@"layoutSubviews");
-
-	CGRect bounds;
-
 	CGFloat toolbarOffsetY = 0;
 	CGFloat toolbarHeight = 40;
 
-	CGSize size = [UIApplication sharedApplication].keyWindow.frame.size;
-	NSLog(@"frame size 2: %f %f", size.width, size.height);
-	NSLog(@"view size 2: %f %f", self.bounds.size.width, self.bounds.size.height);
-
 	CGRect viewBounds = self.bounds;
+
+	CGRect bounds; // Temporary rect
 
 	// Size Back button.
     [self.buttonBack setFrame: CGRectMake(3, toolbarOffsetY, 40, toolbarHeight)];
@@ -518,8 +512,6 @@ NSLog(@"layoutSubviews");
 
 - (id) init
 {
-	NSLog(@"init");
-
 	self = [super init];
 
 	// Global reference to the AppViewController instance.
@@ -530,8 +522,6 @@ NSLog(@"layoutSubviews");
 
 - (void) loadView
 {
-NSLog(@"loadView");
-
 	// Create application root view.
 	self.view = [[FuffrBoxView alloc] initWithFrame: CGRectZero];
 }
@@ -548,8 +538,6 @@ NSLog(@"loadView");
 
 - (void) viewDidLoad
 {
-NSLog(@"viewDidLoad");
-
     [super viewDidLoad];
 
 	// Set property that fixes web view layout problem.
@@ -655,8 +643,6 @@ NSLog(@"viewDidLoad");
 
 - (void) viewWillDisappear: (BOOL)animated
 {
-	NSLog(@"FuffrBox: viewWillDisappear");
-
 	// Clear the web view delegate.
 	self.webView.delegate = nil;
 
@@ -668,7 +654,6 @@ NSLog(@"viewDidLoad");
 
 -(void) viewDidDisappear: (BOOL)animated
 {
-	NSLog(@"FuffrBox: viewDidDisappear");
 }
 
 - (void)didReceiveMemoryWarning
@@ -812,6 +797,9 @@ NSLog(@"viewDidLoad");
 
 - (void) onButtonBack: (id)sender
 {
+	// Hack to update firmware when pressing Back:
+	//[self jsCommandUpdateFirmware: nil];
+
 	[self.webView goBack];
 }
 
