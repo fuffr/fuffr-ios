@@ -81,14 +81,14 @@ static const FFRSide SideLookupTable[4] =
 			userInfo: nil
 			repeats: YES];
 
-		// Enable device orientation readings.
-		[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+		// Enable UI orientation readings.
+		//[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
 		[[NSNotificationCenter defaultCenter]
 			addObserver: self
-			selector: @selector(deviceOrientationDidChange:)
-			name: UIDeviceOrientationDidChangeNotification
+			selector: @selector(statusBarOrientationDidChange:)
+			name: UIApplicationDidChangeStatusBarOrientationNotification
 			object: nil];
-		self.deviceOrientation = [[UIDevice currentDevice] orientation];
+		self.userInterfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
 	}
 
 	return self;
@@ -117,7 +117,7 @@ static const FFRSide SideLookupTable[4] =
 	self.spaceMapper = nil;
 	self.touchDelegate = nil;
 
-	[[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
+	//[[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
 }
 
 #pragma mark - Service discovery
@@ -550,19 +550,19 @@ currently 5 touches. Setting 0 will disable the touch detection."
 {
 	CGPoint p = point;
 
-	if (UIDeviceOrientationPortraitUpsideDown == self.deviceOrientation)
+	if (UIInterfaceOrientationPortraitUpsideDown == self.userInterfaceOrientation)
 	{
 		p.x = 1.0 - point.x;
 		p.y = 1.0 - point.y;
 		return p;
 	}
-	else if (UIDeviceOrientationLandscapeLeft == self.deviceOrientation)
+	else if (UIInterfaceOrientationLandscapeRight == self.userInterfaceOrientation)
 	{
 		p.y = 1.0 - point.x;
 		p.x = point.y;
 		return p;
 	}
-	else if (UIDeviceOrientationLandscapeRight == self.deviceOrientation)
+	else if (UIInterfaceOrientationLandscapeLeft == self.userInterfaceOrientation)
 	{
 		p.y = point.x;
 		p.x = 1.0 - point.y;
@@ -574,16 +574,17 @@ currently 5 touches. Setting 0 will disable the touch detection."
 	}
 }
 
-- (void)deviceOrientationDidChange:(NSNotification *)notification
+- (void) statusBarOrientationDidChange:(NSNotification *)notification
 {
-	UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+	UIInterfaceOrientation orientation =
+		[UIApplication sharedApplication].statusBarOrientation;
 
-	if (UIDeviceOrientationPortrait == orientation ||
-		UIDeviceOrientationPortraitUpsideDown == orientation ||
-		UIDeviceOrientationLandscapeLeft == orientation ||
-		UIDeviceOrientationLandscapeRight == orientation)
+	if (UIInterfaceOrientationPortrait == orientation ||
+		UIInterfaceOrientationPortraitUpsideDown == orientation ||
+		UIInterfaceOrientationLandscapeLeft == orientation ||
+		UIInterfaceOrientationLandscapeRight == orientation)
 	{
-		self.deviceOrientation = orientation;
+		self.userInterfaceOrientation = orientation;
 	}
 }
 

@@ -79,7 +79,7 @@ extern NSString* const FFRBatteryCharacteristicUUID;
 /**
  * Current device orientation.
  */
-@property (atomic, assign) UIDeviceOrientation deviceOrientation;
+@property (atomic, assign) UIInterfaceOrientation userInterfaceOrientation;
 
 /**
  * Activate the sensor service of the case.
