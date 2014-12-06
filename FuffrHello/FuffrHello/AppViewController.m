@@ -97,7 +97,7 @@
 
 - (void)drawImageView
 {
-    UIGraphicsBeginImageContext(self.view.frame.size);
+    UIGraphicsBeginImageContext(self.imageView.bounds.size);
     CGContextRef context = UIGraphicsGetCurrentContext();
 
 	// Draw right circle.
