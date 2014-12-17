@@ -69,7 +69,7 @@
 
 - (void) setupFuffr
 {
-	[self.view makeToast: @"Scanning for Fuffr"];
+	[self.view ffr_makeToast: @"Scanning for Fuffr"];
 
 	// Get a reference to the touch manager.
 	FFRTouchManager* manager = [FFRTouchManager sharedManager];
@@ -82,7 +82,7 @@
 			^{
 				NSLog(@"Fuffr Connected");
 
-				[self.view makeToast: @"Fuffr Connected"];
+				[self.view ffr_makeToast: @"Fuffr Connected"];
 
 				[[FFRTouchManager sharedManager]
 					enableSides: FFRSideLeft | FFRSideRight
@@ -93,7 +93,7 @@
 		^{
 			NSLog(@"Fuffr Disconnected");
 
-			[self.view makeToast: @"Fuffr Disconnected"];
+			[self.view ffr_makeToast: @"Fuffr Disconnected"];
 		}];
 
 	// Register gesture listeners.
