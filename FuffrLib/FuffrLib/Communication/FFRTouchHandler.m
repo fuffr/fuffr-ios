@@ -94,11 +94,6 @@ static const FFRSide SideLookupTable[4] =
 	return self;
 }
 
--(void) setPeripheral:(CBPeripheral*) peripheral
-{
-	_peripheral = peripheral;
-}
-
 -(void) dealloc
 {
 	[self shutDown];
@@ -118,6 +113,12 @@ static const FFRSide SideLookupTable[4] =
 	self.touchDelegate = nil;
 
 	//[[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
+	[[NSNotificationCenter defaultCenter] removeObserver: self];
+}
+
+-(void) setPeripheral:(CBPeripheral*) peripheral
+{
+	_peripheral = peripheral;
 }
 
 #pragma mark - Service discovery
@@ -574,7 +575,7 @@ currently 5 touches. Setting 0 will disable the touch detection."
 	}
 }
 
-- (void) statusBarOrientationDidChange:(NSNotification *)notification
+- (void) statusBarOrientationDidChange: (NSNotification *)notification
 {
 	UIInterfaceOrientation orientation =
 		[UIApplication sharedApplication].statusBarOrientation;

@@ -226,7 +226,7 @@ static int touchBlockIdCounter = 0;
 		^{
 			[manager useSensorService:
 			^{
-				NSLog(@"Fuffr Connected");
+				NSLog(@"FFRTouchManager: Fuffr Connected");
 				[manager
 					enableSides: sides
 					touchesPerSide: numberOfTouches];
@@ -234,7 +234,7 @@ static int touchBlockIdCounter = 0;
 		}
 		onFuffrDisconnected:
 		^{
-			NSLog(@"Fuffr Disconnected");
+			NSLog(@"FFRTouchManager: Fuffr Disconnected");
 		}];
 }
 
@@ -266,39 +266,16 @@ static int touchBlockIdCounter = 0;
 {
 	self.onConnectedBlock = connectedBlock;
 	self.onDisconnectedBlock = disconnectedBlock;
-
-	if (self.connected)
-	{
-		// Call connectedBlock if already connected.
-		connectedBlock();
-	}
-	else
-	{
-		// Call disconnectedBlock if already disconnected.
-		disconnectedBlock();
-	}
 }
 
 - (void) onFuffrConnected: (void(^)())connectedBlock
 {
 	self.onConnectedBlock = connectedBlock;
-
-	if (self.connected)
-	{
-		// Call connectedBlock if already connected.
-		connectedBlock();
-	}
 }
 
 - (void) onFuffrDisconnected: (void(^)())disconnectedBlock
 {
 	self.onDisconnectedBlock = disconnectedBlock;
-
-	if (!self.connected)
-	{
-		// Call disconnectedBlock if already disconnected.
-		disconnectedBlock();
-	}
 }
 
 - (void) disconnectFuffr
@@ -329,6 +306,8 @@ static int touchBlockIdCounter = 0;
 		[self.screenIdleTimerTimer invalidate];
 		self.screenIdleTimerTimer = nil;
 	}
+		
+	[[NSNotificationCenter defaultCenter] removeObserver: self];
 
 	[self disconnectFuffr];
 }
@@ -392,12 +371,12 @@ static int touchBlockIdCounter = 0;
 		// Scan for required service.
 		[bleManager.handler useImageVersionService:
 		^{
-			NSLog(@"Found image version service");
+			NSLog(@"FFRTouchManager: Found image version service");
 
 			// Get firmware image version to download.
 			[handler queryCurrentImageVersion: ^void (char version)
 			{
-				NSLog(@"*** Image type is: %c", version);
+				NSLog(@"FFRTouchManager: Image type is: %c", version);
 
 				// Update to the version not running.
 				self.firmwareImageVersion = ('A' == version ? 'B' : 'A');
@@ -413,13 +392,13 @@ static int touchBlockIdCounter = 0;
 
 - (void) updateFirmwareCC2541
 {
-	NSLog(@"updateFirmwareCC2541");
+	NSLog(@"FFRTouchManager: updateFirmwareCC2541");
 	[self updateFirmware: @"CC2541" nextState: FFRFirmwareUpdateCC2541];
 }
 
 - (void) updateFirmwareMSP430
 {
-	NSLog(@"updateFirmwareMSP430");
+	NSLog(@"FFRTouchManager: updateFirmwareMSP430");
 	[self updateFirmware: @"MSP430" nextState: FFRFirmwareUpdateMSP430];
 }
 
@@ -432,7 +411,7 @@ static int touchBlockIdCounter = 0;
 		{
 			if (data)
 			{
-				NSLog(@"Got %@ data: %i", firmwareId, (int)[data length]);
+				NSLog(@"FFRTouchManager: Got %@ data: %i", firmwareId, (int)[data length]);
 
 				BOOL started = [[FFRBLEManager sharedManager].handler
 					validateAndLoadImage: data];
@@ -447,7 +426,7 @@ static int touchBlockIdCounter = 0;
 			}
 			else
 			{
-				NSLog(@"Failed to get %@ data", firmwareId);
+				NSLog(@"FFRTouchManager: Failed to get %@ data", firmwareId);
 				self.firmwareUpdateState = FFRFirmwareUpdateNotInProgress;
 			}
 		}];
@@ -478,7 +457,7 @@ static int touchBlockIdCounter = 0;
 	{
 		if (FFRFirmwareUpdateCC2541 == self.firmwareUpdateState)
 		{
-			NSLog(@"Firmware part 1 updated");
+			NSLog(@"FFRTouchManager: Firmware part 1 updated");
 			[FFR_SVProgressHUD
 				showWithStatus: @"Perparing Update 2(2)"
 				maskType: FFR_SVProgressHUDMaskTypeBlack];
@@ -489,13 +468,13 @@ static int touchBlockIdCounter = 0;
 		}
 		else if (FFRFirmwareUpdateMSP430 == self.firmwareUpdateState)
 		{
-			NSLog(@"Firmware part 2 updated");
+			NSLog(@"FFRTouchManager: Firmware part 2 updated");
 
 			[FFR_SVProgressHUD showSuccessWithStatus:@"Firmware updated"];
 
         	[self performSelector:@selector(firmwareUpdateEnded) withObject:nil afterDelay:3.0];
 
-			NSLog(@"Firmware update done");
+			NSLog(@"FFRTouchManager: Firmware update done");
 			
 			UIAlertView *alertView = [[UIAlertView alloc]
 				initWithTitle:@"Firmware Upgraded"
@@ -508,7 +487,7 @@ static int touchBlockIdCounter = 0;
     }
     else if (state == FFRProgrammingStateFailedDueToDeviceDisconnect)
 	{
-		NSLog(@"Device disconnected during update");
+		NSLog(@"FFRTouchManager: Device disconnected during update");
 
         [self performSelector:@selector(firmwareUpdateEnded) withObject:nil afterDelay:3.0];
 
@@ -660,6 +639,18 @@ static int touchBlockIdCounter = 0;
 
 		// Start timer that handles screen stay awake behaviour.
 		[self createScreenIdleTimer];
+
+		// Notifications for application active/resign.
+		[[NSNotificationCenter defaultCenter]
+			addObserver: self
+			selector: @selector(applicationDidBecomeActive:)
+			name: UIApplicationDidBecomeActiveNotification
+			object: nil];
+		[[NSNotificationCenter defaultCenter]
+			addObserver: self
+			selector: @selector(applicationWillResignActive:)
+			name: UIApplicationWillResignActiveNotification
+			object: nil];
 	}
 	return self;
 }
@@ -667,6 +658,20 @@ static int touchBlockIdCounter = 0;
 - (void) dealloc
 {
 	[self shutDown];
+}
+
+- (void) applicationDidBecomeActive: (NSNotification *)notification
+{
+	NSLog(@"FFRTouchManager: applicationDidBecomeActive");
+
+	[[FFRTouchManager sharedManager] reconnectFuffr];
+}
+
+- (void) applicationWillResignActive: (NSNotification *)notification
+{
+	NSLog(@"FFRTouchManager: applicationWillResignActive");
+
+	[[FFRTouchManager sharedManager] disconnectFuffr];
 }
 
 // Internal helper method.
@@ -688,7 +693,7 @@ static int touchBlockIdCounter = 0;
 // TODO: Delete.
 - (void) startScan
 {
-	NSLog(@"startScan");
+	NSLog(@"FFRTouchManager: startScan");
 
 	// Not needed, scan is started automatically bu central manager.
 	// TODO: Perhaps we want to change this?
@@ -698,14 +703,14 @@ static int touchBlockIdCounter = 0;
 // TODO: Delete. Not used.
 - (void) stopScan
 {
-	NSLog(@"stopScan");
+	NSLog(@"FFRTouchManager: stopScan");
 
 	[[FFRBLEManager sharedManager] stopScan];
 }
 
 -(void) connectToDeviceWithMaxRSSI
 {
-	NSLog(@"connectToDeviceWithMaxRSSI: %@", self.peripheralWithMaxRSSI.name);
+	NSLog(@"FFRTouchManager: connectToDeviceWithMaxRSSI: %@", self.peripheralWithMaxRSSI.name);
 
 	// This is where we connect.
 	[[FFRBLEManager sharedManager] connectPeripheral: self.peripheralWithMaxRSSI];
@@ -719,14 +724,14 @@ static int touchBlockIdCounter = 0;
 	FFRBLEManager* bleManager = [FFRBLEManager sharedManager];
 	bleManager.onPeripheralDiscovered = ^(CBPeripheral* p)
 	{
-		NSLog(@"Found device: %@", p.name);
+		NSLog(@"FFRTouchManager: Found device: %@", p.name);
 
 		if (stringContains(p.name, @"Fuffr") ||
 			stringContains(p.name, @"Neonode"))
 		{
 			if (nil == me.peripheralWithMaxRSSI)
 			{
-				NSLog(@"start timer for connectToDeviceWithMaxRSSI: %@", p.name);
+				NSLog(@"FFRTouchManager: Start timer for connectToDeviceWithMaxRSSI: %@", p.name);
 				me.peripheralWithMaxRSSI = p;
 				[NSTimer
 					scheduledTimerWithTimeInterval: 1.0
@@ -742,7 +747,7 @@ static int touchBlockIdCounter = 0;
 				NSNumber* rssiNew = p.discoveryRSSI;
 				if (rssiNew.intValue > rssiMax.intValue)
 				{
-					NSLog(@"Found device with stronger RSSI: %@", p.name);
+					NSLog(@"FFRTouchManager: Found device with stronger RSSI: %@", p.name);
 					me.peripheralWithMaxRSSI = p;
 				}
 			}
@@ -763,7 +768,7 @@ static int touchBlockIdCounter = 0;
 	bleManager.onPeriperalConnected =
 		^(CBPeripheral* hostPeripheral)
 		{
-			NSLog(@"initFuffr onPeriperalConnected");
+			NSLog(@"FFRTouchManager: onPeriperalConnected");
 			[manager.handler setPeripheral: hostPeripheral];
 			self.connected = YES;
 			if (me.onConnectedBlock)
@@ -775,7 +780,7 @@ static int touchBlockIdCounter = 0;
 	bleManager.onPeriperalDisconnected =
 		^(CBPeripheral* hostPeripheral)
 		{
-			NSLog(@"initFuffr onPeriperalDisconnected");
+			NSLog(@"FFRTouchManager: onPeriperalDisconnected");
 			self.connected = NO;
 			if (me.onDisconnectedBlock)
 			{
