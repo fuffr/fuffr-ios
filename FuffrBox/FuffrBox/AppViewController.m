@@ -885,21 +885,23 @@ static void CreateSwipeGesture(
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
-	NSLog(@"Failed to load page: %@", [error debugDescription]);
-
-	// Show error page.
-
-	// Set URL to local error page.
-	NSString* path = [[NSBundle mainBundle]
-		pathForResource:@"error" ofType:@"html" inDirectory:@"www"];
-	NSURL* errorPageURL = [NSURL fileURLWithPath:path isDirectory:NO];
-
-	// Load URL into web view.
-	NSURLRequest* request = [NSURLRequest
-		requestWithURL: errorPageURL
-		cachePolicy: NSURLRequestReloadIgnoringLocalAndRemoteCacheData
-		timeoutInterval: 10];
-	[self.webView loadRequest: request];
+    if ([error code] != -999) {
+        NSLog(@"Failed to load page: %@", [error debugDescription]);
+        
+        // Show error page.
+        
+        // Set URL to local error page.
+        NSString* path = [[NSBundle mainBundle]
+                          pathForResource:@"error" ofType:@"html" inDirectory:@"www"];
+        NSURL* errorPageURL = [NSURL fileURLWithPath:path isDirectory:NO];
+        
+        // Load URL into web view.
+        NSURLRequest* request = [NSURLRequest
+                                 requestWithURL: errorPageURL
+                                 cachePolicy: NSURLRequestReloadIgnoringLocalAndRemoteCacheData
+                                 timeoutInterval: 10];
+        [self.webView loadRequest: request];
+    }
 }
 
 @end
