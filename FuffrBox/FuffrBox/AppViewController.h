@@ -12,7 +12,7 @@
 /**
  * View controller with a web view.
  */
-@interface AppViewController : UIViewController<UIWebViewDelegate>
+@interface AppViewController : UIViewController<UIWebViewDelegate, UIGestureRecognizerDelegate>
 
 /** The web view. */
 @property UIWebView* webView;

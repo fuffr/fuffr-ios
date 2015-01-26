@@ -397,6 +397,12 @@ static void CreateSwipeGesture(
 
 @end
 
+@interface AppViewController ()
+@property UIView *urlView;
+@property CGFloat toolbarHeight;
+@property BOOL showFirstTooltip;
+@end
+
 @implementation AppViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -426,6 +432,11 @@ static void CreateSwipeGesture(
     return YES;
 }
 
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    return YES;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -436,6 +447,13 @@ static void CreateSwipeGesture(
 
 	CGFloat toolbarOffsetY = 0;
 	CGFloat toolbarHeight = 40;
+    self.toolbarHeight = toolbarHeight;
+    self.showFirstTooltip = YES;
+    
+    // URL view containing all URL elements
+    
+    self.urlView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, toolbarHeight)];
+    self.urlView.backgroundColor = [UIColor whiteColor];
 
 	// Back button.
 
@@ -446,23 +464,24 @@ static void CreateSwipeGesture(
 		addTarget: self
 		action: @selector(onButtonBack:)
 		forControlEvents: UIControlEventTouchUpInside];
-    [self.view addSubview: buttonBack];
+    [self.urlView addSubview: buttonBack];
 
 	// URL field.
 
 	bounds = CGRectMake(50, toolbarOffsetY + 1, 0, toolbarHeight);
-	bounds.size.width = viewBounds.size.width - 90;
+	bounds.size.width = viewBounds.size.width - 130;
 	self.urlField = [[UITextField alloc] initWithFrame: bounds];
 	[self setSavedURL];
+    //self.urlField.backgroundColor = [UIColor grayColor];
 	self.urlField.clearButtonMode = UITextFieldViewModeNever;
 	[self.urlField setKeyboardType: UIKeyboardTypeURL];
 	self.urlField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-    [self.view addSubview: self.urlField];
+    [self.urlView addSubview: self.urlField];
 
 	// Go button.
 
 	bounds = CGRectMake(0, toolbarOffsetY, 40, toolbarHeight);
-	bounds.origin.x = viewBounds.size.width - 40;
+	bounds.origin.x = viewBounds.size.width - 80;
 	UIButton* buttonGo = [UIButton buttonWithType: UIButtonTypeSystem];
     [buttonGo setFrame: bounds];
 	[buttonGo setTitle: @"Go" forState: UIControlStateNormal];
@@ -470,7 +489,21 @@ static void CreateSwipeGesture(
 		addTarget: self
 		action: @selector(onButtonGo:)
 		forControlEvents: UIControlEventTouchUpInside];
-    [self.view addSubview: buttonGo];
+    [self.urlView addSubview: buttonGo];
+    
+    // X button
+    
+    bounds = CGRectMake(0, toolbarOffsetY, 30, toolbarHeight);
+    bounds.origin.x = viewBounds.size.width - 30;
+    UIButton* buttonClose = [UIButton buttonWithType: UIButtonTypeSystem];
+    [buttonClose setFrame: bounds];
+    //buttonClose.backgroundColor = [UIColor ];
+    [buttonClose setTitle: @"X" forState: UIControlStateNormal];
+    [buttonClose
+     addTarget: self
+     action: @selector(onButtonClose:)
+     forControlEvents: UIControlEventTouchUpInside];
+    [self.urlView addSubview: buttonClose];
 
 	// Web view.
 
@@ -478,8 +511,8 @@ static void CreateSwipeGesture(
 	bounds = viewBounds;
 	//bounds = CGRectOffset(bounds, 0, 20);
 	//bounds = CGRectInset(bounds, 0, 50);
-	bounds.origin.y = toolbarHeight;
-	bounds.size.height -= bounds.origin.y;
+	//bounds.origin.y = toolbarHeight;
+	//bounds.size.height -= bounds.origin.y;
 
 	// Create the web view.
 	self.webView = [[UIWebView alloc] initWithFrame: bounds];
@@ -500,6 +533,15 @@ static void CreateSwipeGesture(
 	[self.webView setBackgroundColor:[UIColor greenColor]];
 
     [self.view addSubview: self.webView];
+    
+    [self.view addSubview:self.urlView];
+    
+    // Add gesture recognizer
+    
+    UISwipeGestureRecognizer *swipeGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleUISwipe:)];
+    swipeGesture.delegate = self;
+    swipeGesture.direction = UISwipeGestureRecognizerDirectionRight;
+    [self.webView addGestureRecognizer:swipeGesture];
 
 	[NSURLProtocol registerClass: [URLProtocolFuffrBridge class]];
 
@@ -594,6 +636,60 @@ static void CreateSwipeGesture(
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
+}
+
+- (void) toggleUrlView
+{
+    [self.urlField resignFirstResponder];
+    CGFloat dy;
+    dy = (self.urlView.hidden) ? self.urlView.bounds.size.height : -self.urlView.bounds.size.height;
+    self.urlView.hidden = NO;
+    [UIView animateWithDuration:0.3 animations:^{
+        self.urlView.frame = CGRectOffset(self.urlView.frame, 0, dy);
+    } completion:^(BOOL finished) {
+        self.urlView.hidden = (dy > 0) ? NO : YES;
+        if (self.urlView.hidden && self.showFirstTooltip)
+        {
+            [self showUrlbarTooltip];
+        }
+    }];
+}
+
+- (void) showUrlbarTooltip
+{
+    self.showFirstTooltip = NO;
+    UIView *redAreaView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, (self.view.bounds.size.height/3)*1)];
+    redAreaView.layer.borderColor = [UIColor redColor].CGColor;
+    redAreaView.layer.borderWidth = 3.0f;
+    redAreaView.userInteractionEnabled = NO;
+    
+    UIFont *font = [UIFont fontWithName:@"GothamRounded-Bold" size:20];
+    
+    UILabel *swipeInstructionLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, redAreaView.frame.size.width, redAreaView.frame.size.height)];
+    swipeInstructionLabel.font = font;
+    swipeInstructionLabel.text = @"Swipe right in this area \n to show the URL bar";
+    swipeInstructionLabel.numberOfLines = 0;
+    swipeInstructionLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    swipeInstructionLabel.textColor = [UIColor redColor];
+    swipeInstructionLabel.textAlignment = NSTextAlignmentCenter;
+    [redAreaView addSubview:swipeInstructionLabel];
+    
+    [self.view addSubview:redAreaView];
+    [self performSelector:@selector(removeRedAreaView:) withObject:redAreaView afterDelay:4.0];
+}
+
+- (void)removeRedAreaView:(UIView *) redAreaView
+{
+    [redAreaView removeFromSuperview];
+}
+
+- (void) handleUISwipe:(UISwipeGestureRecognizer *) gesture
+{
+    CGPoint startPoint = [gesture locationOfTouch:0 inView:self.webView];
+    if (startPoint.y < (self.view.frame.size.height/5)*2 && self.urlView.hidden)
+    {
+        [self toggleUrlView];
+    }
 }
 
 - (void) setupFuffr
@@ -762,6 +858,11 @@ static void CreateSwipeGesture(
 	[self.webView loadRequest: request];
 }
 
+- (void) onButtonClose: (id)sender
+{
+    [self toggleUrlView];
+}
+
 - (void) saveURL: (NSString*)url
 {
 	[[NSUserDefaults standardUserDefaults]
@@ -901,7 +1002,7 @@ static void CreateSwipeGesture(
                                  cachePolicy: NSURLRequestReloadIgnoringLocalAndRemoteCacheData
                                  timeoutInterval: 10];
         [self.webView loadRequest: request];
-    }
+        }
 }
 
 @end
