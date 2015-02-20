@@ -398,7 +398,10 @@ static void CreateSwipeGesture(
 @end
 
 @interface AppViewController ()
-@property UIView *urlView;
+@property UIView *urlView, *redAreaView;
+@property UILabel *swipeInstructionLabel;
+@property CGSize screenSizePortrait;
+@property UIButton *buttonGo, *buttonClose, *buttonBack;
 @property CGFloat toolbarHeight;
 @property BOOL showFirstTooltip;
 @end
@@ -444,6 +447,17 @@ static void CreateSwipeGesture(
 	CGRect bounds;
 
 	CGRect viewBounds = self.view.bounds;
+    
+    UIInterfaceOrientation interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+    
+    if (interfaceOrientation == UIInterfaceOrientationPortrait)
+    {
+        self.screenSizePortrait = [UIScreen mainScreen].bounds.size;
+    }
+    else
+    {
+        self.screenSizePortrait = CGSizeMake([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);
+    }
 
 	CGFloat toolbarOffsetY = 0;
 	CGFloat toolbarHeight = 40;
@@ -457,14 +471,14 @@ static void CreateSwipeGesture(
 
 	// Back button.
 
-	UIButton* buttonBack = [UIButton buttonWithType: UIButtonTypeSystem];
-    [buttonBack setFrame: CGRectMake(3, toolbarOffsetY, 40, toolbarHeight)];
-	[buttonBack setTitle: @"Back" forState: UIControlStateNormal];
-	[buttonBack
+	self.buttonBack = [UIButton buttonWithType: UIButtonTypeSystem];
+    [self.buttonBack setFrame: CGRectMake(3, toolbarOffsetY, 40, toolbarHeight)];
+	[self.buttonBack setTitle: @"Back" forState: UIControlStateNormal];
+	[self.buttonBack
 		addTarget: self
 		action: @selector(onButtonBack:)
 		forControlEvents: UIControlEventTouchUpInside];
-    [self.urlView addSubview: buttonBack];
+    [self.urlView addSubview: self.buttonBack];
 
 	// URL field.
 
@@ -482,28 +496,27 @@ static void CreateSwipeGesture(
 
 	bounds = CGRectMake(0, toolbarOffsetY, 40, toolbarHeight);
 	bounds.origin.x = viewBounds.size.width - 80;
-	UIButton* buttonGo = [UIButton buttonWithType: UIButtonTypeSystem];
-    [buttonGo setFrame: bounds];
-	[buttonGo setTitle: @"Go" forState: UIControlStateNormal];
-	[buttonGo
+	self.buttonGo = [UIButton buttonWithType: UIButtonTypeSystem];
+    [self.buttonGo setFrame: bounds];
+	[self.buttonGo setTitle: @"Go" forState: UIControlStateNormal];
+	[self.buttonGo
 		addTarget: self
 		action: @selector(onButtonGo:)
 		forControlEvents: UIControlEventTouchUpInside];
-    [self.urlView addSubview: buttonGo];
+    [self.urlView addSubview: self.buttonGo];
     
     // X button
     
     bounds = CGRectMake(0, toolbarOffsetY, 30, toolbarHeight);
     bounds.origin.x = viewBounds.size.width - 30;
-    UIButton* buttonClose = [UIButton buttonWithType: UIButtonTypeSystem];
-    [buttonClose setFrame: bounds];
-    //buttonClose.backgroundColor = [UIColor ];
-    [buttonClose setTitle: @"X" forState: UIControlStateNormal];
-    [buttonClose
+    self.buttonClose = [UIButton buttonWithType: UIButtonTypeSystem];
+    [self.buttonClose setFrame: bounds];
+    [self.buttonClose setTitle: @"X" forState: UIControlStateNormal];
+    [self.buttonClose
      addTarget: self
      action: @selector(onButtonClose:)
      forControlEvents: UIControlEventTouchUpInside];
-    [self.urlView addSubview: buttonClose];
+    [self.urlView addSubview: self.buttonClose];
 
 	// Web view.
 
@@ -530,7 +543,7 @@ static void CreateSwipeGesture(
 	self.automaticallyAdjustsScrollViewInsets = NO;
 	self.webView.scrollView.bounces = NO;
 	self.view.multipleTouchEnabled = YES;
-	[self.webView setBackgroundColor:[UIColor greenColor]];
+	[self.webView setBackgroundColor:[UIColor blackColor]];
 
     [self.view addSubview: self.webView];
     
@@ -658,24 +671,24 @@ static void CreateSwipeGesture(
 - (void) showUrlbarTooltip
 {
     self.showFirstTooltip = NO;
-    UIView *redAreaView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, (self.view.bounds.size.height/3)*1)];
-    redAreaView.layer.borderColor = [UIColor redColor].CGColor;
-    redAreaView.layer.borderWidth = 3.0f;
-    redAreaView.userInteractionEnabled = NO;
+    self.redAreaView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, (self.view.bounds.size.height/3)*1)];
+    self.redAreaView.layer.borderColor = [UIColor redColor].CGColor;
+    self.redAreaView.layer.borderWidth = 3.0f;
+    self.redAreaView.userInteractionEnabled = NO;
     
     UIFont *font = [UIFont fontWithName:@"GothamRounded-Bold" size:20];
     
-    UILabel *swipeInstructionLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, redAreaView.frame.size.width, redAreaView.frame.size.height)];
-    swipeInstructionLabel.font = font;
-    swipeInstructionLabel.text = @"Swipe right in this area \n to show the URL bar";
-    swipeInstructionLabel.numberOfLines = 0;
-    swipeInstructionLabel.lineBreakMode = NSLineBreakByWordWrapping;
-    swipeInstructionLabel.textColor = [UIColor redColor];
-    swipeInstructionLabel.textAlignment = NSTextAlignmentCenter;
-    [redAreaView addSubview:swipeInstructionLabel];
+    self.swipeInstructionLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.redAreaView.frame.size.width, self.redAreaView.frame.size.height)];
+    self.swipeInstructionLabel.font = font;
+    self.swipeInstructionLabel.text = @"Swipe right in this area \n to show the URL bar";
+    self.swipeInstructionLabel.numberOfLines = 0;
+    self.swipeInstructionLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    self.swipeInstructionLabel.textColor = [UIColor redColor];
+    self.swipeInstructionLabel.textAlignment = NSTextAlignmentCenter;
+    [self.redAreaView addSubview:self.swipeInstructionLabel];
     
-    [self.view addSubview:redAreaView];
-    [self performSelector:@selector(removeRedAreaView:) withObject:redAreaView afterDelay:4.0];
+    [self.view addSubview:self.redAreaView];
+    [self performSelector:@selector(removeRedAreaView:) withObject:self.redAreaView afterDelay:4.0];
 }
 
 - (void)removeRedAreaView:(UIView *) redAreaView
@@ -986,7 +999,8 @@ static void CreateSwipeGesture(
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
-    if ([error code] != -999) {
+    if ([error code] != -999)
+    {
         NSLog(@"Failed to load page: %@", [error debugDescription]);
         
         // Show error page.
@@ -1002,7 +1016,66 @@ static void CreateSwipeGesture(
                                  cachePolicy: NSURLRequestReloadIgnoringLocalAndRemoteCacheData
                                  timeoutInterval: 10];
         [self.webView loadRequest: request];
+    }
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    return (UIInterfaceOrientationIsPortrait(interfaceOrientation) || UIInterfaceOrientationIsLandscape(interfaceOrientation));
+}
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+    if(UIInterfaceOrientationIsPortrait(toInterfaceOrientation)){
+        [self changeTheViewToPortrait:YES andDuration:duration];
+        
+    }
+    else if(UIInterfaceOrientationIsLandscape(toInterfaceOrientation))
+    {
+        [self changeTheViewToPortrait:NO andDuration:duration];
+    }
+}
+
+- (void) changeTheViewToPortrait:(BOOL)portrait andDuration:(NSTimeInterval)duration
+{
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:duration];
+    
+    if(portrait)
+    {
+        [self.urlView setFrame:CGRectMake(self.urlView.frame.origin.x, self.urlView.frame.origin.y, self.screenSizePortrait.width, self.toolbarHeight)];
+        if (self.redAreaView)
+        {
+            [self.redAreaView setFrame:CGRectMake(0, 0, self.screenSizePortrait.width, (self.screenSizePortrait.height/3)*1)];
+            [self.swipeInstructionLabel setFrame:CGRectMake(0, 0, self.redAreaView.frame.size.width, self.redAreaView.frame.size.height)];
         }
+        [self.buttonBack setFrame:CGRectMake(3, 0, 40, self.toolbarHeight)];
+        
+        [self.urlField setFrame:CGRectMake(50, 0, self.screenSizePortrait.width - 130, self.toolbarHeight)];
+        
+        [self.buttonClose setFrame:CGRectMake(self.screenSizePortrait.width - 30, 0, 30, self.toolbarHeight)];
+        
+        [self.buttonGo setFrame:CGRectMake(self.buttonClose.frame.origin.x - 50, 0, 40, self.toolbarHeight)];
+    }
+    else
+    {
+        [self.urlView setFrame:CGRectMake(self.urlView.frame.origin.x, self.urlView.frame.origin.y, self.screenSizePortrait.height, self.toolbarHeight)];
+        if (self.redAreaView)
+        {
+            [self.redAreaView setFrame:CGRectMake(0, 0, self.screenSizePortrait.height, (self.screenSizePortrait.width/3)*1)];
+            [self.swipeInstructionLabel setFrame:CGRectMake(0, 0, self.redAreaView.frame.size.width, self.redAreaView.frame.size.height)];
+        }
+        
+        [self.buttonBack setFrame:CGRectMake(3, 0, 40, self.toolbarHeight)];
+        
+        [self.urlField setFrame:CGRectMake(50, 0, self.screenSizePortrait.height - 130, self.toolbarHeight)];
+        
+        [self.buttonClose setFrame:CGRectMake(self.screenSizePortrait.height - 30, 0, 30, self.toolbarHeight)];
+        
+        [self.buttonGo setFrame:CGRectMake(self.buttonClose.frame.origin.x - 50, 0, 40, self.toolbarHeight)];
+    }
+    [UIView commitAnimations];
 }
 
 @end

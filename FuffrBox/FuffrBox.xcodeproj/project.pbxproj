@@ -240,6 +240,9 @@
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = Fuffr;
 				TargetAttributes = {
+					21B26CA518EBFCAC009FE791 = {
+						DevelopmentTeam = LNZ46XBBR6;
+					};
 					21B26CC018EBFCAC009FE791 = {
 						TestTargetID = 21B26CA518EBFCAC009FE791;
 					};
@@ -440,6 +443,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FuffrBox/FuffrBox-Prefix.pch";
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -461,6 +465,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FuffrBox/FuffrBox-Prefix.pch";
 				GCC_WARN_UNDECLARED_SELECTOR = YES;

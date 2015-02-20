@@ -25,6 +25,32 @@
     return YES;
 }
 
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    // First, we'll extract the list of parameters from the URL
+    NSString* URLstring = [url absoluteString];
+    NSArray *strURLParse = [URLstring componentsSeparatedByString:@"//"];
+    if ([strURLParse count] == 2) {
+        for (int i = 0; i < strURLParse.count; i++)
+        {
+            NSRange range = [[strURLParse objectAtIndex:i ]  rangeOfString:@"fuffrbox:"];
+            if (range.length != 7)
+            {
+                NSString *urlString = [@"http://" stringByAppendingString:[strURLParse objectAtIndex:i ]];
+                NSURL* passedUrl = [NSURL URLWithString: urlString];
+                NSLog(@"passedURL = %@", passedUrl);
+                NSURLRequest* request = [NSURLRequest
+                                         requestWithURL: passedUrl
+                                         cachePolicy: NSURLRequestReloadIgnoringLocalAndRemoteCacheData
+                                         timeoutInterval: 10];
+                AppViewController * viewController = (AppViewController *)self.window.rootViewController;
+                [viewController.webView loadRequest:request];
+            }
+        }
+    }
+    return YES;
+}
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
 	// Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
