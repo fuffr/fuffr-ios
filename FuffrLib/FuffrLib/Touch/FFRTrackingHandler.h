@@ -50,7 +50,7 @@ extern const float FFRTrackingManagerUpdateSpeed;
 /**
  * Queue used for manipulation of trackedObjects.
  */
-@property (nonatomic, weak) dispatch_queue_t backgroundQueue;
+@property (nonatomic, assign) dispatch_queue_t backgroundQueue;
 
 /**
  * The timeout value or removing touches that are no longer
