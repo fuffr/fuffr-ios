@@ -38,9 +38,6 @@
 		CEF8434F19666CA1002DF0DF /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CEF8434D19666CA1002DF0DF /* Main_iPhone.storyboard */; };
 		CEF8435519666CA1002DF0DF /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CEF8435419666CA1002DF0DF /* ViewController.m */; };
 		CEF8435719666CA1002DF0DF /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEF8435619666CA1002DF0DF /* Images.xcassets */; };
-		CEF8435E19666CA1002DF0DF /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF8435D19666CA1002DF0DF /* XCTest.framework */; };
-		CEF8435F19666CA1002DF0DF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF8433B19666CA1002DF0DF /* Foundation.framework */; };
-		CEF8436019666CA1002DF0DF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF8433F19666CA1002DF0DF /* UIKit.framework */; };
 		CEF843741966714C002DF0DF /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = CEF843731966714C002DF0DF /* background.png */; };
 		CEF843761966729B002DF0DF /* background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CEF843751966729B002DF0DF /* background@2x.png */; };
 /* End PBXBuildFile section */
@@ -59,13 +56,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = 219718D518D60662007B6E84;
 			remoteInfo = FuffrLibTests;
-		};
-		CEF8436119666CA1002DF0DF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEF8433019666CA1002DF0DF /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = CEF8433719666CA1002DF0DF;
-			remoteInfo = "FR-808";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -105,7 +95,6 @@
 		CEF8435319666CA1002DF0DF /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		CEF8435419666CA1002DF0DF /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		CEF8435619666CA1002DF0DF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		CEF8435C19666CA1002DF0DF /* FuffrBeatsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FuffrBeatsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEF8435D19666CA1002DF0DF /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		CEF843731966714C002DF0DF /* background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background.png; sourceTree = "<group>"; };
 		CEF843751966729B002DF0DF /* background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "background@2x.png"; sourceTree = "<group>"; };
@@ -122,16 +111,6 @@
 				CEF8433E19666CA1002DF0DF /* CoreGraphics.framework in Frameworks */,
 				CEF8434019666CA1002DF0DF /* UIKit.framework in Frameworks */,
 				CEF8433C19666CA1002DF0DF /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		CEF8435919666CA1002DF0DF /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				CEF8435E19666CA1002DF0DF /* XCTest.framework in Frameworks */,
-				CEF8436019666CA1002DF0DF /* UIKit.framework in Frameworks */,
-				CEF8435F19666CA1002DF0DF /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -161,7 +140,6 @@
 			isa = PBXGroup;
 			children = (
 				CEF8433819666CA1002DF0DF /* FuffrBeats.app */,
-				CEF8435C19666CA1002DF0DF /* FuffrBeatsTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -245,24 +223,6 @@
 			productReference = CEF8433819666CA1002DF0DF /* FuffrBeats.app */;
 			productType = "com.apple.product-type.application";
 		};
-		CEF8435B19666CA1002DF0DF /* FuffrBeatsTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = CEF8437019666CA1002DF0DF /* Build configuration list for PBXNativeTarget "FuffrBeatsTests" */;
-			buildPhases = (
-				CEF8435819666CA1002DF0DF /* Sources */,
-				CEF8435919666CA1002DF0DF /* Frameworks */,
-				CEF8435A19666CA1002DF0DF /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				CEF8436219666CA1002DF0DF /* PBXTargetDependency */,
-			);
-			name = FuffrBeatsTests;
-			productName = "FR-808Tests";
-			productReference = CEF8435C19666CA1002DF0DF /* FuffrBeatsTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -271,11 +231,6 @@
 			attributes = {
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = "Per-Olov Jernberg";
-				TargetAttributes = {
-					CEF8435B19666CA1002DF0DF = {
-						TestTargetID = CEF8433719666CA1002DF0DF;
-					};
-				};
 			};
 			buildConfigurationList = CEF8433319666CA1002DF0DF /* Build configuration list for PBXProject "FuffrBeats" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -297,7 +252,6 @@
 			projectRoot = "";
 			targets = (
 				CEF8433719666CA1002DF0DF /* FuffrBeats */,
-				CEF8435B19666CA1002DF0DF /* FuffrBeatsTests */,
 			);
 		};
 /* End PBXProject section */
@@ -352,13 +306,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		CEF8435A19666CA1002DF0DF /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -372,22 +319,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		CEF8435819666CA1002DF0DF /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		CEF8436219666CA1002DF0DF /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = CEF8433719666CA1002DF0DF /* FuffrBeats */;
-			targetProxy = CEF8436119666CA1002DF0DF /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		CEF8434419666CA1002DF0DF /* InfoPlist.strings */ = {
@@ -521,46 +453,6 @@
 			};
 			name = Release;
 		};
-		CEF8437119666CA1002DF0DF /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/FR-808.app/FR-808";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "FR-808/FR-808-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = "FR-808Tests/FR-808Tests-Info.plist";
-				PRODUCT_NAME = FuffrBeatsTests;
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = Debug;
-		};
-		CEF8437219666CA1002DF0DF /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/FR-808.app/FR-808";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "FR-808/FR-808-Prefix.pch";
-				INFOPLIST_FILE = "FR-808Tests/FR-808Tests-Info.plist";
-				PRODUCT_NAME = FuffrBeatsTests;
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -578,15 +470,6 @@
 			buildConfigurations = (
 				CEF8436E19666CA1002DF0DF /* Debug */,
 				CEF8436F19666CA1002DF0DF /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		CEF8437019666CA1002DF0DF /* Build configuration list for PBXNativeTarget "FuffrBeatsTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				CEF8437119666CA1002DF0DF /* Debug */,
-				CEF8437219666CA1002DF0DF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
